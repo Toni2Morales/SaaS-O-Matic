@@ -7,20 +7,22 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+# Los patrones se anclan a la raíz del repositorio para no ocultar
+# directorios de código con el mismo nombre dentro de backend/ o frontend/.
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
+/build/
+/dist/
+/develop-eggs/
+/downloads/
+/eggs/
+/.eggs/
+/lib/
+/lib64/
+/parts/
+/sdist/
+/var/
+/wheels/
+/share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -50,7 +52,7 @@ coverage.xml
 *.lcov
 .hypothesis/
 .pytest_cache/
-cover/
+/cover/
 
 # Translations
 *.mo
@@ -59,11 +61,29 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
+
+# SQLite: bases de datos locales y ficheros auxiliares WAL/SHM.
+# Las fixtures de test pequeñas y explícitas quedan fuera de estas reglas,
+# tanto si tests/ está en la raíz como si vive dentro de backend/.
+/data/
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+!**/tests/**/fixtures/**/*.db
+!**/tests/**/fixtures/**/*.sqlite
+!**/tests/**/fixtures/**/*.sqlite3
 
 # Flask stuff:
-instance/
+/instance/
 .webassets-cache
 
 # Scrapy stuff:
@@ -73,8 +93,8 @@ instance/
 docs/_build/
 
 # PyBuilder
-.pybuilder/
-target/
+/.pybuilder/
+/target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -150,14 +170,42 @@ activemq-data/
 *.sage.py
 
 # Environments
+# Los ficheros .env.* se ignoran; .env.example es la plantilla versionada.
 .env
+.env.*
+!.env.example
 .envrc
 .venv
 env/
-venv/
 ENV/
+venv/
 env.bak/
 venv.bak/
+
+# Node / Angular
+node_modules/
+.angular/
+out-tsc/
+/frontend/dist/
+/frontend/coverage/
+*.tsbuildinfo
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE / sistema operativo (reglas efectivas)
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
 
 # Spyder project settings
 .spyderproject
@@ -184,11 +232,7 @@ dmypy.json
 cython_debug/
 
 # PyCharm
-#   JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#   be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#   and can be added to the global gitignore or merged into this file.  For a more nuclear
-#   option (not recommended) you can uncomment the following to ignore the entire idea folder.
-# .idea/
+#   Las reglas efectivas para .idea/ están en la sección "IDE / sistema operativo".
 
 # Abstra
 #   Abstra is an AI-powered process automation framework.
@@ -197,11 +241,7 @@ cython_debug/
 .abstra/
 
 # Visual Studio Code
-#   Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore that
-#   can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#   and can be added to the global gitignore or merged into this file. However, if you prefer, you
-#   could uncomment the following to ignore the entire vscode folder
-# .vscode/
+#   Las reglas efectivas para .vscode/ están en la sección "IDE / sistema operativo".
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
