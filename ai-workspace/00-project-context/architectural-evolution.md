@@ -39,8 +39,8 @@ El cambio no se produjo por un problema técnico detectado en la propuesta anter
 | --- | --- | --- |
 | 1. Repositorio inicial | Completada | `README.md`, `.gitignore` y `LICENSE` (MIT). Un único commit creado desde la interfaz web de GitHub. |
 | 2. Evaluación del repositorio | Completada | Inspección de estructura, Git, `.gitignore` y entorno; identificación de riesgos y huecos. |
-| 3. Fundamento documental (esta rama) | En revisión | Requisitos, ADRs, proceso de trabajo, contexto de IA y configuración compartida. Sin código. |
-| 4. Scaffold de backend | No iniciada | Pendiente de aprobación. |
+| 3. Fundamento documental | Completada; PR #1 fusionado | Requisitos, ADRs, proceso de trabajo, contexto de IA y configuración compartida. Sin código. |
+| 4. Scaffold de backend | En curso | Estructura inicial, entorno virtual, aplicación FastAPI mínima, pruebas y documentación; pendiente de revisión. |
 | 5. Scaffold de frontend | No iniciada | Pendiente de aprobación. |
 | 6. Funcionalidades | No iniciadas | Pendiente de especificación y aprobación. |
 
@@ -63,20 +63,22 @@ El cambio no se produjo por un problema técnico detectado en la propuesta anter
 
 En la fecha de este documento:
 
-- No hay código de aplicación.
-- No hay dependencias instaladas.
-- No hay migraciones ni modelos de datos.
+- Existe un scaffold de backend en `backend/` con Python 3.13, FastAPI y arquitectura de monolito modular.
+- El entorno virtual `backend/.venv` es local y no se versiona.
+- La aplicación expone `GET /health` y genera OpenAPI; no contiene lógica de negocio.
+- Las pruebas del scaffold cubren `/health`, `/openapi.json` y las reglas de dependencia entre capas.
+- No hay frontend, modelos de datos, migraciones ni acceso real a base de datos.
 - No hay workflows de CI.
-- Existe documentación de requisitos, arquitectura y proceso, pendiente de aprobación.
+- La documentación de requisitos, arquitectura y proceso sigue pendiente de aprobación formal.
 
-## 6. Decisiones todavía abiertas
+## 6. Decisiones arquitectónicas y técnicas
 
-Decisiones arquitectónicas y técnicas pendientes:
+Estado de las decisiones arquitectónicas y técnicas:
 
 | ID | Decisión | Referencia |
 | --- | --- | --- |
 | P-01 | Versión de Angular y compatibilidad de Vitest | ADR 0001 |
-| P-02 | Fijación de Python 3.13 frente al 3.15 local | ADR 0001 |
+| P-02 | Fijación de Python 3.13 frente al 3.15 local | Aplicada en TASK014; pendiente de revisión del resultado: Python 3.13.17 instalado; `backend/pyproject.toml` exige `>=3.13,<3.14` |
 | P-03 | Proveedor de tipos de cambio | ADR 0001 |
 | P-04 | Fuente autoritativa de tipos impositivos | ADR 0001 |
 | P-05 | Estrategia de despliegue y papel de SQLite | ADR 0001 |

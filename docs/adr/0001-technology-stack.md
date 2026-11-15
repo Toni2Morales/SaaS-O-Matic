@@ -74,12 +74,14 @@ La propuesta inicial del propietario era Node.js/TypeScript con React. Antes de 
 - mypy estricto con SQLAlchemy 2 y Pydantic v2 requiere configuración específica de plugins.
 - Vitest en Angular depende de la versión; si no hay compatibilidad, habría que revisar la decisión de testing.
 
-## Decisiones pendientes de validación
+## Decisiones de validación
+
+Estado de las decisiones sujetas a validación; P-02 se aplicó en TASK014 y queda pendiente de revisión del resultado.
 
 | ID | Decisión pendiente | Responsable |
 | --- | --- | --- |
 | P-01 | Versión concreta de Angular y confirmación de Vitest como runner. | Propietario |
-| P-02 | Fijar Python 3.13 en el proyecto; el entorno local tiene 3.15 instalado. | Propietario |
+| P-02 | Fijar Python 3.13 en el proyecto. **Aplicada en TASK014; pendiente de revisión del resultado:** Python 3.13.17 instalado y fijado en `backend/pyproject.toml` con `>=3.13,<3.14`. | Propietario (instrucción TASK014) |
 | P-03 | Proveedor público de tipos de cambio. | Propietario |
 | P-04 | Fuente autoritativa de tipos impositivos. | Propietario |
 | P-05 | Estrategia de despliegue y si SQLite es aceptable fuera de desarrollo. | Propietario |

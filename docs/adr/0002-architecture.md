@@ -74,6 +74,8 @@ La construcción y conexión de las implementaciones concretas se realiza en un 
 
 Como ubicación propuesta se usará el punto de entrada o módulo de bootstrap de `backend/`, fuera de `domain`, `application`, `infrastructure` y `presentation`. La ruta definitiva se concretará durante el scaffold y forma parte de los detalles provisionales de esta decisión. El composition root puede depender de las cuatro capas, pero ninguna capa depende de él.
 
+En TASK014 se materializó provisionalmente en `backend/src/saas_o_matic/bootstrap/`, con `main.py` como punto de entrada ASGI. Esta ubicación sigue siendo una propuesta y no una decisión cerrada; no se han creado dependencias de capas hacia `bootstrap`.
+
 ### Módulos previstos
 
 | Módulo | Contenido |

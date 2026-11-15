@@ -2,7 +2,7 @@
 
 Herramienta interna para que el equipo comercial simule y estime el coste de suscripciones SaaS corporativas: clientes, planes, consumo estimado, tramos de usuarios, impuestos por país y conversión de divisas.
 
-> **Estado:** fase de definición y fundamentos del repositorio. Todavía no existe código de aplicación, dependencias instaladas ni entorno desplegado.
+> **Estado:** scaffold inicial del backend. Existe una aplicación FastAPI mínima con endpoint `/health`, pruebas y un entorno virtual local. No hay frontend, lógica de negocio, modelos de datos ni entorno desplegado.
 >
 > **Estado documental:** las decisiones de stack y alcance fueron aceptadas por el propietario. Los documentos de requisitos, ADRs, proceso y evaluación siguen pendientes de revisión o aprobación formal. El proceso se utiliza provisionalmente como referencia de trabajo hasta su aprobación.
 
@@ -38,19 +38,19 @@ Fuera de alcance salvo decisión posterior del propietario:
 
 La aplicación **estima** costes: no factura, no cobra y no provisiona servicios.
 
-## Estructura prevista
+## Estructura actual
 
 ```text
 .
-├─ backend/          # API FastAPI, dominio, persistencia y migraciones
-├─ frontend/         # Aplicación Angular
+├─ backend/          # Scaffold FastAPI, dominio, aplicación, infraestructura y bootstrap
+├─ frontend/         # Pendiente de scaffold
 ├─ docs/             # Requisitos, ADRs, evaluación y proceso
 ├─ ai-workspace/     # Contexto para sesiones de desarrollo asistido por IA
 ├─ AGENTS.md         # Instrucciones para agentes de IA
 └─ .env.example      # Plantilla de configuración local
 ```
 
-La estructura definitiva se fijará en el scaffold de cada aplicación. No se ha creado código todavía.
+El backend ya dispone de un scaffold inicial. El frontend todavía no se ha creado. La ubicación definitiva del composition root sigue pendiente; `backend/src/saas_o_matic/bootstrap/` es una propuesta provisional.
 
 ## Documentación
 
@@ -64,7 +64,20 @@ La estructura definitiva se fijará en el scaffold de cada aplicación. No se ha
 
 ## Puesta en marcha
 
-Pendiente. El scaffold de backend y frontend se abordará en pull requests posteriores, una vez aprobada esta base documental. En esta fase no se instalan dependencias ni se inicializan proyectos.
+El backend requiere Python 3.13 y un entorno virtual local. Desde `backend/`:
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e ".[dev]" -c requirements.lock
+python -m uvicorn saas_o_matic.bootstrap.main:app --reload
+```
+
+`-c requirements.lock` aplica restricciones de versión; no es un lock estricto. La verificación de dependencias y sus límites se detallan en [backend/README.md](backend/README.md).
+
+La aplicación expone `GET /health` y `GET /openapi.json`. Las instrucciones completas, las pruebas y las reglas de dependencia están en [backend/README.md](backend/README.md).
+
+El frontend se abordará en una tarea posterior. En esta fase no se implementan funcionalidades de negocio ni acceso real a base de datos.
 
 ## Convenciones de trabajo
 

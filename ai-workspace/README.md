@@ -33,13 +33,18 @@ ai-workspace/
 │   ├── TASK009-final-audit-task.md
 │   ├── TASK010-documentation-corrections.md
 │   ├── TASK011-final-audit-task.md
-│   └── TASK012-original-task-sources.md
+│   ├── TASK012-original-task-sources.md
+│   ├── TASK013-documentation-publication.md
+│   ├── TASK014-backend-scaffold.md
+│   ├── TASK015-backend-scaffold-audit.md
+│   └── TASK016-scaffold-corrections.md
 └── 02-audits/
     ├── TASK003-audit.md
     ├── TASK005-audit.md
     ├── TASK007-audit.md
     ├── TASK009-audit.md
-    └── TASK011-audit.md
+    ├── TASK011-audit.md
+    └── TASK015-audit.md
 ```
 
 ### 2.1 Fuentes originales
@@ -47,6 +52,10 @@ ai-workspace/
 En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `TASK001.md`–`TASK010.md`. Los diez se comprobaron y se leyeron íntegramente antes de actualizar los registros. El ZIP no se incorpora al repositorio: los registros citan el nombre del archivo original y no copian su contenido completo.
 
 `TASK011` y `TASK012` no forman parte de `TASKS.zip`. Su instrucción y su informe proceden de la sesión de OpenCode; se identifican así en los registros correspondientes.
+
+`TASK013` y `TASK014` tampoco forman parte de `TASKS.zip`. Sus instrucciones proceden de la sesión de OpenCode. TASK013 registra la publicación y el merge del PR #1; TASK014 materializa el registro de TASK013 y el scaffold inicial del backend.
+
+`TASK015` y `TASK016` tampoco forman parte de `TASKS.zip`. TASK015 registra la auditoría técnica del scaffold y TASK016 las correcciones posteriores.
 
 ## 3. Índice de tareas
 
@@ -64,6 +73,18 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 | TASK010 | Corrección documental y trazabilidad del desarrollo asistido por IA | Completada; pendiente de revisión | [TASK010-documentation-corrections.md](01-tasks/TASK010-documentation-corrections.md) | — | `TASK010.md` (TASKS.zip); informe en el registro |
 | TASK011 | Auditoría de aceptación y preparación del primer PR | Completada; informe del agente | [TASK011-final-audit-task.md](01-tasks/TASK011-final-audit-task.md) | [TASK011-audit.md](02-audits/TASK011-audit.md) | Instrucción y respuesta de la sesión; no está en TASKS.zip |
 | TASK012 | Incorporación de TASK originales y cierre documental | Completada; pendiente de revisión | [TASK012-original-task-sources.md](01-tasks/TASK012-original-task-sources.md) | — | Instrucción de la sesión; TASKS.zip con `TASK001.md`–`TASK010.md` |
+| TASK013 | Publicación de la base documental y del primer PR | Completada; PR #1 fusionado por el propietario | [TASK013-documentation-publication.md](01-tasks/TASK013-documentation-publication.md) | — | Instrucción de la sesión; PR #1 y commit de merge `50f8047` |
+| TASK014 | Scaffold del backend y entorno virtual Python | En curso; cambios locales pendientes de revisión | [TASK014-backend-scaffold.md](01-tasks/TASK014-backend-scaffold.md) | — | Instrucción de la sesión; comprobaciones ejecutadas en el repositorio |
+| TASK015 | Auditoría técnica del scaffold Python | Completada; informe del agente | [TASK015-backend-scaffold-audit.md](01-tasks/TASK015-backend-scaffold-audit.md) | [TASK015-audit.md](02-audits/TASK015-audit.md) | Instrucción de la sesión; comprobaciones ejecutadas en el repositorio |
+| TASK016 | Correcciones finales del scaffold antes del PR #2 | Completada; cambios locales pendientes de revisión | [TASK016-scaffold-corrections.md](01-tasks/TASK016-scaffold-corrections.md) | — | Instrucción de la sesión; correcciones y comprobaciones en el repositorio |
+
+### 3.1 Publicaciones
+
+| PR | Rama | Base | Estado | Merge commit | Registro |
+| --- | --- | --- | --- | --- | --- |
+| [#1](https://github.com/Toni2Morales/SaaS-O-Matic/pull/1) | `docs/project-foundation` | `main` | Fusionado por el propietario el 2026-11-13T16:50:46Z | `50f80470eafc9517a277b652252391880b4a491e` | [TASK013](01-tasks/TASK013-documentation-publication.md) |
+
+El merge del PR #1 fue ejecutado personalmente por el propietario. El agente no ejecutó merge ni force-push.
 
 ## 4. Índice de auditorías
 
@@ -74,6 +95,7 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 | [TASK007-audit.md](02-audits/TASK007-audit.md) | Parcial | `TASK007.md` (TASKS.zip) y `TASK008.md` | El informe original no está disponible; TASK008 referencia el veredicto NO APTA. |
 | [TASK009-audit.md](02-audits/TASK009-audit.md) | Informe del agente | `TASK009.md` (TASKS.zip) y respuesta de TASK009 en la sesión | No es una validación independiente. |
 | [TASK011-audit.md](02-audits/TASK011-audit.md) | Informe del agente | Instrucción y respuesta de TASK011 en la sesión de OpenCode | No es una validación independiente; veredicto APTA CON OBSERVACIONES. |
+| [TASK015-audit.md](02-audits/TASK015-audit.md) | Informe del agente | Instrucción y respuesta de TASK015 en la sesión de OpenCode | No es una validación independiente; veredicto APTA CON OBSERVACIONES; hallazgos M1, M2 y B1–B4. |
 
 ## 5. Reglas de reconstrucción histórica
 
@@ -114,8 +136,11 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 - Las instrucciones originales `TASK001.md`–`TASK010.md` están disponibles en `TASKS.zip`, pero el ZIP no se incorpora al repositorio.
 - No constan los informes originales de ejecución de TASK001, TASK002, TASK004, TASK006 ni TASK008. El assessment resume TASK004, TASK006 y TASK008; los archivos actuales permiten verificar parte de TASK002.
 - No constan los informes originales de auditoría de TASK003, TASK005 ni TASK007. `TASK004.md` referencia los hallazgos de TASK003; `TASK006.md` referencia los hallazgos bloqueantes de TASK005; `TASK008.md` referencia el veredicto NO APTA de TASK007.
-- TASK009, TASK010, TASK011 y TASK012 disponen de registros o informes del agente, pero no consta una revisión independiente humana.
-- TASK011 y TASK012 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
+- TASK009, TASK010, TASK011, TASK012, TASK013, TASK014, TASK015 y TASK016 disponen de registros o informes del agente, pero no consta una revisión independiente humana.
+- TASK011, TASK012, TASK013, TASK014, TASK015 y TASK016 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
 - No se ha creado `docs/specs/` porque todavía no hay funcionalidades iniciadas.
-- No existe código de aplicación ni pruebas de aplicación; no se han ejecutado pruebas de ese tipo.
+- Existe un scaffold de backend con pruebas de infraestructura; no hay frontend, lógica de negocio, modelos de datos ni acceso real a base de datos.
+- El entorno virtual `backend/.venv` es local y no se versiona. `TASKS.zip` permanece sin seguimiento y está excluido localmente mediante `.git/info/exclude`; esa regla no se versiona.
+- La estrategia de dependencias usa restricciones de versión, no un lock estricto con hashes; la build isolation queda fuera de `requirements.lock`.
+- La prueba de arquitectura es estática y no cubre imports dinámicos.
 - El inventario de 29 rutas del informe de TASK011 corresponde al estado auditado en TASK011; TASK012 añade y modifica documentación y actualiza el inventario.
