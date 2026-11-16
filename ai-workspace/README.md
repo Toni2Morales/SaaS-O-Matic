@@ -42,7 +42,10 @@ ai-workspace/
 │   ├── TASK018-customer-registration.md
 │   ├── TASK019-customer-implementation.md
 │   ├── TASK020-customer-registration-completion.md
-│   └── TASK022-customer-validation-fix.md
+│   ├── TASK022-customer-validation-fix.md
+│   ├── TASK023-customer-publication.md
+│   ├── TASK024-progressive-pricing-preparation.md
+│   └── TASK025-progressive-pricing-implementation.md
 └── 02-audits/
     ├── TASK003-audit.md
     ├── TASK005-audit.md
@@ -62,7 +65,7 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 
 `TASK015` y `TASK016` tampoco forman parte de `TASKS.zip`. TASK015 registra la auditoría técnica del scaffold y TASK016 las correcciones posteriores.
 
-`TASK017` registra la publicación del scaffold y el merge del PR #2 por el propietario. `TASK018` inicia la primera funcionalidad, documenta la especificación del alta de clientes y se detiene en el punto de control por decisiones funcionales pendientes. `TASK019` aplica las decisiones aprobadas e implementa la base técnica de clientes, manteniendo el endpoint y la migración bloqueados por el catálogo de planes. `TASK020` aprueba D-02, completa el catálogo `standard`, crea la migración Alembic y deja operativo `POST /customers` con pruebas de dominio, aplicación, infraestructura, migración y API. `TASK021` fue una auditoría en sesión, sin archivo de registro; sus hallazgos se trazan en `TASK022`. `TASK022` aplica D-15, corrige la validación de `legal_name` y añade pruebas de regresión.
+`TASK017` registra la publicación del scaffold y el merge del PR #2 por el propietario. `TASK018` inicia la primera funcionalidad, documenta la especificación del alta de clientes y se detiene en el punto de control por decisiones funcionales pendientes. `TASK019` aplica las decisiones aprobadas e implementa la base técnica de clientes, manteniendo el endpoint y la migración bloqueados por el catálogo de planes. `TASK020` aprueba D-02, completa el catálogo `standard`, crea la migración Alembic y deja operativo `POST /customers` con pruebas de dominio, aplicación, infraestructura, migración y API. `TASK021` fue una auditoría en sesión, sin archivo de registro; sus hallazgos se trazan en `TASK022`. `TASK022` aplica D-15, corrige la validación de `legal_name` y añade pruebas de regresión. `TASK023` publica el alta de clientes y registra el merge del PR #3 en `88816201a01677760a68ded5b8be21565bf737fc`. `TASK024` cierra documentalmente ese merge y prepara la especificación, el plan y las tareas del motor de precios progresivos, sin implementarlo. `TASK025` implementa y prueba el dominio `pricing`, registra las decisiones Q-02, PP-Q-01, Q-08 y Q-12 y deja los cambios locales pendientes de publicación. `TASK027` corrige los hallazgos menores H-01 y H-02 de la auditoría TASK026, añade la prueba de aislamiento decimal H-04 y mantiene H-03 como observación pendiente.
 
 ## 3. Índice de tareas
 
@@ -89,6 +92,10 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 | TASK019 | Implementación de clientes con decisiones aprobadas | Parcial; base técnica implementada; endpoint y migración bloqueados por D-02, completados en TASK020 | [TASK019-customer-implementation.md](01-tasks/TASK019-customer-implementation.md) | — | Instrucción de la sesión; código, pruebas y validaciones en el repositorio |
 | TASK020 | Cierre del alta de clientes: plan `standard`, Alembic y `POST /customers` | Completada y validada localmente; cambios no publicados | [TASK020-customer-registration-completion.md](01-tasks/TASK020-customer-registration-completion.md) | — | Instrucción de la sesión; código, migración, pruebas y validaciones en el repositorio |
 | TASK022 | Corrección de `legal_name` y pruebas de regresión | Completada y validada localmente; cambios no publicados | [TASK022-customer-validation-fix.md](01-tasks/TASK022-customer-validation-fix.md) | — | Instrucción de la sesión; código, pruebas y validaciones en el repositorio |
+| TASK023 | Publicación controlada del alta de clientes | Completada; PR #3 fusionado por el propietario | [TASK023-customer-publication.md](01-tasks/TASK023-customer-publication.md) | — | Instrucción de la sesión; PR #3 y merge commit `8881620` |
+| TASK024 | Preparación del motor de precios progresivos | Completada (análisis y documentación); decisiones cerradas en TASK025; sin implementación en TASK024 | [TASK024-progressive-pricing-preparation.md](01-tasks/TASK024-progressive-pricing-preparation.md) | — | Instrucción de la sesión; `docs/specs/002-progressive-pricing/` |
+| TASK025 | Implementación del motor de precios progresivos | Completada; implementación local; pendiente de publicación | [TASK025-progressive-pricing-implementation.md](01-tasks/TASK025-progressive-pricing-implementation.md) | — | Instrucción de la sesión; código, pruebas y validaciones en el repositorio |
+| TASK027 | Correcciones limitadas del motor de precios progresivos | Completada; correcciones locales; pendiente de publicación | [TASK027-progressive-pricing-audit-fixes.md](01-tasks/TASK027-progressive-pricing-audit-fixes.md) | — | Instrucción de la sesión; código, pruebas y validaciones en el repositorio |
 
 ### 3.1 Publicaciones
 
@@ -96,8 +103,9 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 | --- | --- | --- | --- | --- | --- |
 | [#1](https://github.com/Toni2Morales/SaaS-O-Matic/pull/1) | `docs/project-foundation` | `main` | Fusionado por el propietario el 2026-11-13T16:50:46Z | `50f80470eafc9517a277b652252391880b4a491e` | [TASK013](01-tasks/TASK013-documentation-publication.md) |
 | [#2](https://github.com/Toni2Morales/SaaS-O-Matic/pull/2) | `feature/backend-scaffold` | `main` | Fusionado por el propietario el 2026-11-15T16:10:42Z | `be755a68a52392fd562eb3901e317bc85b1ed8e9` | [TASK017](01-tasks/TASK017-backend-publication.md) |
+| [#3](https://github.com/Toni2Morales/SaaS-O-Matic/pull/3) | `feature/customer-registration` | `main` | Fusionado por el propietario el 2026-11-16T15:48:44+01:00 | `88816201a01677760a68ded5b8be21565bf737fc` | [TASK023](01-tasks/TASK023-customer-publication.md) |
 
-Los merges del PR #1 y del PR #2 fueron ejecutados personalmente por el propietario. El agente no ejecutó merge ni force-push.
+Los merges del PR #1, del PR #2 y del PR #3 fueron ejecutados personalmente por el propietario. El agente no ejecutó merge ni force-push. TASK024 registra el cierre documental del PR #3.
 
 ## 4. Índice de auditorías
 
@@ -149,10 +157,11 @@ Los merges del PR #1 y del PR #2 fueron ejecutados personalmente por el propieta
 - Las instrucciones originales `TASK001.md`–`TASK010.md` están disponibles en `TASKS.zip`, pero el ZIP no se incorpora al repositorio.
 - No constan los informes originales de ejecución de TASK001, TASK002, TASK004, TASK006 ni TASK008. El assessment resume TASK004, TASK006 y TASK008; los archivos actuales permiten verificar parte de TASK002.
 - No constan los informes originales de auditoría de TASK003, TASK005 ni TASK007. `TASK004.md` referencia los hallazgos de TASK003; `TASK006.md` referencia los hallazgos bloqueantes de TASK005; `TASK008.md` referencia el veredicto NO APTA de TASK007.
-- TASK009, TASK010, TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020 y TASK022 disponen de registros o informes del agente, pero no consta una revisión independiente humana. TASK021 fue una auditoría en sesión sin archivo de registro.
-- TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020 y TASK022 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
-- `docs/specs/001-customer-registration/` contiene la especificación cerrada: D-01 a D-15 están aprobadas; D-02 se aprobó en TASK020 con el único plan `standard` y D-15 en TASK022 para `legal_name`; el endpoint y la migración están implementados y validados localmente.
-- Existe un backend con dominio fiscal, caso de uso operativo, modelo SQLAlchemy, repositorio, migración Alembic y `POST /customers`. No hay frontend ni endpoints de listado, detalle, edición o eliminación.
+- TASK009, TASK010, TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020, TASK022, TASK023, TASK024 y TASK025 disponen de registros o informes del agente, pero no consta una revisión independiente humana. TASK021 fue una auditoría en sesión sin archivo de registro.
+- TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020, TASK022, TASK023, TASK024 y TASK025 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
+- `docs/specs/001-customer-registration/` contiene la especificación cerrada: D-01 a D-15 están aprobadas; D-02 se aprobó en TASK020 con el único plan `standard` y D-15 en TASK022 para `legal_name`; el endpoint y la migración están implementados y publicados en el PR #3.
+- `docs/specs/002-progressive-pricing/` contiene la especificación, el plan y las tareas del motor de precios progresivos. TASK025 implementó el dominio `pricing` y registró las decisiones Q-02, PP-Q-01, Q-08 y Q-12; los cambios locales siguen pendientes de publicación.
+- Existe un backend con dominio fiscal, caso de uso operativo, modelo SQLAlchemy, repositorio, migración Alembic, `POST /customers` y dominio puro de precios progresivos. No hay frontend ni endpoints de listado, detalle, edición, eliminación o simulación.
 - El entorno virtual `backend/.venv` es local y no se versiona. `TASKS.zip` permanece sin seguimiento y está excluido localmente mediante `.git/info/exclude`; esa regla no se versiona.
 - La estrategia de dependencias usa restricciones de versión, no un lock estricto con hashes; la build isolation queda fuera de `requirements.lock`.
 - La prueba de arquitectura es estática y no cubre imports dinámicos.

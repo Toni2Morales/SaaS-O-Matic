@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 0.7 (revisión TASK022; D-15 aprobada) |
+| Versión | 0.8 (revisión TASK027; Q-02, Q-08 y Q-12 registradas) |
 | Fecha | 2026-11-16 |
-| Estado | Pendiente de validación por el propietario; D-02 y D-15 aprobadas |
+| Estado | Pendiente de validación por el propietario; D-02, D-15, Q-02, Q-08 y Q-12 aprobadas; PP-Q-01 aprobada en SPEC-002 |
 | Fuente | Brief funcional proporcionado por el propietario del repositorio |
 
 Este documento separa **requisitos funcionales**, **restricciones**, **supuestos** y **preguntas abiertas**. Todo lo que no aparece aquí como requisito no debe implementarse por iniciativa propia.
@@ -63,9 +63,9 @@ El coste se calcula por **tramos progresivos acumulativos**: cada usuario se cob
 Estos casos son candidatos a pruebas y no constituyen criterios de aceptación cerrados hasta que se apruebe la especificación correspondiente.
 
 - Límite inferior y superior de cada tramo: 1, 10, 11, 50, 51.
-- Cálculo con 0 usuarios (ver Q-02).
+- Cálculo con 0 usuarios: se rechaza (Q-02, SPEC-002).
 - Entradas negativas o no enteras: deben rechazarse en la validación.
-- Importes con `Decimal` y sin errores de coma flotante. La precisión decimal y el modo de redondeo son supuestos provisionales pendientes de confirmación (ver Q-08); no se fijan dos decimales como regla aprobada.
+- Importes con `Decimal` exacto en EUR, sin `float`; no se aplica redondeo de negocio en el cálculo del subtotal. El formato de presentación y la serialización HTTP quedan pendientes (Q-08, SPEC-002).
 
 ---
 
@@ -93,7 +93,7 @@ Los siguientes puntos se asumen para poder avanzar, pero **no están confirmados
 | ID | Supuesto |
 | --- | --- |
 | ASM-01 | El país del cliente determina el impuesto aplicable. |
-| ASM-02 | El número de usuarios activos es un entero no negativo. El mínimo funcional (0 o 1) queda pendiente de confirmación en Q-02. |
+| ASM-02 | El número de usuarios activos es un entero mayor o igual que 1. Cero se rechaza (Q-02, SPEC-002). |
 | ASM-03 | Los tramos de precio están expresados en EUR. No dependen del plan contratado; esta independencia queda confirmada por D-02. |
 | ASM-04 | El impuesto se aplica sobre el subtotal de usuarios. |
 | ASM-05 | El almacenamiento y las llamadas a la API se muestran como datos informativos, sin importe asociado. |
@@ -107,24 +107,24 @@ Los siguientes puntos se asumen para poder avanzar, pero **no están confirmados
 | ID | Pregunta | Impacto |
 | --- | --- | --- |
 | Q-01 | ¿Qué catálogo de países debe soportarse y cómo se relaciona cada país con su impuesto? | Modelo de datos y FR-06 |
-| Q-02 | ¿Se permite una simulación con 0 usuarios o se exige un mínimo de 1? | Validación y casos límite |
+| Q-02 | **Resuelta por [SPEC-002](../specs/002-progressive-pricing/spec.md) y [TASK025](../../ai-workspace/01-tasks/TASK025-progressive-pricing-implementation.md):** mínimo 1 usuario; cero se rechaza. | Validación y casos límite |
 | Q-03 | ¿Qué planes existen y qué efectos tienen sobre precios, límites o funcionalidades? **Resuelta por D-02 en TASK020.** | Modelo de datos y FR-01 |
 | Q-04 | ¿Debe soportarse NIE además de DNI/NIF/CIF? | Validación FR-02 |
 | Q-05 | ¿Cuál es la fuente autoritativa de los tipos impositivos y con qué vigencia temporal? | FR-06 y CON-05 |
 | Q-06 | ¿Qué proveedor público de tipos de cambio se usará y con qué frecuencia de actualización? | FR-10 |
 | Q-07 | ¿Qué divisas adicionales deben soportarse además de EUR, USD y GBP? | FR-10 |
-| Q-08 | ¿Qué precisión decimal y qué ámbito y modo de redondeo deben aplicarse a los importes (por línea, por subtotal o en el total)? | Cálculo y persistencia |
+| Q-08 | **Resuelta por [SPEC-002](../specs/002-progressive-pricing/spec.md) y [TASK025](../../ai-workspace/01-tasks/TASK025-progressive-pricing-implementation.md):** cálculo exacto con `Decimal` en EUR, sin `float` ni redondeo de negocio. Formato de salida y serialización pendientes. | Cálculo y persistencia |
 | Q-09 | ¿El historial de simulaciones debe ser inmutable o editable? | Modelo y API |
 | Q-10 | ¿Se requiere exportación de la estimación (CSV, PDF, etc.)? | Fuera de alcance actual |
 | Q-11 | ¿Debe mantenerse una caché o archivo histórico de tipos de cambio para reutilizarlos en futuras simulaciones cuando el proveedor no esté disponible, además de la tasa aplicada que FR-11 ya persiste por simulación? | FR-11 y persistencia |
-| Q-12 | ¿Existe un límite máximo de usuarios, almacenamiento o llamadas por simulación? ¿Qué rango y qué paso debe tener el control deslizante de usuarios? | Validación y FR-09 |
+| Q-12 | **Resuelta para usuarios en el dominio por [SPEC-002](../specs/002-progressive-pricing/spec.md) y [TASK025](../../ai-workspace/01-tasks/TASK025-progressive-pricing-implementation.md):** sin máximo comercial de usuarios; el límite de UI/API y los rangos de almacenamiento/llamadas siguen pendientes. | Validación y FR-09 |
 | Q-13 | ¿Qué reglas de validación debe cumplir el email del cliente? | FR-01 y validación |
 | Q-14 | ¿Deben ser únicos el identificador fiscal y/o la razón social? ¿La unicidad sería global o por país? | FR-01, modelo de datos y API |
 | Q-15 | ¿En qué unidades deben registrarse el almacenamiento contratado y las llamadas estimadas a la API? ¿Se expresan por periodo? | FR-04 y modelo de datos |
 | Q-16 | ¿Qué magnitud económica debe convertirse y persistirse como importe base en EUR: el subtotal de usuarios, el subtotal con impuestos o el total estimado? | FR-06, FR-11 y modelo de datos |
 | Q-17 | ¿Deben ser obligatorias la fecha y la fuente del tipo de cambio aplicado a cada simulación, o se permite persistirlas como desconocidas cuando el proveedor no las facilite? | FR-11 y trazabilidad de las conversiones |
 
-Las preguntas Q-03, Q-04, Q-13 y Q-14 quedan resueltas por las decisiones D-02, D-03, D-04 y D-05/D-06, respectivamente. El resto no debe resolverse por inferencia durante la implementación. Si una tarea depende de una pregunta no resuelta, se detiene y se consulta al propietario.
+Las preguntas Q-02, Q-03, Q-04, Q-08, Q-13 y Q-14 quedan resueltas por las decisiones aprobadas y por [SPEC-002](../specs/002-progressive-pricing/spec.md)/[TASK025](../../ai-workspace/01-tasks/TASK025-progressive-pricing-implementation.md); Q-12 queda resuelta para el dominio de usuarios, con el límite de UI/API pendiente. El resto no debe resolverse por inferencia durante la implementación. Si una tarea depende de una pregunta no resuelta, se detiene y se consulta al propietario.
 
 ### 5.1 Decisiones de negocio aprobadas
 
