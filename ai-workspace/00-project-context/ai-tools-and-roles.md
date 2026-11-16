@@ -79,7 +79,7 @@ Las versiones de herramientas y modelos pueden cambiar. Cuando cambien, se actua
 | `docs/adr/` | Decisiones de arquitectura y stack, con su estado. |
 | `docs/process/` | Flujo de trabajo, ramas, commits y prohibiciones. |
 | `docs/assessment/` | Evaluaciones del repositorio. |
-| `docs/specs/` | Especificaciones por funcionalidad (se creará al iniciar la primera funcionalidad; todavía no existe). |
+| `docs/specs/` | Especificaciones por funcionalidad. `001-customer-registration/` está cerrada: D-02 aprobada, migración Alembic y `POST /customers` implementados y validados localmente. |
 | `ai-workspace/README.md` | Índice de tareas, auditorías y reglas de trazabilidad. |
 | `ai-workspace/00-project-context/` | Evolución del proyecto y contexto de herramientas. |
 | `ai-workspace/01-tasks/` | Registros de tareas, instrucciones, evidencias, validaciones y decisiones. |
@@ -97,7 +97,7 @@ Una sesión de IA debe leer estos artefactos antes de proponer cambios. El conte
 | Informe de tarea | `ai-workspace/01-tasks/TASKxxx.md` | OpenCode + DeepSeek |
 | Auditoría | `ai-workspace/02-audits/TASKxxx-audit.md` | OpenCode + DeepSeek |
 
-`docs/specs/` no se crea en esta fase: las rutas son ubicaciones previstas para cuando se inicie la primera funcionalidad. La autoría intelectual o propuesta de contenido puede ser de ChatGPT; la materialización en el repositorio corresponde a OpenCode + DeepSeek.
+`docs/specs/001-customer-registration/` se creó en TASK018 al iniciar la primera funcionalidad, se actualizó en TASK019 con las decisiones aprobadas y se cerró en TASK020 con D-02, el contrato definitivo y las evidencias de validación. La autoría intelectual o propuesta de contenido puede ser de ChatGPT; la materialización en el repositorio corresponde a OpenCode + DeepSeek.
 
 ## 4. Reglas de colaboración
 

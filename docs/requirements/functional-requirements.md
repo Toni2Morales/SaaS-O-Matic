@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 0.5 (borrador para aprobación; revisión TASK010) |
-| Fecha | 2026-11-13 |
-| Estado | Pendiente de validación por el propietario |
+| Versión | 0.7 (revisión TASK022; D-15 aprobada) |
+| Fecha | 2026-11-16 |
+| Estado | Pendiente de validación por el propietario; D-02 y D-15 aprobadas |
 | Fuente | Brief funcional proporcionado por el propietario del repositorio |
 
 Este documento separa **requisitos funcionales**, **restricciones**, **supuestos** y **preguntas abiertas**. Todo lo que no aparece aquí como requisito no debe implementarse por iniciativa propia.
@@ -29,8 +29,9 @@ Este documento separa **requisitos funcionales**, **restricciones**, **supuestos
 
 ### Notas de interpretación
 
-- FR-01: el "plan seleccionado" es un dato del cliente. Su catálogo, precios y efecto sobre la estimación **no están definidos** (ver Q-03).
+- FR-01: el "plan seleccionado" es un dato obligatorio del cliente. El catálogo del MVP aprobado en D-02 contiene únicamente `standard`; no existen precios ni prestaciones adicionales asociados al plan, no modifica los tramos progresivos de usuarios y no se introducirán otros planes sin una decisión posterior. La razón social se recorta, no puede quedar vacía y debe tener entre 1 y 255 caracteres después del recorte (D-15).
 - FR-04: almacenamiento y llamadas a la API se **registran y muestran**, pero no generan cargos (ver CON-04).
+- FR-02: además de DNI/NIF y CIF/NIF, se admite NIE conforme a D-03.
 - FR-06: la tasa aplicable es configurable; la tabla de tipos y su fuente autoritativa no están definidas (ver Q-05).
 - FR-11: la fecha y la fuente/proveedor del tipo de cambio se guardan cuando estén disponibles. El importe convertido es un dato derivado de estos campos y no requiere persistencia adicional para garantizar la reproducibilidad. La magnitud exacta del importe base (subtotal, subtotal con impuestos o total estimado) queda pendiente de Q-16. La obligatoriedad de la fecha y la fuente del tipo de cambio queda pendiente de Q-17.
 
@@ -93,11 +94,11 @@ Los siguientes puntos se asumen para poder avanzar, pero **no están confirmados
 | --- | --- |
 | ASM-01 | El país del cliente determina el impuesto aplicable. |
 | ASM-02 | El número de usuarios activos es un entero no negativo. El mínimo funcional (0 o 1) queda pendiente de confirmación en Q-02. |
-| ASM-03 | Los tramos de precio están expresados en EUR. Como supuesto provisional, no dependen del plan contratado; esta independencia queda condicionada a la respuesta de Q-03. |
+| ASM-03 | Los tramos de precio están expresados en EUR. No dependen del plan contratado; esta independencia queda confirmada por D-02. |
 | ASM-04 | El impuesto se aplica sobre el subtotal de usuarios. |
 | ASM-05 | El almacenamiento y las llamadas a la API se muestran como datos informativos, sin importe asociado. |
 | ASM-06 | Las conversiones de divisa son informativas y no alteran el importe base persistido en EUR. La magnitud exacta de ese importe base se decide en Q-16. |
-| ASM-07 | Los identificadores fiscales admitidos en esta fase son españoles (DNI/NIF/CIF). |
+| ASM-07 | Los identificadores fiscales admitidos en esta fase son españoles (DNI/NIF, NIE y CIF/NIF), conforme a D-03. |
 
 ---
 
@@ -107,7 +108,7 @@ Los siguientes puntos se asumen para poder avanzar, pero **no están confirmados
 | --- | --- | --- |
 | Q-01 | ¿Qué catálogo de países debe soportarse y cómo se relaciona cada país con su impuesto? | Modelo de datos y FR-06 |
 | Q-02 | ¿Se permite una simulación con 0 usuarios o se exige un mínimo de 1? | Validación y casos límite |
-| Q-03 | ¿Qué planes existen y qué efectos tienen sobre precios, límites o funcionalidades? | Modelo de datos y FR-01 |
+| Q-03 | ¿Qué planes existen y qué efectos tienen sobre precios, límites o funcionalidades? **Resuelta por D-02 en TASK020.** | Modelo de datos y FR-01 |
 | Q-04 | ¿Debe soportarse NIE además de DNI/NIF/CIF? | Validación FR-02 |
 | Q-05 | ¿Cuál es la fuente autoritativa de los tipos impositivos y con qué vigencia temporal? | FR-06 y CON-05 |
 | Q-06 | ¿Qué proveedor público de tipos de cambio se usará y con qué frecuencia de actualización? | FR-10 |
@@ -123,7 +124,14 @@ Los siguientes puntos se asumen para poder avanzar, pero **no están confirmados
 | Q-16 | ¿Qué magnitud económica debe convertirse y persistirse como importe base en EUR: el subtotal de usuarios, el subtotal con impuestos o el total estimado? | FR-06, FR-11 y modelo de datos |
 | Q-17 | ¿Deben ser obligatorias la fecha y la fuente del tipo de cambio aplicado a cada simulación, o se permite persistirlas como desconocidas cuando el proveedor no las facilite? | FR-11 y trazabilidad de las conversiones |
 
-Ninguna de estas preguntas debe resolverse por inferencia durante la implementación. Si una tarea depende de ellas, se detiene y se consulta al propietario.
+Las preguntas Q-03, Q-04, Q-13 y Q-14 quedan resueltas por las decisiones D-02, D-03, D-04 y D-05/D-06, respectivamente. El resto no debe resolverse por inferencia durante la implementación. Si una tarea depende de una pregunta no resuelta, se detiene y se consulta al propietario.
+
+### 5.1 Decisiones de negocio aprobadas
+
+| ID | Decisión |
+| --- | --- |
+| D-02 | El catálogo de planes del MVP contiene únicamente `standard`. El campo `plan` es obligatorio y no tiene valor por defecto. Cualquier otro valor se rechaza. No existen precios ni prestaciones adicionales asociados al plan, no modifica los tramos progresivos de precio por número de usuarios y no se introducirán otros planes sin una decisión posterior. |
+| D-15 | `legal_name` es obligatorio. Eliminar espacios iniciales y finales con `strip()`; rechazar cadenas vacías o compuestas únicamente por espacios; aceptar entre 1 y 255 caracteres después del recorte; conservar los espacios interiores; persistir y devolver el valor normalizado. |
 
 ---
 

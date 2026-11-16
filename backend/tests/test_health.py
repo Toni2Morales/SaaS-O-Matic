@@ -5,6 +5,7 @@ import asyncio
 from httpx import ASGITransport, AsyncClient, Response
 
 from saas_o_matic.bootstrap.main import app
+from saas_o_matic.presentation.customers.dependencies import get_create_customer_use_case
 
 
 async def _get(path: str) -> Response:
@@ -22,6 +23,12 @@ def test_health_returns_ok() -> None:
     assert response.json() == {"status": "ok"}
 
 
+def test_composition_root_wires_customer_use_case() -> None:
+    """El composition root sustituye la dependencia del caso de uso de clientes."""
+
+    assert get_create_customer_use_case in app.dependency_overrides
+
+
 def test_openapi_schema_is_available() -> None:
     """FastAPI publica el esquema OpenAPI generado."""
 
@@ -31,3 +38,7 @@ def test_openapi_schema_is_available() -> None:
     payload = response.json()
     assert payload["openapi"].startswith("3.")
     assert "/health" in payload["paths"]
+    assert "/customers" in payload["paths"]
+    assert "post" in payload["paths"]["/customers"]
+    assert "ProblemDetails" in payload["components"]["schemas"]
+    assert "ProblemFieldError" in payload["components"]["schemas"]

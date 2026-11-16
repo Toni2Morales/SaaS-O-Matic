@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Fecha | 2026-11-12 |
+| Fecha | 2026-11-15 |
 | Estado | Registro histórico de decisiones |
 | Autoridad | Propietario del repositorio |
 
@@ -40,9 +40,9 @@ El cambio no se produjo por un problema técnico detectado en la propuesta anter
 | 1. Repositorio inicial | Completada | `README.md`, `.gitignore` y `LICENSE` (MIT). Un único commit creado desde la interfaz web de GitHub. |
 | 2. Evaluación del repositorio | Completada | Inspección de estructura, Git, `.gitignore` y entorno; identificación de riesgos y huecos. |
 | 3. Fundamento documental | Completada; PR #1 fusionado | Requisitos, ADRs, proceso de trabajo, contexto de IA y configuración compartida. Sin código. |
-| 4. Scaffold de backend | En curso | Estructura inicial, entorno virtual, aplicación FastAPI mínima, pruebas y documentación; pendiente de revisión. |
+| 4. Scaffold de backend | Completada; PR #2 fusionado | Estructura inicial, entorno virtual, aplicación FastAPI mínima, pruebas y documentación; publicada y fusionada por el propietario. |
 | 5. Scaffold de frontend | No iniciada | Pendiente de aprobación. |
-| 6. Funcionalidades | No iniciadas | Pendiente de especificación y aprobación. |
+| 6. Funcionalidades | Alta de clientes MVP completada y validada localmente | `docs/specs/001-customer-registration/` cerrada; catálogo `standard`, migración `0001_create_customers`, `POST /customers`, persistencia SQLite y pruebas de dominio, aplicación, infraestructura, migración y API. Cambios de TASK020 no publicados. |
 
 ## 4. Consecuencias del cambio
 
@@ -65,9 +65,11 @@ En la fecha de este documento:
 
 - Existe un scaffold de backend en `backend/` con Python 3.13, FastAPI y arquitectura de monolito modular.
 - El entorno virtual `backend/.venv` es local y no se versiona.
-- La aplicación expone `GET /health` y genera OpenAPI; no contiene lógica de negocio.
-- Las pruebas del scaffold cubren `/health`, `/openapi.json` y las reglas de dependencia entre capas.
-- No hay frontend, modelos de datos, migraciones ni acceso real a base de datos.
+- La aplicación expone `GET /health`, `GET /openapi.json` y `POST /customers`.
+- El dominio de clientes valida DNI/NIF, NIE y CIF/NIF; la aplicación valida el catálogo `standard`; la infraestructura incluye modelo SQLAlchemy, repositorio y migración Alembic.
+- Las pruebas cubren `/health`, `/openapi.json`, reglas de dependencia, validación fiscal, esquemas, caso de uso, persistencia SQLite, migración y API.
+- Existe una especificación cerrada para el alta de clientes en `docs/specs/001-customer-registration/`; D-02 se aprobó con el único plan `standard` y el endpoint y la migración están implementados.
+- No hay frontend ni endpoints de listado, detalle, edición o eliminación; no se usa una base SQLite de desarrollo versionada.
 - No hay workflows de CI.
 - La documentación de requisitos, arquitectura y proceso sigue pendiente de aprobación formal.
 
@@ -83,8 +85,8 @@ Estado de las decisiones arquitectónicas y técnicas:
 | P-04 | Fuente autoritativa de tipos impositivos | ADR 0001 |
 | P-05 | Estrategia de despliegue y papel de SQLite | ADR 0001 |
 | P-06 | Fronteras definitivas de los módulos | ADR 0002 |
-| P-07 | Límites transaccionales por caso de uso | ADR 0002 |
-| P-09 | Política de errores de API (`application/problem+json`) | ADR 0002 |
+| P-07 | Límites transaccionales por caso de uso | ADR 0002; resuelta en TASK019: una transacción por caso de uso y commit en infraestructura |
+| P-09 | Política de errores de API (`application/problem+json`) | ADR 0002; resuelta en TASK019: errores controlados con `application/problem+json` |
 
 Las preguntas de negocio Q-01 a Q-17 no se reproducen aquí para evitar duplicidad y deriva: su fuente única es [`docs/requirements/functional-requirements.md`](../../docs/requirements/functional-requirements.md), sección 5. No se mezclan ambos espacios de identificadores en una misma tabla.
 
