@@ -37,7 +37,12 @@ ai-workspace/
 │   ├── TASK013-documentation-publication.md
 │   ├── TASK014-backend-scaffold.md
 │   ├── TASK015-backend-scaffold-audit.md
-│   └── TASK016-scaffold-corrections.md
+│   ├── TASK016-scaffold-corrections.md
+│   ├── TASK017-backend-publication.md
+│   ├── TASK018-customer-registration.md
+│   ├── TASK019-customer-implementation.md
+│   ├── TASK020-customer-registration-completion.md
+│   └── TASK022-customer-validation-fix.md
 └── 02-audits/
     ├── TASK003-audit.md
     ├── TASK005-audit.md
@@ -57,6 +62,8 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 
 `TASK015` y `TASK016` tampoco forman parte de `TASKS.zip`. TASK015 registra la auditoría técnica del scaffold y TASK016 las correcciones posteriores.
 
+`TASK017` registra la publicación del scaffold y el merge del PR #2 por el propietario. `TASK018` inicia la primera funcionalidad, documenta la especificación del alta de clientes y se detiene en el punto de control por decisiones funcionales pendientes. `TASK019` aplica las decisiones aprobadas e implementa la base técnica de clientes, manteniendo el endpoint y la migración bloqueados por el catálogo de planes. `TASK020` aprueba D-02, completa el catálogo `standard`, crea la migración Alembic y deja operativo `POST /customers` con pruebas de dominio, aplicación, infraestructura, migración y API. `TASK021` fue una auditoría en sesión, sin archivo de registro; sus hallazgos se trazan en `TASK022`. `TASK022` aplica D-15, corrige la validación de `legal_name` y añade pruebas de regresión.
+
 ## 3. Índice de tareas
 
 | ID | Título | Estado | Registro | Auditoría | Fuente disponible |
@@ -74,17 +81,23 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 | TASK011 | Auditoría de aceptación y preparación del primer PR | Completada; informe del agente | [TASK011-final-audit-task.md](01-tasks/TASK011-final-audit-task.md) | [TASK011-audit.md](02-audits/TASK011-audit.md) | Instrucción y respuesta de la sesión; no está en TASKS.zip |
 | TASK012 | Incorporación de TASK originales y cierre documental | Completada; pendiente de revisión | [TASK012-original-task-sources.md](01-tasks/TASK012-original-task-sources.md) | — | Instrucción de la sesión; TASKS.zip con `TASK001.md`–`TASK010.md` |
 | TASK013 | Publicación de la base documental y del primer PR | Completada; PR #1 fusionado por el propietario | [TASK013-documentation-publication.md](01-tasks/TASK013-documentation-publication.md) | — | Instrucción de la sesión; PR #1 y commit de merge `50f8047` |
-| TASK014 | Scaffold del backend y entorno virtual Python | En curso; cambios locales pendientes de revisión | [TASK014-backend-scaffold.md](01-tasks/TASK014-backend-scaffold.md) | — | Instrucción de la sesión; comprobaciones ejecutadas en el repositorio |
+| TASK014 | Scaffold del backend y entorno virtual Python | Completada; publicada en PR #2 | [TASK014-backend-scaffold.md](01-tasks/TASK014-backend-scaffold.md) | — | Instrucción de la sesión; comprobaciones ejecutadas en el repositorio |
 | TASK015 | Auditoría técnica del scaffold Python | Completada; informe del agente | [TASK015-backend-scaffold-audit.md](01-tasks/TASK015-backend-scaffold-audit.md) | [TASK015-audit.md](02-audits/TASK015-audit.md) | Instrucción de la sesión; comprobaciones ejecutadas en el repositorio |
-| TASK016 | Correcciones finales del scaffold antes del PR #2 | Completada; cambios locales pendientes de revisión | [TASK016-scaffold-corrections.md](01-tasks/TASK016-scaffold-corrections.md) | — | Instrucción de la sesión; correcciones y comprobaciones en el repositorio |
+| TASK016 | Correcciones finales del scaffold antes del PR #2 | Completada; publicada en PR #2 | [TASK016-scaffold-corrections.md](01-tasks/TASK016-scaffold-corrections.md) | — | Instrucción de la sesión; correcciones y comprobaciones en el repositorio |
+| TASK017 | Publicación del scaffold mediante PR #2 | Completada; PR #2 fusionado por el propietario | [TASK017-backend-publication.md](01-tasks/TASK017-backend-publication.md) | — | Instrucción de la sesión; PR #2 y merge commit `be755a6` |
+| TASK018 | Primera funcionalidad: alta de clientes | Parcial; bloqueada en el punto de control por decisiones funcionales pendientes | [TASK018-customer-registration.md](01-tasks/TASK018-customer-registration.md) | — | Instrucción de la sesión; especificación y comprobaciones en el repositorio |
+| TASK019 | Implementación de clientes con decisiones aprobadas | Parcial; base técnica implementada; endpoint y migración bloqueados por D-02, completados en TASK020 | [TASK019-customer-implementation.md](01-tasks/TASK019-customer-implementation.md) | — | Instrucción de la sesión; código, pruebas y validaciones en el repositorio |
+| TASK020 | Cierre del alta de clientes: plan `standard`, Alembic y `POST /customers` | Completada y validada localmente; cambios no publicados | [TASK020-customer-registration-completion.md](01-tasks/TASK020-customer-registration-completion.md) | — | Instrucción de la sesión; código, migración, pruebas y validaciones en el repositorio |
+| TASK022 | Corrección de `legal_name` y pruebas de regresión | Completada y validada localmente; cambios no publicados | [TASK022-customer-validation-fix.md](01-tasks/TASK022-customer-validation-fix.md) | — | Instrucción de la sesión; código, pruebas y validaciones en el repositorio |
 
 ### 3.1 Publicaciones
 
 | PR | Rama | Base | Estado | Merge commit | Registro |
 | --- | --- | --- | --- | --- | --- |
 | [#1](https://github.com/Toni2Morales/SaaS-O-Matic/pull/1) | `docs/project-foundation` | `main` | Fusionado por el propietario el 2026-11-13T16:50:46Z | `50f80470eafc9517a277b652252391880b4a491e` | [TASK013](01-tasks/TASK013-documentation-publication.md) |
+| [#2](https://github.com/Toni2Morales/SaaS-O-Matic/pull/2) | `feature/backend-scaffold` | `main` | Fusionado por el propietario el 2026-11-15T16:10:42Z | `be755a68a52392fd562eb3901e317bc85b1ed8e9` | [TASK017](01-tasks/TASK017-backend-publication.md) |
 
-El merge del PR #1 fue ejecutado personalmente por el propietario. El agente no ejecutó merge ni force-push.
+Los merges del PR #1 y del PR #2 fueron ejecutados personalmente por el propietario. El agente no ejecutó merge ni force-push.
 
 ## 4. Índice de auditorías
 
@@ -136,10 +149,10 @@ El merge del PR #1 fue ejecutado personalmente por el propietario. El agente no 
 - Las instrucciones originales `TASK001.md`–`TASK010.md` están disponibles en `TASKS.zip`, pero el ZIP no se incorpora al repositorio.
 - No constan los informes originales de ejecución de TASK001, TASK002, TASK004, TASK006 ni TASK008. El assessment resume TASK004, TASK006 y TASK008; los archivos actuales permiten verificar parte de TASK002.
 - No constan los informes originales de auditoría de TASK003, TASK005 ni TASK007. `TASK004.md` referencia los hallazgos de TASK003; `TASK006.md` referencia los hallazgos bloqueantes de TASK005; `TASK008.md` referencia el veredicto NO APTA de TASK007.
-- TASK009, TASK010, TASK011, TASK012, TASK013, TASK014, TASK015 y TASK016 disponen de registros o informes del agente, pero no consta una revisión independiente humana.
-- TASK011, TASK012, TASK013, TASK014, TASK015 y TASK016 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
-- No se ha creado `docs/specs/` porque todavía no hay funcionalidades iniciadas.
-- Existe un scaffold de backend con pruebas de infraestructura; no hay frontend, lógica de negocio, modelos de datos ni acceso real a base de datos.
+- TASK009, TASK010, TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020 y TASK022 disponen de registros o informes del agente, pero no consta una revisión independiente humana. TASK021 fue una auditoría en sesión sin archivo de registro.
+- TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020 y TASK022 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
+- `docs/specs/001-customer-registration/` contiene la especificación cerrada: D-01 a D-15 están aprobadas; D-02 se aprobó en TASK020 con el único plan `standard` y D-15 en TASK022 para `legal_name`; el endpoint y la migración están implementados y validados localmente.
+- Existe un backend con dominio fiscal, caso de uso operativo, modelo SQLAlchemy, repositorio, migración Alembic y `POST /customers`. No hay frontend ni endpoints de listado, detalle, edición o eliminación.
 - El entorno virtual `backend/.venv` es local y no se versiona. `TASKS.zip` permanece sin seguimiento y está excluido localmente mediante `.git/info/exclude`; esa regla no se versiona.
 - La estrategia de dependencias usa restricciones de versión, no un lock estricto con hashes; la build isolation queda fuera de `requirements.lock`.
 - La prueba de arquitectura es estática y no cubre imports dinámicos.

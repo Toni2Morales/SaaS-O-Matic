@@ -2,7 +2,7 @@
 
 Herramienta interna para que el equipo comercial simule y estime el coste de suscripciones SaaS corporativas: clientes, planes, consumo estimado, tramos de usuarios, impuestos por país y conversión de divisas.
 
-> **Estado:** scaffold inicial del backend. Existe una aplicación FastAPI mínima con endpoint `/health`, pruebas y un entorno virtual local. No hay frontend, lógica de negocio, modelos de datos ni entorno desplegado.
+> **Estado:** alta de clientes implementada y validada localmente. Existe una aplicación FastAPI con `/health`, `POST /customers`, dominio fiscal, catálogo MVP con el único plan `standard`, migración Alembic de `customers`, persistencia SQLite, pruebas y un entorno virtual local. Los cambios de TASK020 y la corrección de TASK022 no están publicados. No hay frontend ni entorno desplegado.
 >
 > **Estado documental:** las decisiones de stack y alcance fueron aceptadas por el propietario. Los documentos de requisitos, ADRs, proceso y evaluación siguen pendientes de revisión o aprobación formal. El proceso se utiliza provisionalmente como referencia de trabajo hasta su aprobación.
 
@@ -44,13 +44,13 @@ La aplicación **estima** costes: no factura, no cobra y no provisiona servicios
 .
 ├─ backend/          # Scaffold FastAPI, dominio, aplicación, infraestructura y bootstrap
 ├─ frontend/         # Pendiente de scaffold
-├─ docs/             # Requisitos, ADRs, evaluación y proceso
+├─ docs/             # Requisitos, ADRs, evaluación, proceso y especificaciones
 ├─ ai-workspace/     # Contexto para sesiones de desarrollo asistido por IA
 ├─ AGENTS.md         # Instrucciones para agentes de IA
 └─ .env.example      # Plantilla de configuración local
 ```
 
-El backend ya dispone de un scaffold inicial. El frontend todavía no se ha creado. La ubicación definitiva del composition root sigue pendiente; `backend/src/saas_o_matic/bootstrap/` es una propuesta provisional.
+El backend ya dispone del alta de clientes completa a nivel de MVP, además del scaffold inicial. El frontend todavía no se ha creado. La ubicación definitiva del composition root sigue pendiente; `backend/src/saas_o_matic/bootstrap/` es una propuesta provisional.
 
 ## Documentación
 
@@ -58,6 +58,7 @@ El backend ya dispone de un scaffold inicial. El frontend todavía no se ha crea
 - [Evaluación inicial del repositorio](docs/assessment/001-repository-assessment.md)
 - [ADR 0001 — Stack tecnológico](docs/adr/0001-technology-stack.md)
 - [ADR 0002 — Arquitectura](docs/adr/0002-architecture.md)
+- [Especificación 001 - Alta de clientes](docs/specs/001-customer-registration/spec.md) (implementada y validada en TASK020; cambios locales no publicados)
 - [Proceso de desarrollo asistido por IA](docs/process/ai-assisted-development.md)
 - [Instrucciones para agentes de IA](AGENTS.md)
 - [Índice de trazabilidad del desarrollo asistido por IA](ai-workspace/README.md)
@@ -75,9 +76,9 @@ python -m uvicorn saas_o_matic.bootstrap.main:app --reload
 
 `-c requirements.lock` aplica restricciones de versión; no es un lock estricto. La verificación de dependencias y sus límites se detallan en [backend/README.md](backend/README.md).
 
-La aplicación expone `GET /health` y `GET /openapi.json`. Las instrucciones completas, las pruebas y las reglas de dependencia están en [backend/README.md](backend/README.md).
+La aplicación expone `GET /health`, `GET /openapi.json` y `POST /customers`. Las instrucciones completas, las pruebas y las reglas de dependencia están en [backend/README.md](backend/README.md).
 
-El frontend se abordará en una tarea posterior. En esta fase no se implementan funcionalidades de negocio ni acceso real a base de datos.
+El frontend se abordará en una tarea posterior. El alta de clientes usa el plan MVP `standard` y una migración Alembic; no se ha creado una base SQLite de desarrollo versionada.
 
 ## Convenciones de trabajo
 
