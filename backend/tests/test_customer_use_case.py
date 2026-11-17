@@ -33,6 +33,9 @@ class InMemoryCustomerRepository:
             for customer in self.customers
         )
 
+    def exists_by_id(self, customer_id: UUID) -> bool:
+        return any(customer.id == customer_id for customer in self.customers)
+
     def add(self, customer: Customer) -> None:
         if self.raise_duplicate_on_add:
             raise DuplicateCustomerTaxId(customer.tax_id.value, customer.country.value)

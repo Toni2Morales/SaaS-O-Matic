@@ -11,6 +11,7 @@ from sqlalchemy import engine_from_config, pool
 
 from saas_o_matic.infrastructure.customers import models as customer_models  # noqa: F401
 from saas_o_matic.infrastructure.database import Base
+from saas_o_matic.infrastructure.simulations import models as simulation_models  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:
