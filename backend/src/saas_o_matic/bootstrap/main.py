@@ -8,13 +8,18 @@ from pathlib import Path
 from sqlalchemy.orm import Session, sessionmaker
 
 from saas_o_matic.application.customers.use_cases import CreateCustomer
+from saas_o_matic.application.simulations.use_cases import CreateSimulation
 from saas_o_matic.bootstrap.customers import build_customer_use_case
+from saas_o_matic.bootstrap.simulations import build_simulation_use_case
 from saas_o_matic.infrastructure.database import (
     create_session_factory,
     create_sqlite_engine,
 )
 from saas_o_matic.presentation.app import create_app
 from saas_o_matic.presentation.customers.dependencies import get_create_customer_use_case
+from saas_o_matic.presentation.simulations.dependencies import (
+    get_create_simulation_use_case,
+)
 
 _DATABASE_PATH = Path(__file__).resolve().parents[3] / "var" / "saas_o_matic.sqlite3"
 _session_factory: sessionmaker[Session] | None = None
@@ -40,5 +45,13 @@ def _customer_use_case_dependency() -> Iterator[CreateCustomer]:
         yield build_customer_use_case(session)
 
 
+def _simulation_use_case_dependency() -> Iterator[CreateSimulation]:
+    """Proporciona el caso de uso de simulaciones con una sesión por petición."""
+
+    with _get_session_factory()() as session:
+        yield build_simulation_use_case(session)
+
+
 app = create_app()
 app.dependency_overrides[get_create_customer_use_case] = _customer_use_case_dependency
+app.dependency_overrides[get_create_simulation_use_case] = _simulation_use_case_dependency

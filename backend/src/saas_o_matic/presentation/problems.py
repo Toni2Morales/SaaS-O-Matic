@@ -14,6 +14,10 @@ from saas_o_matic.application.customers.errors import (
     CustomerTaxIdAlreadyExists,
     InvalidCustomerData,
 )
+from saas_o_matic.application.simulations.errors import (
+    InvalidSimulationData,
+    SimulationCustomerNotFound,
+)
 
 
 class ProblemFieldError(BaseModel):
@@ -60,11 +64,16 @@ def problem_response(
 
 
 def register_problem_handlers(app: FastAPI) -> None:
-    """Registra los manejadores de errores controlados de clientes."""
+    """Registra los manejadores de errores controlados de la API."""
 
     app.add_exception_handler(RequestValidationError, _handle_request_validation_error)
     app.add_exception_handler(InvalidCustomerData, _handle_invalid_customer_data)
     app.add_exception_handler(CustomerTaxIdAlreadyExists, _handle_tax_id_conflict)
+    app.add_exception_handler(InvalidSimulationData, _handle_invalid_simulation_data)
+    app.add_exception_handler(
+        SimulationCustomerNotFound,
+        _handle_simulation_customer_not_found,
+    )
     app.add_exception_handler(Exception, _handle_unexpected_error)
 
 
@@ -106,9 +115,14 @@ async def _handle_request_validation_error(request: Request, exc: Exception) -> 
         )
         for error in exc.errors()
     ]
+    title = (
+        "Datos de simulación no válidos"
+        if request.url.path.startswith("/simulations")
+        else "Datos de cliente no válidos"
+    )
     return problem_response(
         status=422,
-        title="Datos de cliente no válidos",
+        title=title,
         detail="La petición no cumple el esquema esperado.",
         instance=request.url.path,
         errors=errors,
@@ -136,6 +150,34 @@ async def _handle_tax_id_conflict(request: Request, exc: Exception) -> JSONRespo
         status=409,
         title="Conflicto de identificador fiscal",
         detail=str(exc),
+        instance=request.url.path,
+    )
+
+
+async def _handle_invalid_simulation_data(request: Request, exc: Exception) -> JSONResponse:
+    if not isinstance(exc, InvalidSimulationData):
+        return _handle_unexpected_error_response(request)
+
+    return problem_response(
+        status=422,
+        title="Datos de simulación no válidos",
+        detail=exc.message,
+        instance=request.url.path,
+        errors=[ProblemFieldError(field=exc.field, message=exc.message)],
+    )
+
+
+async def _handle_simulation_customer_not_found(
+    request: Request,
+    exc: Exception,
+) -> JSONResponse:
+    if not isinstance(exc, SimulationCustomerNotFound):
+        return _handle_unexpected_error_response(request)
+
+    return problem_response(
+        status=404,
+        title="Cliente no encontrado",
+        detail="El cliente indicado no existe.",
         instance=request.url.path,
     )
 

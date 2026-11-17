@@ -18,7 +18,7 @@ from saas_o_matic.infrastructure.customers.repositories import SqlAlchemyCustome
 from saas_o_matic.infrastructure.database import create_session_factory
 
 ALEMBIC_INI = Path(__file__).resolve().parents[1] / "alembic.ini"
-EXPECTED_REVISION = "0001_create_customers"
+EXPECTED_REVISION = "0002_create_simulations"
 
 
 def _config(database_url: str) -> Config:
@@ -55,7 +55,7 @@ def test_alembic_upgrade_schema_persistence_downgrade_and_reupgrade(
     engine = create_engine(database_url)
     try:
         inspector = inspect(engine)
-        assert "customers" in inspector.get_table_names()
+        assert {"customers", "simulations"} <= set(inspector.get_table_names())
 
         columns = {column["name"]: column for column in inspector.get_columns("customers")}
         assert set(columns) == {
@@ -77,6 +77,35 @@ def test_alembic_upgrade_schema_persistence_downgrade_and_reupgrade(
             for constraint in unique_constraints
         )
 
+        simulation_columns = {
+            column["name"]: column for column in inspector.get_columns("simulations")
+        }
+        assert set(simulation_columns) == {
+            "id",
+            "customer_id",
+            "user_count",
+            "user_subtotal_eur",
+            "created_at",
+        }
+        for field in ("id", "customer_id", "user_count", "user_subtotal_eur", "created_at"):
+            assert simulation_columns[field]["nullable"] is False
+
+        check_constraints = inspector.get_check_constraints("simulations")
+        assert any(
+            constraint["name"] == "ck_simulations_user_count_range"
+            and "user_count" in constraint["sqltext"]
+            for constraint in check_constraints
+        )
+
+        foreign_keys = inspector.get_foreign_keys("simulations")
+        assert any(
+            foreign_key["name"] == "fk_simulations_customer_id"
+            and foreign_key["constrained_columns"] == ["customer_id"]
+            and foreign_key["referred_table"] == "customers"
+            and foreign_key["referred_columns"] == ["id"]
+            for foreign_key in foreign_keys
+        )
+
         with engine.connect() as connection:
             revision = connection.execute(
                 text("SELECT version_num FROM alembic_version")
@@ -95,6 +124,18 @@ def test_alembic_upgrade_schema_persistence_downgrade_and_reupgrade(
     finally:
         engine.dispose()
 
+    command.downgrade(config, "0001_create_customers")
+
+    engine = create_engine(database_url)
+    try:
+        tables = inspect(engine).get_table_names()
+        assert "customers" in tables
+        assert "simulations" not in tables
+        with engine.connect() as connection:
+            assert connection.execute(text("SELECT COUNT(*) FROM customers")).scalar_one() == 1
+    finally:
+        engine.dispose()
+
     command.downgrade(config, "base")
 
     engine = create_engine(database_url)
@@ -107,6 +148,6 @@ def test_alembic_upgrade_schema_persistence_downgrade_and_reupgrade(
 
     engine = create_engine(database_url)
     try:
-        assert "customers" in inspect(engine).get_table_names()
+        assert {"customers", "simulations"} <= set(inspect(engine).get_table_names())
     finally:
         engine.dispose()

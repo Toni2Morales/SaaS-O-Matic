@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -26,6 +28,12 @@ class SqlAlchemyCustomerRepository:
             CustomerModel.tax_id == tax_id.value,
             CustomerModel.country == country.value,
         )
+        return self._session.scalar(statement) is not None
+
+    def exists_by_id(self, customer_id: UUID) -> bool:
+        """Comprueba si existe un cliente por su identificador."""
+
+        statement = select(CustomerModel.id).where(CustomerModel.id == customer_id)
         return self._session.scalar(statement) is not None
 
     def add(self, customer: Customer) -> None:

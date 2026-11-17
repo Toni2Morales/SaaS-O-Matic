@@ -68,6 +68,24 @@ def test_repository_persists_and_reads_a_customer(migrated_database: Path) -> No
         engine.dispose()
 
 
+def test_repository_checks_customer_existence_by_id(migrated_database: Path) -> None:
+    """El repositorio distingue un cliente existente de un UUID desconocido."""
+
+    engine = create_sqlite_engine(migrated_database)
+    session_factory = create_session_factory(engine)
+
+    try:
+        with session_factory() as session:
+            repository = SqlAlchemyCustomerRepository(session)
+            customer = _customer()
+            repository.add(customer)
+
+            assert repository.exists_by_id(customer.id)
+            assert not repository.exists_by_id(uuid4())
+    finally:
+        engine.dispose()
+
+
 def test_repository_rejects_duplicate_tax_id_for_the_same_country(
     migrated_database: Path,
 ) -> None:
