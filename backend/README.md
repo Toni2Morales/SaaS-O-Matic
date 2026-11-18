@@ -1,6 +1,111 @@
 # Backend de SaaS-O-Matic
 
-Backend con Python 3.13, FastAPI y una estructura de monolito modular. Incluye el alta de clientes de extremo a extremo: dominio fiscal, catálogo MVP con el único plan `standard`, caso de uso, persistencia SQLAlchemy, migración Alembic, endpoint `POST /customers` y pruebas de API.
+## Estado vigente TASK039B
+
+TASK039 auditó el backend acumulado con dictamen **APTA CON OBSERVACIONES** y sin
+hallazgos bloqueantes. TASK039B corrige la trazabilidad, el README, `.env.example`,
+la configuración de SQLite y la validación defensiva de tasas FX. El runtime y
+Alembic comparten ahora la resolución de `DATABASE_URL`; la base predeterminada
+sigue siendo `backend/var/saas_o_matic.sqlite3`. Las tasas externas fuera de los
+límites técnicos se rechazan antes de la caché y producen `503
+application/problem+json`. La suite local tiene 579 pruebas. El backend sigue
+implementado localmente y **no publicado**; Angular, E2E, seguridad de despliegue
+y CI continúan pendientes.
+
+## Delta TASK038 (conservado)
+
+GET /customers: search opcional (máximo255 tras recortar), limit20 por defecto
+(1..100) y offset0 no negativo. Retorna {items,total,limit,offset}, incluyendo
+created_at de cliente. Búsqueda parcial OR por legal_name/tax_id, Unicode casefold,
+%/_/barra inversa literales; sin quitar acentos ni normalizar NFC. Orden nombre
+casefold e id ASC, colación binaria no lingüística. Filtrado/COUNT/página en SQLite,
+sin cargar tablas completas en aplicación. Se registra UDF por conexión, sin migración.
+
+GET /customers/{customer_id}: mismo CustomerResponse de creación, sin historial
+embebido. UUID inválido422; cliente desconocido404. GET /customers/{customer_id}/simulations:
+página de snapshots ordenada created_at/id DESC; verifica cliente primero. Campos
+históricos desconocidos (incluida divisa y total con impuesto) NULL, no cero ni EUR
+inventado. No consulta Frankfurter ni catálogo fiscal actual; no edición/borrado.
+
+POST /simulations/preview: mismo cuerpo estricto de creación; 200 con todos los
+datos de cálculo de SPEC-005, sin id ni created_at de registro. Sí incluye la fecha
+de obtención FX, que no es fecha de persistencia. CalculateSimulation/MonthlyEstimator
+y caché compartidos con guardado; sin INSERT/UPDATE/DELETE. 404/422/503/500 problem+json;
+EUR sigue sin proveedor. No Location ni cotización bloqueada: una referencia distinta
+al guardar puede cambiar resultado. Guardar implica recalcular y POST /simulations explícito.
+
+Ejemplos (sustituir UUID por cliente existente):
+
+```text
+GET /customers?search=%C3%89cole&limit=20&offset=0
+GET /customers/560e1a4d-49f2-4bf7-a3e5-fb53ac4d14ec
+GET /customers/560e1a4d-49f2-4bf7-a3e5-fb53ac4d14ec/simulations
+POST /simulations/preview
+```
+
+```json
+{"customer_id":"560e1a4d-49f2-4bf7-a3e5-fb53ac4d14ec","user_count":15,"storage_gb":250,"api_calls_per_month":100000}
+```
+
+Para ES/EUR el cálculo da subtotal140.00, IVA29.40, total/convertido169.40, tasa1,
+source identity y fecha de referencia NULL; todas las cantidades son cadenas exactas.
+Historial sin registros: {items:[],total:0,limit:20,offset:0}. Los contratos definitivos,
+OpenAPI y guía Angular (debounce/cancelación/respuestas obsoletas/guardado) están en
+[SPEC-006](../docs/specs/006-customer-queries-and-preview/spec.md).
+
+Validación TASK038: 538 pruebas (+127), sin Internet en la suite, sin migraciones
+ni dependencias nuevas. Previews repetidos probados con DML denegado por SQLite y
+sin aumentar historial. Limitación: LIKE/UDF puede escanear tablas y offset no es
+snapshot estable ante escrituras concurrentes.
+
+Validación TASK039B: 579 pruebas (+41 sobre 538), Ruff, formato, mypy y `pip check`
+correctos; 35 pines del lock sin cambios. Se añadieron pruebas de resolución
+SQLite compartida, base temporal alternativa, aislamiento de la base predeterminada,
+tasas FX patológicas, recuperación de caché, `503` en preview/guardado, ausencia de
+filas parciales y corrupción controlada del historial. Sin publicación.
+
+## Impuestos y divisas (TASK037, conservados)
+
+POST /simulations mantiene sus cuatro campos obligatorios y añade display_currency
+opcional (EUR predeterminado; EUR/USD/GBP). Respuesta incorpora IVA general por
+país del cliente, total EUR y conversión HALF_UP; dinero y tasas como cadenas exactas.
+Metadatos fiscales: país, tasa, fuente, versión, ámbito, consulta y vigencia conocida.
+Metadatos FX: tasa, referencia, obtención UTC y fuente; EUR identity/1/fecha referencia NULL.
+Proveedor Frankfurter v2 único; urllib estándar, sin nuevas dependencias. Caché por
+proceso/par de 24h desde éxito, timeout5s; no expirados ni fallback ficticio. 503
+problem+json sin tasa válida; EUR no consulta red. Referencias no son mercado continuo.
+Sin transacción de escritura durante la espera externa; lectura inicial se finaliza.
+
+Límites técnicos FX: la tasa externa debe ser finita, positiva, estar entre
+`0.000001` y `1000000` y tener como máximo 32 dígitos significativos. Son límites
+de plausibilidad, no comerciales: EUR/USD y EUR/GBP se mueven alrededor de 0,8–1,2.
+El límite de respuesta externa sigue siendo 64 KiB. Una tasa fuera de rango se
+rechaza antes de la caché y se traduce al `503` externo existente; no se redondea
+silenciosamente, no se cachea y no se convierte en un `500`. Los snapshots
+históricos fuera de esos límites se consideran datos corruptos y siguen la política
+controlada de A39-05.
+
+Migración 0004 añade calculation_snapshot TEXT (JSON versionado con dinero/tasas
+en cadenas). Históricos quedan NULL, sin recalcular; nuevas simulaciones completas.
+Downgrade bloquea antes de DDL si existen snapshots. Revisiones previas intactas.
+Catálogo único configurable por inyección en infrastructure/tax_catalog.py; fuentes
+contrastadas 2026-11-17. No actualizar tasas sin verificar y versionar. Estimación
+general simplificada, sin reducidos, exenciones, B2B, inversión ni regiones especiales.
+La caché se pierde al reiniciar y no se comparte entre procesos; timeout de socket
+no constituye garantía de latencia total. No se impone edad máxima de referencia
+adicional al TTL de obtención (festivos/fines de semana).
+
+Contrato y fuentes: [SPEC-005](../docs/specs/005-taxes-and-currency-conversion/spec.md).
+Las exclusiones fiscales/FX inferiores corresponden al estado anterior TASK036.
+
+Validación TASK037: 411 pruebas (+71 sobre 340), Ruff, formato, mypy y pip check
+correctos; lock 35 pines sin cambios. Smoke real 201 para EUR/USD/GBP en base temporal;
+ninguna prueba automatizada requiere Internet. Sin staging ni publicación.
+
+Backend Python 3.13/FastAPI, monolito modular. Alta para ES/PT/FR/DE/IT/NL,
+plan único `standard`, simulaciones mensuales persistidas desde cero usuarios,
+impuestos generales, conversión FX, lecturas, historial y preview. TASK036–039B
+son locales, sin publicación. UI Angular pendiente; P-01/P-05 sin resolver.
 
 ## Requisitos
 
@@ -94,11 +199,24 @@ Estrategias más estrictas, no adoptadas en esta tarea:
 python -m uvicorn saas_o_matic.bootstrap.main:app --reload
 ```
 
+El runtime y Alembic comparten la resolución de `DATABASE_URL`. Si no se define,
+ambos usan `backend/var/saas_o_matic.sqlite3`; las rutas SQLite relativas se
+interpretan desde `backend/`, no desde el directorio de trabajo actual. Solo se
+admite SQLite de fichero: se rechazan otros motores, `:memory:` y parámetros de
+consulta. El backend **no carga automáticamente** un archivo `.env`; exporta la
+variable en el proceso que arranca Uvicorn o Alembic. La plantilla
+[`.env.example`](../.env.example) documenta la variable y no contiene secretos.
+
 La aplicación expone:
 
 - `GET /health`: comprobación de infraestructura; devuelve `{"status": "ok"}`.
 - `GET /openapi.json`: esquema OpenAPI generado por FastAPI.
 - `POST /customers`: alta de un cliente.
+- `POST /simulations`: simulación mensual con consumos informativos sin cargos.
+- `GET /customers`: listado/búsqueda paginados.
+- `GET /customers/{customer_id}`: detalle.
+- `GET /customers/{customer_id}/simulations`: historial inmutable paginado.
+- `POST /simulations/preview`: cálculo sin escritura.
 
 Ejemplo de alta:
 
@@ -118,6 +236,31 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/customers -ContentType
 
 `legal_name` se recorta: se eliminan los espacios iniciales y finales, se conservan los interiores y debe contener entre 1 y 255 caracteres después del recorte. La respuesta y la base de datos contienen el valor normalizado.
 
+Países exactos: ES/PT/FR/DE/IT/NL. España conserva DNI/NIF/NIE/CIF algorítmico.
+Los demás países usan validación genérica, no fiscal oficial: 1..64 caracteres
+después de recortar/colapsar espacios y pasar a mayúsculas; conservar puntuación,
+rechazar controles Unicode Cc/Cf/Cs antes de normalizar. Unicidad `(country, tax_id)`.
+Clientes conservan su política de campos adicionales (no se aplica forbid aquí).
+
+### Contrato de simulaciones (ruptura TASK036)
+
+```json
+{"customer_id":"c58669e3-4bcb-49ca-b2c3-7f6eb17cb506","user_count":15,"storage_gb":250,"api_calls_per_month":100000}
+```
+
+UUID ilustrativo: sustituir por un cliente registrado. Los cuatro campos son
+obligatorios. Enteros estrictos: usuarios y GB 0..1.000.000; llamadas 0..1.000.000.000.
+No enviar billing_period: el servidor fija `monthly`. Campos desconocidos, ausentes,
+nulos, booleanos, cadenas o decimales producen 422 `application/problem+json`.
+Las peticiones antiguas sin consumos dejan de ser compatibles.
+
+Respuesta 201: id, customer_id, user_count, storage_gb, api_calls_per_month,
+billing_period, user_subtotal_eur (cadena de dos decimales) y created_at UTC/Z.
+15 usuarios producen `140.00`; cero `0.00`. Sin cargos por GB/llamadas; sí se
+calculan IVA general, total EUR y, con `display_currency` USD/GBP, conversión y
+snapshot FX. Cliente inexistente: 404; tasa externa no válida: 503; error
+inesperado: 500; sin Location.
+
 La respuesta correcta es `201 Created` con `id`, `legal_name`, `tax_id`, `email`, `country`, `plan` y `created_at` en UTC. No se envía cabecera `Location`. Los errores controlados usan `application/problem+json`:
 
 - `422` para datos inválidos, campos ausentes, razón social vacía o fuera del rango 1–255, país o plan no admitidos y JSON malformado.
@@ -134,7 +277,24 @@ python -m mypy .
 python -m pip check
 ```
 
-Las pruebas cubren `/health`, OpenAPI, reglas de dependencia, validación de DNI/NIF, NIE y CIF/NIF, catálogo de plan `standard`, esquemas Pydantic, normalización y límites de `legal_name`, caso de uso, persistencia SQLite temporal, migración Alembic, ciclo `downgrade`/`upgrade`, errores `application/problem+json` y la API `POST /customers`.
+Las pruebas cubren `/health`, OpenAPI, reglas de dependencia, validación de
+DNI/NIF, NIE y CIF/NIF, catálogo de plan `standard`, esquemas Pydantic,
+normalización y límites de `legal_name`, precios progresivos, persistencia SQLite
+temporal, migraciones y ciclos `downgrade`/`upgrade`, impuestos, Frankfurter con
+transporte simulado, caché/errores, consultas, historial inmutable, preview sin
+escrituras, errores `application/problem+json`, resolución SQLite compartida y
+tasas FX patológicas. La suite no depende de Internet.
+
+TASK036: 340 pruebas superadas frente al baseline real de 240; cubren además seis
+países, identificadores genéricos, cero, contrato estricto de consumos, traps Decimal,
+SQL físico TEXT, sesión nueva/UTC y upgrade poblado con downgrade protegido.
+Ruff, formato, mypy y pip check correctos; 35 pines verificados, sin dependencias nuevas.
+
+TASK039B: 579 pruebas superadas (+41 sobre 538), Ruff, formato, mypy y `pip check`
+correctos; 35 pines sin cambios y sin dependencias nuevas. Incluye base SQLite
+alternativa migrada y usada por el runtime, comprobación de que la base
+predeterminada no cambia, límites FX, recuperación de caché, `503` en preview y
+guardado, ausencia de filas parciales y corrupción controlada del historial.
 
 ## Estructura
 
@@ -142,7 +302,7 @@ Las pruebas cubren `/health`, OpenAPI, reglas de dependencia, validación de DNI
 backend/
 ├── .venv/                  # Entorno virtual local; no versionado
 ├── alembic.ini
-├── migrations/             # Configuración Alembic y revisión 0001_create_customers
+├── migrations/             # Revisiones 0001–0004
 ├── pyproject.toml
 ├── requirements.lock
 ├── README.md
@@ -150,15 +310,22 @@ backend/
 │   └── saas_o_matic/
 │       ├── __init__.py
 │       ├── domain/         # Python puro; sin FastAPI, Pydantic ni SQLAlchemy
-│       │   └── customers/  # Entidad, objetos de valor, errores y puerto
+│       │   ├── customers/  # Entidad, objetos de valor, errores y puerto
+│       │   ├── pricing/    # Tramos progresivos
+│       │   └── simulations/# Cálculo fiscal/FX, snapshots y entidad
 │       ├── application/    # Casos de uso; depende de domain
-│       │   └── customers/  # Catálogos, DTOs, errores y CreateCustomer
+│       │   ├── customers/  # Catálogos, DTOs, errores y CreateCustomer
+│       │   └── simulations/# Estimador, cálculo, consultas y casos de uso
 │       ├── infrastructure/ # Adaptadores; implementa puertos de domain
-│       │   ├── database.py
-│       │   └── customers/  # Modelo, mapeador y repositorio SQLAlchemy
+│       │   ├── database.py # Motor, sesiones y resolución SQLite compartida
+│       │   ├── customers/  # Modelo, mapeador y repositorio SQLAlchemy
+│       │   ├── simulations/# Modelo, mapeador, repositorio y snapshots
+│       │   ├── frankfurter.py
+│       │   └── tax_catalog.py
 │       ├── presentation/   # Routers y esquemas HTTP; depende de application
 │       │   ├── problems.py
-│       │   └── customers/  # Router, dependencias y esquemas Pydantic
+│       │   ├── customers/  # Router, dependencias y esquemas Pydantic
+│       │   └── simulations/# Router, dependencias y esquemas Pydantic
 │       └── bootstrap/      # Composition root provisional
 └── tests/
 ```
@@ -184,14 +351,37 @@ La ubicación definitiva del composition root sigue pendiente. `bootstrap/` es u
 
 ## Alembic y base de datos
 
-La configuración está en `alembic.ini` y `migrations/`. La revisión `0001_create_customers` crea la tabla `customers` con:
+La configuración está en `alembic.ini` y `migrations/`. El runtime y Alembic
+comparten `resolve_database_url` en `infrastructure/database.py`:
 
-- UUID compatible con SQLite.
-- `legal_name`, `tax_id`, `email`, `country`, `plan` y `created_at` no nulos.
-- Restricción única `(country, tax_id)`.
-- `created_at` en UTC.
+- prioridad: `DATABASE_URL` del proceso, URL configurada por Alembic y ruta
+  predeterminada `backend/var/saas_o_matic.sqlite3`;
+- las rutas SQLite relativas se resuelven desde `backend/`;
+- solo se admite SQLite de fichero; otros motores, `:memory:` y parámetros de
+  consulta se rechazan con `ValueError`;
+- no se carga ningún `.env` automáticamente ni se abren conexiones al importar;
+- el runtime crea el motor de forma perezosa, así que importar la aplicación no
+  crea el directorio ni el fichero.
 
-La URL por defecto es `sqlite:///./var/saas_o_matic.sqlite3` y puede sustituirse con `DATABASE_URL`. Los ficheros SQLite están excluidos por `.gitignore`. Las pruebas usan bases temporales creadas con Alembic; no se usa `create_all()` como sustituto de la migración.
+Los ficheros SQLite están excluidos por `.gitignore`. Las pruebas usan bases
+temporales creadas con Alembic; no se usa `create_all()` como sustituto de la
+migración. La prueba `tests/test_database_config.py` demuestra que una base
+alternativa recibe la migración y las escrituras del runtime, y que la base
+predeterminada no cambia.
+
+Revisiones:
+
+- `0001_create_customers` crea `customers` con UUID compatible con SQLite,
+  campos funcionales no nulos, unicidad `(country, tax_id)` y `created_at` UTC.
+- `0002_create_simulations` incorpora simulaciones.
+- `0003_international_simulations` amplía tax_id, usuarios desde cero y consumos
+  NULL históricos; asigna monthly sin alterar importes ni fechas. Conserva
+  unicidad compuesta y verifica FK después del batch. El downgrade falla antes
+  del DDL si hay datos incompatibles.
+- `0004_add_simulation_taxes_and_fx` añade `calculation_snapshot` TEXT nullable
+  con JSON versionado. Los históricos quedan NULL sin backfill; las nuevas
+  simulaciones guardan el snapshot completo. El downgrade bloquea antes del DDL
+  si existen snapshots.
 
 Comandos de comprobación:
 
@@ -199,17 +389,19 @@ Comandos de comprobación:
 python -m alembic heads
 python -m alembic upgrade head
 python -m alembic current
-python -m alembic downgrade base
-python -m alembic upgrade head
 ```
 
 Para no tocar una base de desarrollo, se puede usar una ruta temporal:
 
 ```powershell
-$db = Join-Path $env:TEMP 'saas-o-matic-task020.sqlite3'
+$db = Join-Path $env:TEMP 'saas-o-matic-task039b.sqlite3'
 $env:DATABASE_URL = "sqlite:///$($db.Replace('\', '/'))"
 python -m alembic upgrade head
+python -m uvicorn saas_o_matic.bootstrap.main:app --reload
 ```
+
+Ambos procesos leen la misma `DATABASE_URL`; si se omite, ambos usan la base
+predeterminada del backend.
 
 ## Dependencias
 
@@ -234,26 +426,50 @@ Incluido:
 
 - Entorno virtual aislado.
 - Estructura de paquetes y capas.
-- Aplicación FastAPI con `/health`, `/openapi.json` y `POST /customers`.
-- Dominio fiscal de clientes: DNI/NIF, NIE y CIF/NIF.
+- Aplicación FastAPI con `/health`, `/openapi.json`, alta/listado/detalle de
+  clientes, alta de simulaciones, historial y previsualización.
+- Dominio fiscal de clientes: DNI/NIF, NIE y CIF/NIF; validación genérica no
+  oficial para el resto.
 - Catálogo MVP con el único plan `standard`.
-- Caso de uso de alta operativo.
-- Modelo SQLAlchemy, repositorio y migración Alembic.
+- Precios progresivos, impuestos generales de seis países y conversión
+  EUR/USD/GBP con snapshot histórico.
+- Modelos SQLAlchemy, repositorios y migraciones Alembic 0001–0004.
 - Esquemas Pydantic y errores `application/problem+json`.
 - Pruebas y configuración de calidad.
 
 Excluido:
 
-- Endpoints de listado, detalle, edición o eliminación.
+- Edición o eliminación de clientes y simulaciones.
 - Planes adicionales, precios de planes y prestaciones asociadas.
-- Autenticación, autorización y multi-tenancy.
-- Simulaciones, impuestos y divisas.
-- Frontend.
+- Autenticación, autorización, multi-tenancy, CORS y límites globales.
+- Facturación real, proveedores FX alternativos y fuentes fiscales configurables.
+- Frontend Angular, CI y despliegue.
 
 ## Limitaciones
 
-- SQLite limita la concurrencia y no reproduce producción.
+- SQLite limita la concurrencia y no reproduce producción; el DDL de las
+  migraciones 0003/0004 no es transaccional y una interrupción podría dejar un
+  estado parcial. Se recomienda copia de seguridad y prueba en copia antes de
+  migrar datos reales (A39-13).
 - La estructura global por capas puede no ser la frontera modular definitiva.
+  `CalculateSimulation` usa el puerto completo de clientes aunque solo necesita
+  leer el país; no se explota actualmente (A39-08).
 - El lock de dependencias no es estricto ni usa hashes.
 - No hay CI configurada.
-- No consta una revisión independiente humana de TASK020.
+- No hay autenticación, autorización, multi-tenancy, CORS ni límites globales de
+  cuerpo o tasa. El backend no debe exponerse con datos reales antes de resolver
+  esos controles (A39-12).
+- La caché FX es por proceso, se pierde al reiniciar y serializa las consultas
+  externas con un lock global; no se comparte entre workers (A39-14/A39-15).
+- La búsqueda usa `LIKE`/UDF y puede escanear tablas; el `offset` no es un
+  snapshot estable ante escrituras concurrentes (A39-11).
+- La prueba de arquitectura solo analiza imports estáticos; no cubre
+  `importlib.import_module`, `__import__` ni cargas dinámicas (A39-10).
+- Un snapshot histórico corrupto produce un `500 application/problem+json`
+  controlado, sin ocultar filas, inventar importes ni reparar datos. La
+  corrupción no es alcanzable por la API; no hay logging estructurado de la fila
+  afectada (A39-05/A39-07).
+- Los clientes ignoran campos desconocidos por Q-26; las simulaciones los
+  rechazan. La asimetría está aprobada y documentada (A39-09).
+- No consta una revisión independiente humana de TASK020 ni de las tareas
+  posteriores; TASK039/TASK039B son revisiones metodológicas del mismo agente.

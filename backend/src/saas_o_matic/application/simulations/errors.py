@@ -9,6 +9,10 @@ class SimulationApplicationError(Exception):
     """Error base de la aplicación de simulaciones."""
 
 
+class ConversionUnavailable(SimulationApplicationError):
+    """No existe una referencia de divisas válida para completar el cálculo."""
+
+
 class InvalidSimulationData(SimulationApplicationError):
     """Los datos de la simulación no superan una validación."""
 

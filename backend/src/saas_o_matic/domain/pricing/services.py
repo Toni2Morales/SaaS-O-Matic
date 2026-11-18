@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from decimal import Decimal, localcontext
+from decimal import Context, Decimal, localcontext
 
 from saas_o_matic.domain.pricing.errors import InvalidUserCount
 from saas_o_matic.domain.pricing.schedule import APPROVED_USER_PRICING_SCHEDULE
@@ -22,9 +22,9 @@ def _decimal_digits_upper_bound(value: int) -> int:
 
 
 def _validate_user_count(user_count: object) -> int:
-    """Valida que la cantidad sea un entero positivo, sin coerciones."""
+    """Valida que la cantidad sea un entero no negativo, sin coerciones."""
 
-    if isinstance(user_count, bool) or not isinstance(user_count, int) or user_count < 1:
+    if isinstance(user_count, bool) or not isinstance(user_count, int) or user_count < 0:
         raise InvalidUserCount(user_count)
     return user_count
 
@@ -38,13 +38,14 @@ def calculate_user_subtotal(user_count: int) -> Decimal:
     """
 
     validated_count = _validate_user_count(user_count)
+    if validated_count == 0:
+        return Decimal("0.00")
     schedule = APPROVED_USER_PRICING_SCHEDULE
     price_digits = max(len(band.price_per_user_eur.as_tuple().digits) for band in schedule.bands)
     digits_bound = _decimal_digits_upper_bound(validated_count)
     precision = max(28, digits_bound + price_digits + 10)
 
-    with localcontext() as context:
-        context.prec = precision
+    with localcontext(Context(prec=precision)):
         total = Decimal(0)
 
         for band in schedule.bands:

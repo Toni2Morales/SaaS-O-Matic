@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 from enum import StrEnum
 
@@ -21,6 +22,11 @@ class CountryCode(StrEnum):
     """Códigos ISO 3166-1 alfa-2 admitidos por la primera versión."""
 
     ES = "ES"
+    PT = "PT"
+    FR = "FR"
+    DE = "DE"
+    IT = "IT"
+    NL = "NL"
 
     @classmethod
     def parse(cls, raw: str) -> CountryCode:
@@ -109,6 +115,33 @@ class SpanishTaxId:
 
     def __str__(self) -> str:
         return self.value
+
+
+@dataclass(frozen=True, slots=True)
+class GenericTaxId:
+    """Identificador internacional; validación de forma, no fiscal oficial."""
+
+    value: str
+
+    @classmethod
+    def parse(cls, raw: str) -> GenericTaxId:
+        """Preserva puntuación y rechaza controles antes de normalizar espacios."""
+
+        if any(unicodedata.category(char) in {"Cc", "Cf", "Cs"} for char in raw):
+            raise InvalidTaxId("El identificador fiscal no admite caracteres de control.")
+        normalized = " ".join(raw.split()).upper()
+        if not 1 <= len(normalized) <= 64:
+            raise InvalidTaxId("El identificador fiscal debe tener entre 1 y 64 caracteres.")
+        return cls(normalized)
+
+
+TaxId = SpanishTaxId | GenericTaxId
+
+
+def parse_tax_id(raw: str, country: CountryCode) -> TaxId:
+    """Selecciona la validación española o genérica según el país."""
+
+    return SpanishTaxId.parse(raw) if country == CountryCode.ES else GenericTaxId.parse(raw)
 
 
 def _is_dni(value: str) -> bool:

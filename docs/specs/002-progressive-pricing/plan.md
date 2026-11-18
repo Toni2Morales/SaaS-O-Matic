@@ -1,11 +1,15 @@
 # Plan técnico 002 - Precios progresivos por usuarios
 
+> Vigente TASK036: Q-19 sustituye Q-02/PP-Q-01; cero admitido como 0.00.
+> Véase [PLAN-004](../004-international-customers-and-simulations/plan.md).
+
 | Campo | Valor |
 | --- | --- |
 | ID | PLAN-002 |
 | Título | Plan técnico del motor de precios progresivos |
-| Estado | **Implementado en TASK025; corregido en TASK027; cambios locales no publicados** |
+| Estado | **Implementado en TASK025, corregido en TASK027 y publicado en PR #4. Estado vigente verificado en TASK035** |
 | Fecha | 2026-11-16 |
+| Actualización | 2026-11-17 (TASK035) |
 | Base arquitectónica | [ADR 0002](../../adr/0002-architecture.md) |
 | Especificación | [spec.md](spec.md) |
 | Tareas | [tasks.md](tasks.md) |
@@ -102,10 +106,10 @@ Implementados con las decisiones Q-02 y PP-Q-01:
 
 | Error | Uso |
 | --- | --- |
-| `InvalidUserCount` | Cantidad de usuarios distinta de un entero positivo, incluidos cero, negativos, no enteros y `bool`. |
+| `InvalidUserCount` | Cantidad distinta de un entero no negativo, incluidos negativos, no enteros y `bool`. |
 | `InvalidPricingSchedule` | Invariante interna incumplida en la tabla de tramos. No se expone a HTTP. |
 
-`InvalidUserCount` aplica el mínimo 1 aprobado en Q-02 y no impone máximo, conforme a Q-12. `InvalidPricingSchedule` es una defensa ante errores de programación, no una regla de negocio.
+`InvalidUserCount` aplica mínimo 0 (Q-19 sustituye Q-02) y no impone máximo comercial. `InvalidPricingSchedule` sigue siendo defensa ante errores de programación.
 
 ## 4. Separación de responsabilidades
 

@@ -11,10 +11,13 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from saas_o_matic.application.customers.errors import (
+    CustomerNotFound,
     CustomerTaxIdAlreadyExists,
     InvalidCustomerData,
 )
+from saas_o_matic.application.pagination import InvalidQueryData
 from saas_o_matic.application.simulations.errors import (
+    ConversionUnavailable,
     InvalidSimulationData,
     SimulationCustomerNotFound,
 )
@@ -69,7 +72,10 @@ def register_problem_handlers(app: FastAPI) -> None:
     app.add_exception_handler(RequestValidationError, _handle_request_validation_error)
     app.add_exception_handler(InvalidCustomerData, _handle_invalid_customer_data)
     app.add_exception_handler(CustomerTaxIdAlreadyExists, _handle_tax_id_conflict)
+    app.add_exception_handler(CustomerNotFound, _handle_customer_not_found)
+    app.add_exception_handler(InvalidQueryData, _handle_invalid_query_data)
     app.add_exception_handler(InvalidSimulationData, _handle_invalid_simulation_data)
+    app.add_exception_handler(ConversionUnavailable, _handle_conversion_unavailable)
     app.add_exception_handler(
         SimulationCustomerNotFound,
         _handle_simulation_customer_not_found,
@@ -142,6 +148,27 @@ async def _handle_invalid_customer_data(request: Request, exc: Exception) -> JSO
     )
 
 
+async def _handle_customer_not_found(request: Request, exc: Exception) -> JSONResponse:
+    return problem_response(
+        status=404,
+        title="Cliente no encontrado",
+        detail="El cliente indicado no existe.",
+        instance=request.url.path,
+    )
+
+
+async def _handle_invalid_query_data(request: Request, exc: Exception) -> JSONResponse:
+    if not isinstance(exc, InvalidQueryData):
+        return _handle_unexpected_error_response(request)
+    return problem_response(
+        status=422,
+        title="Datos de consulta no válidos",
+        detail=exc.message,
+        instance=request.url.path,
+        errors=[ProblemFieldError(field=exc.field, message=exc.message)],
+    )
+
+
 async def _handle_tax_id_conflict(request: Request, exc: Exception) -> JSONResponse:
     if not isinstance(exc, CustomerTaxIdAlreadyExists):
         return _handle_unexpected_error_response(request)
@@ -184,6 +211,15 @@ async def _handle_simulation_customer_not_found(
 
 async def _handle_unexpected_error(request: Request, exc: Exception) -> JSONResponse:
     return _handle_unexpected_error_response(request)
+
+
+async def _handle_conversion_unavailable(request: Request, exc: Exception) -> JSONResponse:
+    return problem_response(
+        status=503,
+        title="Proveedor de divisas no disponible",
+        detail="No se pudo obtener un tipo de cambio válido. Inténtelo más tarde.",
+        instance=request.url.path,
+    )
 
 
 def _handle_unexpected_error_response(request: Request) -> JSONResponse:

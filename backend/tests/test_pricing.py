@@ -23,6 +23,9 @@ from saas_o_matic.domain.pricing import (
 @pytest.mark.parametrize(
     ("user_count", "expected"),
     [
+        (0, Decimal("0.00")),
+        (15, Decimal("140.00")),
+        (1_000_000, Decimal("5000170.00")),
         (1, Decimal("10.00")),
         (10, Decimal("100.00")),
         (11, Decimal("108.00")),
@@ -35,7 +38,7 @@ def test_calculate_user_subtotal_acceptance_examples(
     user_count: int,
     expected: Decimal,
 ) -> None:
-    """Los seis ejemplos aprobados producen exactamente el subtotal esperado."""
+    """Los nueve ejemplos aprobados producen exactamente el subtotal esperado."""
 
     assert calculate_user_subtotal(user_count) == expected
 
@@ -71,6 +74,10 @@ def test_calculate_user_subtotal_returns_decimal() -> None:
 
     assert isinstance(result, Decimal)
     assert not isinstance(result, float)
+
+
+def test_zero_has_exactly_two_decimal_places() -> None:
+    assert calculate_user_subtotal(0).as_tuple() == Decimal("0.00").as_tuple()
 
 
 def test_calculate_user_subtotal_is_monotonic() -> None:
@@ -136,7 +143,6 @@ def test_calculate_user_subtotal_has_no_plan_parameter() -> None:
 @pytest.mark.parametrize(
     "user_count",
     [
-        0,
         -1,
         -100,
         1.0,
@@ -156,7 +162,7 @@ def test_calculate_user_subtotal_has_no_plan_parameter() -> None:
     ],
 )
 def test_calculate_user_subtotal_rejects_invalid_counts(user_count: object) -> None:
-    """Solo se aceptan enteros positivos, sin coerciones ni truncamientos."""
+    """Solo se aceptan enteros no negativos, sin coerciones ni truncamientos."""
 
     with pytest.raises(InvalidUserCount) as error:
         calculate_user_subtotal(cast(Any, user_count))

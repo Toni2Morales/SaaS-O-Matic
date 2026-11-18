@@ -22,8 +22,8 @@ from saas_o_matic.domain.customers.ports import CustomerRepository
 from saas_o_matic.domain.customers.value_objects import (
     CountryCode,
     PlanCode,
-    SpanishTaxId,
     normalize_legal_name,
+    parse_tax_id,
 )
 
 
@@ -46,14 +46,14 @@ class CreateCustomer:
             raise InvalidCustomerData("legal_name", str(exc)) from exc
 
         try:
-            tax_id = SpanishTaxId.parse(command.tax_id)
-        except InvalidTaxId as exc:
-            raise InvalidCustomerData("tax_id", str(exc)) from exc
-
-        try:
             country = CountryCode.parse(command.country)
         except InvalidCountry as exc:
             raise InvalidCustomerData("country", str(exc)) from exc
+
+        try:
+            tax_id = parse_tax_id(command.tax_id, country)
+        except InvalidTaxId as exc:
+            raise InvalidCustomerData("tax_id", str(exc)) from exc
 
         try:
             plan = PlanCode.parse(command.plan)

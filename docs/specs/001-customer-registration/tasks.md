@@ -1,11 +1,16 @@
 # Tareas 001 - Alta de clientes
 
+> Ampliación vigente TASK036: [TASKS-004](../004-international-customers-and-simulations/tasks.md).
+> Los checks siguientes registran el primer incremento; D-01/restricción ES quedan
+> sustituidos por Q-20 (seis países, validación genérica fuera de ES).
+
 | Campo | Valor |
 | --- | --- |
 | ID | TASKS-001 |
 | Título | Desglose de implementación de `POST /customers` |
-| Estado | **Implementado; validación de `legal_name` corregida en TASK022. Cambios locales no publicados** |
+| Estado | **Implementado y publicado en PR #3. Estado vigente verificado en TASK035** |
 | Fecha | 2026-11-16 |
+| Actualización | 2026-11-17 (TASK035) |
 
 ## 1. Regla de alcance
 
@@ -199,4 +204,4 @@ La funcionalidad se considera terminada cuando:
 
 ## 8. Estado actual
 
-El alta de clientes está implementada y validada localmente. Los cambios de TASK020 y la corrección de TASK022 permanecen sin `git add`, sin commit, sin push y sin PR. El siguiente paso es la revisión del propietario y la eventual preparación del PR #3. El merge corresponde exclusivamente al propietario.
+El alta de clientes está implementada, auditada y publicada en el PR #3, fusionado por el propietario en `88816201a01677760a68ded5b8be21565bf737fc`. El estado vigente se verificó en TASK035. El siguiente paso funcional es la búsqueda, el listado y el detalle (FR-07/FR-08), pendientes de especificación. El merge de cambios futuros corresponde exclusivamente al propietario.

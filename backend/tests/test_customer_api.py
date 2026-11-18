@@ -270,7 +270,7 @@ def test_missing_required_field_returns_problem_422(
         ("tax_id", "12345678A"),
         ("tax_id", "X1234567A"),
         ("tax_id", "B12345678"),
-        ("country", "FR"),
+        ("country", "US"),
         ("plan", "premium"),
     ],
 )
@@ -349,3 +349,55 @@ def test_openapi_documents_customer_contract(customer_api: CustomerApi) -> None:
         legal_name_schema = schemas[schema_name]["properties"]["legal_name"]
         assert legal_name_schema["minLength"] == LEGAL_NAME_MIN_LENGTH
         assert legal_name_schema["maxLength"] == LEGAL_NAME_MAX_LENGTH
+
+
+@pytest.mark.parametrize("country", ["ES", "PT", "FR", "DE", "IT", "NL"])
+def test_supported_countries(customer_api: CustomerApi, country: str) -> None:
+    """Los seis países conservan todos los campos y el único plan."""
+
+    payload = {**_valid_payload(), "country": country}
+    response = asyncio.run(_post(customer_api.app, payload))
+    assert response.status_code == 201
+    assert response.json()["country"] == country
+    assert response.json()["plan"] == "standard"
+
+
+def test_international_normalization_and_country_uniqueness(customer_api: CustomerApi) -> None:
+    """Preserva puntuación y permite un mismo identificador en distintos países."""
+
+    payload = {**_valid_payload(), "country": "FR", "tax_id": "  ab-12 /  34  "}
+    first = asyncio.run(_post(customer_api.app, payload))
+    assert first.status_code == 201
+    assert first.json()["tax_id"] == "AB-12 / 34"
+    duplicate = asyncio.run(_post(customer_api.app, {**payload, "tax_id": "AB-12 / 34"}))
+    assert duplicate.status_code == 409
+    assert duplicate.headers["content-type"].startswith("application/problem+json")
+    other = asyncio.run(_post(customer_api.app, {**payload, "country": "DE"}))
+    assert other.status_code == 201
+    assert len(_stored_customers(customer_api)) == 2
+
+
+@pytest.mark.parametrize("tax_id", ["", "   ", "X" * 65, "AB\n12", "AB\x0012", "AB\u200b12"])
+def test_generic_tax_id_rejected(customer_api: CustomerApi, tax_id: str) -> None:
+    """La validación genérica rechaza vacío, exceso y controles."""
+
+    response = asyncio.run(
+        _post(
+            customer_api.app,
+            {
+                **_valid_payload(),
+                "country": "PT",
+                "tax_id": tax_id,
+            },
+        )
+    )
+    assert response.status_code == 422
+    assert response.headers["content-type"].startswith("application/problem+json")
+    assert _stored_customers(customer_api) == []
+
+
+def test_customers_continue_ignoring_extra_fields(customer_api: CustomerApi) -> None:
+    """Q-26 no amplía unilateralmente el contrato de clientes."""
+
+    response = asyncio.run(_post(customer_api.app, {**_valid_payload(), "unknown": 1}))
+    assert response.status_code == 201

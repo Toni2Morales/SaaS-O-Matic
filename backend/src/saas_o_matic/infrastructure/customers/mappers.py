@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC
 
 from saas_o_matic.domain.customers.entities import Customer
-from saas_o_matic.domain.customers.value_objects import CountryCode, PlanCode, SpanishTaxId
+from saas_o_matic.domain.customers.value_objects import CountryCode, PlanCode, parse_tax_id
 from saas_o_matic.infrastructure.customers.models import CustomerModel
 
 
@@ -19,7 +19,7 @@ def to_domain(model: CustomerModel) -> Customer:
     return Customer(
         id=model.id,
         legal_name=model.legal_name,
-        tax_id=SpanishTaxId.parse(model.tax_id),
+        tax_id=parse_tax_id(model.tax_id, CountryCode.parse(model.country)),
         email=model.email,
         country=CountryCode.parse(model.country),
         plan=PlanCode.parse(model.plan),

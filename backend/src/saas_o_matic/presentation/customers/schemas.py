@@ -18,6 +18,8 @@ from saas_o_matic.application.customers.catalogs import (
     CountryCode,
     PlanCode,
 )
+from saas_o_matic.application.pagination import MAX_SEARCH_LENGTH
+from saas_o_matic.presentation.pagination import PageParameters
 
 LegalNameStr = Annotated[
     str,
@@ -49,3 +51,23 @@ class CustomerResponse(BaseModel):
     country: CountryCode
     plan: PlanCode
     created_at: datetime
+
+
+class CustomerListParameters(PageParameters):
+    search: (
+        Annotated[
+            str,
+            StringConstraints(
+                strip_whitespace=True,
+                max_length=MAX_SEARCH_LENGTH,
+            ),
+        ]
+        | None
+    ) = None
+
+
+class CustomerPageResponse(BaseModel):
+    items: list[CustomerResponse]
+    total: int
+    limit: int
+    offset: int

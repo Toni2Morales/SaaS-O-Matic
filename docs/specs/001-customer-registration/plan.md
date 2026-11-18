@@ -1,11 +1,15 @@
 # Plan técnico 001 - Alta de clientes
 
+> TASK036 amplía este plan mediante [PLAN-004](../004-international-customers-and-simulations/plan.md).
+> Seis países, tax_id hasta 64 para no ES y unicidad compuesta conservada.
+
 | Campo | Valor |
 | --- | --- |
 | ID | PLAN-001 |
 | Título | Plan técnico para `POST /customers` |
-| Estado | **Implementado; validación de `legal_name` corregida en TASK022. Cambios locales no publicados.** |
+| Estado | **Implementado y publicado en PR #3. Estado vigente verificado en TASK035.** |
 | Fecha | 2026-11-16 |
+| Actualización | 2026-11-17 (TASK035) |
 | Base arquitectónica | [ADR 0002](../../adr/0002-architecture.md) |
 | Especificación | [spec.md](spec.md) |
 
@@ -70,7 +74,7 @@ La migración inicial vive en `backend/migrations/versions/0001_create_customers
 | `legal_name` | `str` | Obligatorio; recortado; 1–255 caracteres tras el recorte; sin unicidad (D-06, D-08, D-15). |
 | `tax_id` | `SpanishTaxId` | Normalizado y validado (D-03, D-07). |
 | `email` | `str` | Obligatorio; validación sintáctica en presentación (D-04, D-08). |
-| `country` | `CountryCode` | Solo `ES` (D-01, D-08). |
+| `country` | `CountryCode` | ES/PT/FR/DE/IT/NL (Q-20/TASK036). |
 | `plan` | `PlanCode` | Obligatorio; solo `standard` (D-02, D-08). |
 | `created_at` | `datetime` | UTC; sin `updated_at` (D-14). |
 
@@ -153,7 +157,7 @@ La persistencia y el commit quedan en la frontera de infraestructura. El caso de
 
 ### 5.2 SQLite de desarrollo
 
-`create_sqlite_engine` crea un motor para una ruta concreta y asegura el directorio padre. La configuración de Alembic usa por defecto `sqlite:///./var/saas_o_matic.sqlite3`, sustituible mediante `DATABASE_URL`.
+`create_sqlite_engine` crea un motor para una ruta concreta y asegura el directorio padre. El runtime y Alembic comparten `resolve_database_url`/`resolve_database_path`: la prioridad es `DATABASE_URL`, la URL configurada por Alembic y `backend/var/saas_o_matic.sqlite3`. Las rutas relativas se resuelven desde `backend/`; solo se admite SQLite de fichero y no se carga `.env` automáticamente.
 
 Las pruebas usan una base SQLite temporal y aislada creada mediante Alembic. No se usa la base de desarrollo ni `create_all()` como sustituto de la migración.
 

@@ -1,11 +1,21 @@
 # Especificación 001 - Alta de clientes
 
+> TASK038 añade listado/búsqueda Unicode y detalle de clientes sin cambiar el alta:
+> [SPEC-006](../006-customer-queries-and-preview/spec.md). Países/plan/validaciones y
+> CustomerResponse existentes preservados; GET paginados y errores404/422/500.
+
+> **Vigente TASK036:** Q-20 amplía D-01 a ES/PT/FR/DE/IT/NL; algoritmos solo
+> españoles, resto con validación genérica de [SPEC-004](../004-international-customers-and-simulations/spec.md).
+> Unicidad por país ya existente conservada. Contrato y resultados del primer
+> incremento que siguen debajo se interpretan con esta ampliación local no publicada.
+
 | Campo | Valor |
 | --- | --- |
 | ID | SPEC-001 |
 | Título | Alta de clientes mediante `POST /customers` |
-| Estado | **Implementada; validación de `legal_name` corregida en TASK022. Cambios locales no publicados.** |
+| Estado | **Implementada, auditada y publicada en PR #3. Estado vigente verificado en TASK035.** |
 | Fecha | 2026-11-16 |
+| Actualización | 2026-11-17 (TASK035) |
 | Rama | `feature/customer-registration` |
 | Base | `origin/main` en `be755a68a52392fd562eb3901e317bc85b1ed8e9` |
 | Alcance | Creación de clientes; no incluye búsqueda, detalle, simulaciones, autenticación ni facturación |
@@ -121,7 +131,7 @@ No se antepone `/api/v1` (D-12).
 | `legal_name` | `string` | Sí | Se recorta; entre 1 y 255 caracteres tras el recorte; no puede quedar vacío; sin restricción de unicidad (D-06, D-15). |
 | `tax_id` | `string` | Sí | Se normaliza y se valida como DNI/NIF, NIE o CIF/NIF (D-03, D-07). |
 | `email` | `string` | Sí | Validación sintáctica con `EmailStr` (D-04). |
-| `country` | `string` | Sí | Únicamente `ES` (D-01). |
+| `country` | `string` | Sí | ES/PT/FR/DE/IT/NL (Q-20 sustituye D-01 en TASK036). |
 | `plan` | `string` | Sí | Únicamente `standard` (D-02). |
 
 La petición no incluye `id`: el servidor genera un UUID (D-10).
@@ -190,7 +200,7 @@ El esquema `ProblemDetails` y las respuestas `201`, `409`, `422` y `500` se docu
 
 1. Un DNI/NIF, NIE o CIF/NIF válido se normaliza y se clasifica correctamente.
 2. Un identificador con formato o control incorrecto se rechaza.
-3. `country` solo admite `ES` en los esquemas y en el dominio.
+3. `country` admite ES/PT/FR/DE/IT/NL; España conserva sus algoritmos y el resto usa validación genérica documentada en SPEC-004.
 4. `email` es obligatorio y se valida con `EmailStr`.
 5. Los cinco campos de FR-01 son obligatorios en el esquema y en la API.
 6. `plan` solo admite `standard`; no existe valor por defecto.
@@ -228,6 +238,7 @@ La validación completa se registra en [TASK020](../../../ai-workspace/01-tasks/
 - No se han introducido planes adicionales, precios de planes ni prestaciones asociadas.
 - El lock de dependencias no es estricto ni usa hashes.
 - No hay CI configurada.
-- Los cambios de TASK020 y la corrección de TASK022 permanecen locales y sin publicar.
+- Los cambios de TASK020 y la corrección de TASK022 fueron publicados en el PR #3, fusionado por el propietario en `88816201a01677760a68ded5b8be21565bf737fc`.
+- El catálogo de países sigue limitado a `ES`; la ampliación internacional se propone en Q-20 y no forma parte de esta especificación histórica.
 
-El siguiente paso es la revisión del propietario y, si la autoriza, la preparación del PR #3. El merge corresponde exclusivamente al propietario.
+El alta de clientes está publicada. El siguiente paso funcional es la búsqueda, el listado y el detalle (FR-07/FR-08), que requieren una especificación posterior. El merge de cualquier cambio futuro corresponde exclusivamente al propietario.

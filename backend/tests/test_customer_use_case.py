@@ -15,7 +15,7 @@ from saas_o_matic.application.customers.errors import (
 from saas_o_matic.application.customers.use_cases import CreateCustomer
 from saas_o_matic.domain.customers.entities import Customer
 from saas_o_matic.domain.customers.errors import DuplicateCustomerTaxId, InvalidLegalName
-from saas_o_matic.domain.customers.value_objects import CountryCode, PlanCode, SpanishTaxId
+from saas_o_matic.domain.customers.value_objects import CountryCode, PlanCode, SpanishTaxId, TaxId
 
 STANDARD_PLAN = PlanCode.STANDARD.value
 
@@ -27,7 +27,7 @@ class InMemoryCustomerRepository:
         self.customers: list[Customer] = []
         self.raise_duplicate_on_add = False
 
-    def exists_by_tax_id(self, tax_id: SpanishTaxId, country: CountryCode) -> bool:
+    def exists_by_tax_id(self, tax_id: TaxId, country: CountryCode) -> bool:
         return any(
             customer.tax_id.value == tax_id.value and customer.country is country
             for customer in self.customers
@@ -35,6 +35,9 @@ class InMemoryCustomerRepository:
 
     def exists_by_id(self, customer_id: UUID) -> bool:
         return any(customer.id == customer_id for customer in self.customers)
+
+    def get_country_by_id(self, customer_id: UUID) -> CountryCode | None:
+        return next((c.country for c in self.customers if c.id == customer_id), None)
 
     def add(self, customer: Customer) -> None:
         if self.raise_duplicate_on_add:
@@ -151,7 +154,7 @@ def test_create_customer_rejects_unsupported_country() -> None:
     repository = InMemoryCustomerRepository()
 
     with pytest.raises(InvalidCustomerData) as error:
-        CreateCustomer(repository).execute(_command(country="FR"))
+        CreateCustomer(repository).execute(_command(country="US"))
 
     assert error.value.field == "country"
     assert repository.customers == []
@@ -189,3 +192,15 @@ def test_create_customer_translates_repository_duplicate() -> None:
 
     with pytest.raises(CustomerTaxIdAlreadyExists):
         CreateCustomer(repository).execute(_command())
+
+
+def test_duplicate_check_is_country_scoped_in_application() -> None:
+    """El puerto recibe país e identificador genérico normalizado."""
+
+    repository = InMemoryCustomerRepository()
+    use_case = CreateCustomer(repository)
+    use_case.execute(_command(country="FR", tax_id=" ab-12 "))
+    use_case.execute(_command(country="PT", tax_id="AB-12"))
+    with pytest.raises(CustomerTaxIdAlreadyExists):
+        use_case.execute(_command(country="FR", tax_id="AB-12"))
+    assert len(repository.customers) == 2

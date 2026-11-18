@@ -7,6 +7,10 @@ class CustomerApplicationError(Exception):
     """Error base de la aplicación de clientes."""
 
 
+class CustomerNotFound(CustomerApplicationError):
+    """El cliente solicitado no existe."""
+
+
 class InvalidCustomerData(CustomerApplicationError):
     """Los datos del cliente no superan una validación de dominio."""
 

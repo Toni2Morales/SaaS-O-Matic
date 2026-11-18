@@ -82,8 +82,8 @@ Estado de las decisiones sujetas a validación; P-02 se aplicó en TASK014 y que
 | --- | --- | --- |
 | P-01 | Versión concreta de Angular y confirmación de Vitest como runner. | Propietario |
 | P-02 | Fijar Python 3.13 en el proyecto. **Aplicada en TASK014; pendiente de revisión del resultado:** Python 3.13.17 instalado y fijado en `backend/pyproject.toml` con `>=3.13,<3.14`. | Propietario (instrucción TASK014) |
-| P-03 | Proveedor público de tipos de cambio. | Propietario |
-| P-04 | Fuente autoritativa de tipos impositivos. | Propietario |
+| P-03 | Resuelta para el MVP en TASK037: Frankfurter v2 único, verificado conforme a Q-23/SPEC-005; biblioteca estándar urllib, sin nuevas dependencias. | Propietario (TASK037) |
+| P-04 | Resuelta en alcance simplificado TASK037: tipos generales de seis países contrastados con Comisión Europea y fuentes oficiales nacionales; catálogo versionado. No regímenes especiales ni vigencias inventadas. | Propietario (TASK037) |
 | P-05 | Estrategia de despliegue y si SQLite es aceptable fuera de desarrollo. | Propietario |
 
 Ninguna de estas decisiones se ha resuelto por inferencia en esta fase.

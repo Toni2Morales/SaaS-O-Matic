@@ -18,6 +18,8 @@ def _payload(**overrides: object) -> dict[str, object]:
     values: dict[str, object] = {
         "customer_id": str(uuid4()),
         "user_count": 100,
+        "storage_gb": 250,
+        "api_calls_per_month": 100000,
     }
     values.update(overrides)
     return values
@@ -27,15 +29,13 @@ def test_request_accepts_the_approved_contract() -> None:
     """El esquema acepta UUID y entero estricto dentro del rango."""
 
     customer_id = uuid4()
-    request = SimulationCreateRequest.model_validate(
-        {"customer_id": str(customer_id), "user_count": 100}
-    )
+    request = SimulationCreateRequest.model_validate(_payload(customer_id=str(customer_id)))
 
     assert request.customer_id == customer_id
     assert request.user_count == 100
 
 
-@pytest.mark.parametrize("user_count", [1, 1_000_000])
+@pytest.mark.parametrize("user_count", [0, 1, 1_000_000])
 def test_request_accepts_user_count_boundaries(user_count: int) -> None:
     """Los dos extremos del rango técnico son válidos."""
 
@@ -47,7 +47,6 @@ def test_request_accepts_user_count_boundaries(user_count: int) -> None:
 @pytest.mark.parametrize(
     "user_count",
     [
-        0,
         -1,
         1_000_001,
         10**100,
@@ -74,9 +73,11 @@ def test_request_rejects_malformed_customer_id(customer_id: object) -> None:
         SimulationCreateRequest.model_validate(_payload(customer_id=customer_id))
 
 
-@pytest.mark.parametrize("field", ["customer_id", "user_count"])
+@pytest.mark.parametrize(
+    "field", ["customer_id", "user_count", "storage_gb", "api_calls_per_month"]
+)
 def test_request_requires_all_fields(field: str) -> None:
-    """Los dos campos del contrato son obligatorios."""
+    """Los cuatro campos del contrato son obligatorios."""
 
     payload = _payload()
     payload.pop(field)
@@ -85,14 +86,11 @@ def test_request_requires_all_fields(field: str) -> None:
         SimulationCreateRequest.model_validate(payload)
 
 
-def test_request_ignores_unknown_fields_following_the_existing_policy() -> None:
-    """Los campos no previstos se ignoran, como en el resto de esquemas actuales."""
+def test_request_rejects_unknown_fields() -> None:
+    """Los campos no previstos se rechazan conforme a Q-26."""
 
-    request = SimulationCreateRequest.model_validate(_payload(plan="standard", storage=10))
-
-    assert request.user_count == 100
-    assert "plan" not in request.model_dump()
-    assert "storage" not in request.model_dump()
+    with pytest.raises(ValidationError):
+        SimulationCreateRequest.model_validate(_payload(plan="standard", storage=10))
 
 
 def test_request_schema_documents_user_count_bounds() -> None:
@@ -101,7 +99,7 @@ def test_request_schema_documents_user_count_bounds() -> None:
     schema = SimulationCreateRequest.model_json_schema()
     user_count_schema = schema["properties"]["user_count"]
 
-    assert user_count_schema["minimum"] == 1
+    assert user_count_schema["minimum"] == 0
     assert user_count_schema["maximum"] == 1_000_000
 
 
@@ -114,6 +112,24 @@ def test_response_serializes_decimal_string_and_utc_timestamp() -> None:
         id=simulation_id,
         customer_id=customer_id,
         user_count=100,
+        storage_gb=250,
+        api_calls_per_month=100000,
+        billing_period="monthly",
+        tax_country="ES",
+        tax_rate="0.21",
+        tax_source="https://example.com",
+        tax_catalog_version="test",
+        tax_verified_on=datetime(2026, 11, 17).date(),
+        tax_territory="Península",
+        tax_effective_from=None,
+        tax_amount_eur="140.70",
+        total_eur="810.70",
+        display_currency="EUR",
+        exchange_rate="1",
+        exchange_rate_date=None,
+        exchange_rate_obtained_at=datetime(2026, 11, 17, tzinfo=UTC),
+        exchange_rate_source="identity",
+        converted_total="810.70",
         user_subtotal_eur="670.00",
         created_at=datetime(2026, 11, 16, 16, 0, tzinfo=UTC),
     )

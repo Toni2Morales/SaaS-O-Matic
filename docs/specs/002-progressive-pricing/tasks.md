@@ -1,11 +1,14 @@
 # Tareas 002 - Precios progresivos por usuarios
 
+> TASK036 amplía mediante [TASKS-004](../004-international-customers-and-simulations/tasks.md).
+
 | Campo | Valor |
 | --- | --- |
 | ID | TASKS-002 |
 | Título | Desglose de implementación del motor de precios progresivos |
-| Estado | **Implementado en TASK025; correcciones TASK027; cambios locales no publicados** |
+| Estado | **Implementado en TASK025, corregido en TASK027 y publicado en PR #4. Estado vigente verificado en TASK035** |
 | Fecha | 2026-11-16 |
+| Actualización | 2026-11-17 (TASK035) |
 | Especificación | [spec.md](spec.md) |
 | Plan | [plan.md](plan.md) |
 | Implementación | [TASK025](../../../ai-workspace/01-tasks/TASK025-progressive-pricing-implementation.md); correcciones en [TASK027](../../../ai-workspace/01-tasks/TASK027-progressive-pricing-audit-fixes.md) |
@@ -25,8 +28,8 @@ No se implementan impuestos, divisas, descuentos, periodicidades, precios de pla
 
 ## 2. Decisiones aprobadas
 
-- [x] Q-02: mínimo 1 usuario; cero es inválido y no produce subtotal.
-- [x] PP-Q-01: solo enteros positivos; se rechazan cero, negativos, no enteros y `bool` con `InvalidUserCount`, sin coerciones.
+- [x] Q-02 sustituida por Q-19: mínimo 0; subtotal exactamente 0.00.
+- [x] PP-Q-01 actualizada: enteros no negativos; negativos, no enteros y `bool` rechazados.
 - [x] Q-08: `Decimal` exacto en EUR, sin `float` ni redondeos innecesarios; formato y serialización HTTP quedan fuera.
 - [x] Q-12: sin máximo comercial en el dominio; el límite de UI/API se decide por separado.
 - [x] Registrar las decisiones en SPEC-002 y TASK025.
@@ -51,9 +54,9 @@ Las decisiones están cerradas. No quedan casos funcionales pendientes dentro de
 
 ## 4. Errores y validación
 
-- [x] Definir `InvalidUserCount` para cantidades distintas de un entero positivo.
+- [x] Definir `InvalidUserCount` para cantidades distintas de un entero no negativo.
 - [x] Definir `InvalidPricingSchedule` como error interno de invariante, sin exponerlo a HTTP.
-- [x] Implementar el rechazo de 0 usuarios.
+- [x] Admitir 0 usuarios con subtotal 0.00 (TASK036 sustituye rechazo inicial).
 - [x] Implementar el rechazo de negativos, no enteros y `bool`.
 - [x] No imponer un máximo de usuarios en el dominio.
 - [x] No truncar, redondear ni convertir silenciosamente entradas inválidas.

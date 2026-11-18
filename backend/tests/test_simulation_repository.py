@@ -9,7 +9,7 @@ from typing import cast
 from uuid import UUID, uuid4
 
 import pytest
-from sqlalchemy import Table, insert, select
+from sqlalchemy import Table, insert, select, text
 from sqlalchemy.exc import IntegrityError
 
 from saas_o_matic.domain.customers.entities import Customer
@@ -94,6 +94,36 @@ def test_repository_persists_and_recovers_the_exact_amount(
         engine.dispose()
 
 
+def test_physical_text_and_new_session_reconstruction(migrated_database: Path) -> None:
+    """Comprueba tipo SQLite real, Decimal exacto y fecha UTC tras cerrar sesión."""
+
+    engine = create_sqlite_engine(migrated_database)
+    factory = create_session_factory(engine)
+    customer = _customer()
+    simulation = _simulation(customer_id=customer.id, user_count=15)
+    try:
+        with factory() as session:
+            SqlAlchemyCustomerRepository(session).add(customer)
+            SqlAlchemySimulationRepository(session).add(simulation)
+        with engine.connect() as connection:
+            row = connection.execute(
+                text(
+                    "SELECT typeof(user_subtotal_eur), user_subtotal_eur, "
+                    "storage_gb, api_calls_per_month, billing_period FROM simulations"
+                )
+            ).one()
+            assert tuple(row) == ("text", "140.00", None, None, "monthly")
+        with factory() as session:
+            restored = SqlAlchemySimulationRepository(session).get_by_id(simulation.id)
+            assert restored is not None
+            assert restored.user_subtotal_eur.as_tuple() == Decimal("140.00").as_tuple()
+            assert restored.created_at == simulation.created_at
+            assert restored.created_at.tzinfo is UTC
+            assert restored.storage_gb is None
+    finally:
+        engine.dispose()
+
+
 def test_repository_persists_the_maximum_technical_count(migrated_database: Path) -> None:
     """El máximo autorizado se persiste con su subtotal exacto."""
 
@@ -161,7 +191,7 @@ def test_database_check_rejects_user_count_outside_the_range(
                     insert(SimulationModel).values(
                         id=uuid4(),
                         customer_id=customer.id,
-                        user_count=0,
+                        user_count=-1,
                         user_subtotal_eur="0.00",
                         created_at=datetime.now(UTC),
                     )

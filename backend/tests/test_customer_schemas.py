@@ -119,14 +119,14 @@ def test_customer_create_request_rejects_invalid_email(email: str) -> None:
 
 
 def test_customer_create_request_rejects_unsupported_country() -> None:
-    """La primera versión solo admite el código ISO ``ES``."""
+    """El país debe pertenecer al catálogo aprobado."""
 
     with pytest.raises(ValidationError):
         CustomerCreateRequest(
             legal_name="Cliente de prueba",
             tax_id="12345678Z",
             email="cliente@example.com",
-            country="FR",
+            country="US",
             plan=STANDARD_PLAN,
         )
 

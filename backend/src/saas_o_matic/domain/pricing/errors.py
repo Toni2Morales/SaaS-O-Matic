@@ -6,11 +6,11 @@ class PricingDomainError(Exception):
 
 
 class InvalidUserCount(PricingDomainError):
-    """El número de usuarios no es un entero positivo válido."""
+    """El número de usuarios no es un entero no negativo válido."""
 
     def __init__(self, value: object) -> None:
         self.value = value
-        super().__init__("El número de usuarios debe ser un entero positivo.")
+        super().__init__("El número de usuarios debe ser un entero no negativo.")
 
 
 class InvalidPricingSchedule(PricingDomainError):

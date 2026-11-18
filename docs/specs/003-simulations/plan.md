@@ -1,11 +1,16 @@
 # Plan técnico 003 - Simulaciones de costes
 
+> TASK036 actualiza este plan mediante [PLAN-004](../004-international-customers-and-simulations/plan.md).
+> Consumos obligatorios nuevos, NULL históricos, mensual, cero y forbid. Orden
+> vigente: validar → comprobar cliente → calcular → persistir. Resultados TASK032 históricos.
+
 | Campo | Valor |
 | --- | --- |
 | ID | PLAN-003 |
 | Título | Plan técnico del primer incremento de simulaciones |
-| Estado | **Implementación local completada en TASK032; 240 pruebas superadas; auditoría independiente y publicación pendientes** |
+| Estado | **Implementado en TASK032, auditado en TASK033 y publicado en PR #5; 240 pruebas superadas. Estado vigente verificado en TASK035** |
 | Fecha | 2026-11-17 |
+| Actualización | 2026-11-17 (TASK035) |
 | Base arquitectónica | [ADR 0002](../../adr/0002-architecture.md) |
 | Especificación | [spec.md](spec.md) |
 | Tareas | [tasks.md](tasks.md) |
@@ -35,8 +40,8 @@ Hay **ocho identificadores SIM-P únicos aprobados** y **nueve decisiones concep
 | SIM-P01 | Persistencia de simulaciones. |
 | SIM-P02 | Cliente registrado obligatorio. |
 | SIM-P08 / Q-08 | Importes HTTP como cadena decimal exacta. |
-| SIM-P09 / Q-12 (API) | Rango 1..1.000.000, ambos inclusive. |
-| SIM-P09 / Q-12 (UI) | Slider 1..1.000; entrada manual hasta 1.000.000. |
+| SIM-P09 / Q-12 (API) | Rango 0..1.000.000 (TASK036). |
+| SIM-P09 / Q-12 (UI) | Slider 0..1.000; entrada manual hasta 1.000.000. |
 | SIM-P12 | Cliente válido inexistente: `404` problem+json; UUID malformado: `422`. |
 | SIM-P13 | Importes en SQLite como texto decimal canónico. |
 | SIM-P15 | `POST /simulations` sin prefijo `/api/v1`. |
@@ -87,7 +92,7 @@ No se crean estos paquetes en TASK031.
 ### 3.2. Flujo
 
 1. El router valida el cuerpo y crea `CreateSimulationCommand(customer_id, user_count)`.
-2. La aplicación valida el rango 1..1.000.000.
+2. La aplicación valida usuarios 0..1.000.000 y consumos estrictos antes de consultar el cliente.
 3. El caso de uso llama a `calculate_user_subtotal(user_count)`.
 4. Si el motor rechaza el número de usuarios, se devuelve `422`.
 5. El caso de uso comprueba `customer_repository.exists_by_id(customer_id)`.
@@ -117,11 +122,11 @@ No se crean estos paquetes en TASK031.
 
 | Capa | Regla |
 | --- | --- |
-| Dominio `pricing` | Mínimo 1; entero positivo estricto; rechazo de `bool`, no enteros y negativos; sin máximo comercial. No se modifica. |
-| Aplicación | Rango defensivo 1..1.000.000; cliente existente; cálculo; persistencia; sin efectos ante error. |
-| Presentación | UUID válido; entero estricto; rango 1..1.000.000; `422`; `application/problem+json`. |
+| Dominio `pricing` | Mínimo 0; enteros no negativos, sin bool ni máximo comercial. |
+| Aplicación | Rangos estrictos; cliente existente antes del cálculo; persistencia sin parciales. |
+| Presentación | UUID válido, enteros estrictos 0..máximos, forbid; 422 problem+json. |
 | Persistencia | `CHECK` de `user_count` entre 1 y 1.000.000; FK; transacción. |
-| UI futura | Slider 1..1.000; entrada manual hasta 1.000.000. No se implementa. |
+| UI futura | Slider 0..1.000; entrada manual hasta 1.000.000. No se implementa. |
 
 El máximo de API no se introduce en `pricing`. El dominio sigue sin máximo comercial.
 
@@ -290,7 +295,9 @@ Verificación independiente para 1.000.000:
 | HTTP | `POST /simulations` con `201`, `404`, `422`, `500` y `application/problem+json`. |
 | Pruebas | 240 superadas; 72 nuevas de simulación y una de `exists_by_id`. |
 | Calidad | Ruff check, Ruff format --check, mypy y `pip check` sin errores. |
-| Publicación | No realizada: sin commit, push, PR ni merge. |
+| Publicación | No realizada en TASK032: sin commit, push, PR ni merge. |
+
+**Estado vigente TASK035:** TASK033 auditó el incremento con veredicto APTA CON OBSERVACIONES, sin hallazgos bloqueantes. TASK034 publicó el PR #5 y el propietario lo fusionó en `b3c5ca81d23d279b478ed466757bada031aa1e1e`. La tabla anterior conserva el resultado histórico de TASK032.
 
 ## 11. Referencias
 
