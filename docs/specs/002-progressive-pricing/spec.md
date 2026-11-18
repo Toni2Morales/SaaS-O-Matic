@@ -1,11 +1,16 @@
 # Especificación 002 - Precios progresivos por usuarios
 
+> TASK036/Q-19 sustituye Q-02/PP-Q-01: cero devuelve exactamente `Decimal("0.00")`.
+> Enteros no negativos sin máximo comercial; tarifas y bandas de unidades intactas.
+> Q-12/SIM-P09: API 0..1.000.000; slider futuro 0..1.000, manual hasta 1.000.000.
+
 | Campo | Valor |
 | --- | --- |
 | ID | SPEC-002 |
 | Título | Motor de cálculo de precios progresivos por número de usuarios |
-| Estado | **Decisiones Q-02, PP-Q-01, Q-08 y Q-12 aprobadas; implementada en TASK025 y corregida en TASK027. Cambios locales no publicados.** |
+| Estado | **Decisiones Q-02, PP-Q-01, Q-08 y Q-12 aprobadas; implementada en TASK025, corregida en TASK027 y publicada en PR #4. Estado vigente verificado en TASK035.** |
 | Fecha | 2026-11-16 |
+| Actualización | 2026-11-17 (TASK035) |
 | Rama | `feature/progressive-pricing` |
 | Base | `origin/main` en `88816201a01677760a68ded5b8be21565bf737fc` (PR #3 fusionado) |
 | Implementación | `backend/src/saas_o_matic/domain/pricing/` |
@@ -90,12 +95,14 @@ La independencia es una decisión aprobada. Cualquier precio o prestación por p
 
 | ID | Decisión aprobada |
 | --- | --- |
-| Q-02 | El mínimo es 1 usuario. Cero usuarios es inválido y no produce subtotal. |
-| PP-Q-01 | Solo se aceptan enteros positivos. Se rechazan cero, negativos, valores no enteros y `bool`, sin truncar, redondear, convertir cadenas ni aplicar coerciones. El error de dominio es `InvalidUserCount`. |
+| Q-02 | Sustituida por Q-19/TASK036: mínimo 0, subtotal exacto 0.00. |
+| PP-Q-01 | Enteros no negativos; rechazar negativos, no enteros y `bool` con `InvalidUserCount`, sin coerciones. |
 | Q-08 | Se usa `Decimal` exacto y EUR. No se usa `float` ni se introducen redondeos innecesarios. El formato de presentación, la serialización HTTP y las futuras conversiones de divisas quedan pendientes. |
 | Q-12 | No se establece un máximo comercial de usuarios en el dominio. El eventual máximo de la interfaz o de una futura API se decidirá por separado. No se introduce un límite arbitrario. |
 
 Estas decisiones están aprobadas y sustituyen a las preguntas abiertas registradas en TASK024. Q-16 y el rango del control deslizante de FR-09 siguen fuera del alcance del cálculo puro. TASK027 corrige el dimensionado de la precisión para no depender de la conversión `int → str` y añade pruebas de cantidades superiores a 4300 dígitos y de aislamiento del contexto decimal, sin cambiar las reglas comerciales.
+
+**Estado TASK036:** representación HTTP exacta de SPEC-003 conservada; cálculo puro sin formato. PR #4 fusionado en `9cd553fff035de640e12a5eb5530f0791ed7b9e7`; ahora Q-19 resuelve localmente la discrepancia del cero, sin publicar este incremento.
 
 ## 5. Trazabilidad de las decisiones
 
@@ -112,8 +119,8 @@ user_count: int
 ```
 
 - Representa el número de usuarios activos.
-- Debe ser un entero positivo mayor o igual que 1.
-- Se rechazan cero, negativos, `float`, `Decimal`, cadenas, `None`, `bool` y otros tipos no enteros con `InvalidUserCount`.
+- Debe ser un entero no negativo; cero produce exactamente `Decimal("0.00")`.
+- Se rechazan negativos, `float`, `Decimal`, cadenas, `None`, `bool` y otros tipos no enteros con `InvalidUserCount`.
 - No se acepta `plan`, país, divisa, impuesto, periodicidad ni precios externos.
 - No se trunca, redondea ni convierte silenciosamente ningún valor.
 - No hay máximo comercial en el dominio (Q-12).
@@ -162,7 +169,7 @@ Con los tramos aprobados:
 | 2 | 11 | 50 | `Decimal("8.00")` |
 | 3 | 51 | sin límite | `Decimal("5.00")` |
 
-El algoritmo se aplica únicamente a enteros positivos. Cero, negativos y valores no enteros se rechazan antes de calcular. La implementación amplía la precisión del contexto de `Decimal` según una cota superior de dígitos calculada con `int.bit_length()`, sin convertir el entero completo a cadena, para preservar la exactitud sin imponer un máximo comercial.
+El algoritmo admite enteros no negativos. Cero devuelve 0.00; negativos y no enteros se rechazan. Para positivos la precisión se dimensiona mediante `int.bit_length()` sin convertir el entero a cadena ni imponer máximo comercial.
 
 ## 8. Validaciones y casos límite
 
@@ -170,7 +177,7 @@ El algoritmo se aplica únicamente a enteros positivos. Cero, negativos y valore
 | --- | --- | --- |
 | 1, 10, 11, 50, 51, 100 | Aprobado e implementado | Criterios de aceptación obligatorios de la sección 3.2. |
 | Límites de tramo | Aprobado e implementado | Probar 10/11 y 50/51 para verificar que cada tramo solo cobra sus unidades. |
-| 0 usuarios | Aprobado e implementado | Rechazar con `InvalidUserCount`; no devolver subtotal. |
+| 0 usuarios | Aprobado e implementado localmente TASK036 | Devolver exactamente `Decimal("0.00")`. |
 | Negativos | Aprobado e implementado | Rechazar con `InvalidUserCount`. |
 | No enteros | Aprobado e implementado | Rechazar con `InvalidUserCount`; no truncar ni convertir. |
 | `bool` como entrada | Aprobado e implementado | Rechazar con `InvalidUserCount`, aunque `bool` sea subtipo de `int`. |

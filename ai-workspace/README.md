@@ -3,12 +3,20 @@
 | Campo | Valor |
 | --- | --- |
 | Fecha de creación | 2026-11-13 |
-| Estado | Registro preparado para revisión; limitaciones históricas documentadas |
+| Estado | TASK040 publica el backend en rama/PR para revisión; integración en main pendiente; frontend y despliegue pendientes |
 | Ámbito | Colaboración entre el propietario, ChatGPT y OpenCode + DeepSeek |
 
 ## 1. Propósito
 
 Este directorio conserva el rastro verificable del trabajo asistido por IA: qué se pidió, qué se hizo, quién participó, qué se validó, qué se corrigió y qué queda pendiente.
+
+**Vigente TASK039B:** TASK039 auditó el backend acumulado con dictamen APTA CON
+OBSERVACIONES y sin hallazgos bloqueantes. TASK039B corrige A39-01/02/03/04/06,
+documenta A39-05 y revisa A39-07 a A39-11; A39-12 a A39-15 quedan diferidos o
+aceptados. Runtime y Alembic comparten la resolución SQLite y las tasas FX
+patológicas se rechazan antes de la caché con `503`. 579 pruebas. Rama
+`feature/mvp-backend`, sin staged ni publicación; UI y despliegue pendientes.
+Las filas y registros históricos conservan su contexto de ejecución.
 
 No sustituye a `docs/`. Los requisitos, ADRs, evaluaciones y proceso siguen siendo la fuente principal en `docs/`; aquí se registra el proceso y se enlaza a esos documentos para evitar duplicidad.
 
@@ -50,7 +58,15 @@ ai-workspace/
 │   ├── TASK029-simulations-preparation.md
 │   ├── TASK030-simulations-decisions-and-contract.md
 │   ├── TASK031-simulations-final-decisions.md
-│   └── TASK032-simulations-implementation.md
+│   ├── TASK032-simulations-implementation.md
+│   ├── TASK035-mvp-reconciliation.md
+│   ├── TASK036-international-customers-and-simulations.md
+│   ├── TASK037-initial-hashes.json
+│   ├── TASK037-taxes-and-currency-conversion.md
+│   ├── TASK038-initial-hashes.json
+│   ├── TASK038-customer-queries-and-preview.md
+│   ├── TASK039-backend-independent-audit.md
+│   └── TASK039B-backend-audit-remediation.md
 └── 02-audits/
     ├── TASK003-audit.md
     ├── TASK005-audit.md
@@ -70,7 +86,13 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 
 `TASK015` y `TASK016` tampoco forman parte de `TASKS.zip`. TASK015 registra la auditoría técnica del scaffold y TASK016 las correcciones posteriores.
 
-`TASK017` registra la publicación del scaffold y el merge del PR #2 por el propietario. `TASK018` inicia la primera funcionalidad, documenta la especificación del alta de clientes y se detiene en el punto de control por decisiones funcionales pendientes. `TASK019` aplica las decisiones aprobadas e implementa la base técnica de clientes, manteniendo el endpoint y la migración bloqueados por el catálogo de planes. `TASK020` aprueba D-02, completa el catálogo `standard`, crea la migración Alembic y deja operativo `POST /customers` con pruebas de dominio, aplicación, infraestructura, migración y API. `TASK021` fue una auditoría en sesión, sin archivo de registro; sus hallazgos se trazan en `TASK022`. `TASK022` aplica D-15, corrige la validación de `legal_name` y añade pruebas de regresión. `TASK023` publica el alta de clientes y registra el merge del PR #3 en `88816201a01677760a68ded5b8be21565bf737fc`. `TASK024` cierra documentalmente ese merge y prepara la especificación, el plan y las tareas del motor de precios progresivos, sin implementarlo. `TASK025` implementa y prueba el dominio `pricing` y registra las decisiones Q-02, PP-Q-01, Q-08 y Q-12; la implementación se publica en el PR #4. `TASK027` corrige los hallazgos menores H-01 y H-02 de la auditoría TASK026, añade la prueba de aislamiento decimal H-04 y mantiene H-03 como observación pendiente. `TASK028` publica la implementación de precios mediante el PR #4, fusionado en `9cd553fff035de640e12a5eb5530f0791ed7b9e7`, sin generar archivo de registro. `TASK029` prepara la especificación, el plan y las tareas del módulo de simulaciones, sin implementarlo y sin aprobar decisiones de persistencia, cliente, formato monetario, plan o máximo de usuarios. `TASK030` aprueba y documenta cuatro decisiones para el primer incremento: simulaciones persistidas, cliente obligatorio, importes HTTP como cadena decimal exacta y alcance limitado al coste de usuarios; mantiene el resto como propuestas o decisiones pendientes y no implementa código. `TASK031` cierra las decisiones bloqueantes restantes: límite técnico de API de 1.000.000 de usuarios, `404` para cliente inexistente, persistencia monetaria como texto decimal canónico, ruta sin prefijo `/api/v1` y aceptación parcial de FR-04/06/10/11; no implementa código ni publica cambios. `TASK032` implementa localmente el primer incremento: entidad y puerto de simulación, caso de uso con reutilización de `calculate_user_subtotal`, persistencia SQLAlchemy con texto decimal canónico y FK activa, migración `0002_create_simulations`, `POST /simulations`, errores `application/problem+json` y pruebas de caso de uso, repositorio, esquemas, API y migración. La suite completa queda en 240 pruebas superadas; no se publican cambios.
+`TASK017` registra la publicación del scaffold y el merge del PR #2 por el propietario. `TASK018` inicia la primera funcionalidad, documenta la especificación del alta de clientes y se detiene en el punto de control por decisiones funcionales pendientes. `TASK019` aplica las decisiones aprobadas e implementa la base técnica de clientes, manteniendo el endpoint y la migración bloqueados por el catálogo de planes. `TASK020` aprueba D-02, completa el catálogo `standard`, crea la migración Alembic y deja operativo `POST /customers` con pruebas de dominio, aplicación, infraestructura, migración y API. `TASK021` fue una auditoría en sesión, sin archivo de registro; sus hallazgos se trazan en `TASK022`. `TASK022` aplica D-15, corrige la validación de `legal_name` y añade pruebas de regresión. `TASK023` publica el alta de clientes y registra el merge del PR #3 en `88816201a01677760a68ded5b8be21565bf737fc`. `TASK024` cierra documentalmente ese merge y prepara la especificación, el plan y las tareas del motor de precios progresivos, sin implementarlo. `TASK025` implementa y prueba el dominio `pricing` y registra las decisiones Q-02, PP-Q-01, Q-08 y Q-12; la implementación se publica en el PR #4. `TASK027` corrige los hallazgos menores H-01 y H-02 de la auditoría TASK026, añade la prueba de aislamiento decimal H-04 y mantiene H-03 como observación pendiente. `TASK028` publica la implementación de precios mediante el PR #4, fusionado en `9cd553fff035de640e12a5eb5530f0791ed7b9e7`, sin generar archivo de registro. `TASK029` prepara la especificación, el plan y las tareas del módulo de simulaciones, sin implementarlo y sin aprobar decisiones de persistencia, cliente, formato monetario, plan o máximo de usuarios. `TASK030` aprueba y documenta cuatro decisiones para el primer incremento: simulaciones persistidas, cliente obligatorio, importes HTTP como cadena decimal exacta y alcance limitado al coste de usuarios; mantiene el resto como propuestas o decisiones pendientes y no implementa código. `TASK031` cierra las decisiones bloqueantes restantes: límite técnico de API de 1.000.000 de usuarios, `404` para cliente inexistente, persistencia monetaria como texto decimal canónico, ruta sin prefijo `/api/v1` y aceptación parcial de FR-04/06/10/11; no implementa código ni publica cambios. `TASK032` implementa localmente el primer incremento: entidad y puerto de simulación, caso de uso con reutilización de `calculate_user_subtotal`, persistencia SQLAlchemy con texto decimal canónico y FK activa, migración `0002_create_simulations`, `POST /simulations`, errores `application/problem+json` y pruebas de caso de uso, repositorio, esquemas, API y migración. La suite completa queda en 240 pruebas superadas; no se publican cambios en TASK032. `TASK033` audita el incremento con veredicto APTA CON OBSERVACIONES, sin hallazgos bloqueantes. `TASK034` publica el commit `3629843881d5ade962b2d1a287b49e98d35b89b0` y crea el PR #5, fusionado por el propietario en `b3c5ca81d23d279b478ed466757bada031aa1e1e`. `TASK035` reconcilia el enunciado original con el estado actual, actualiza requisitos y estado de especificaciones, crea la matriz de trazabilidad y la hoja de ruta, y deja Q-18–Q-26 pendientes de aprobación sin implementar ni publicar.
+
+`TASK036`–`TASK038` implementaron localmente clientes internacionales, impuestos,
+FX, consultas, historial y preview. `TASK039` auditó el backend acumulado con
+dictamen APTA CON OBSERVACIONES. `TASK039B` aplica solo las correcciones
+autorizadas, añade pruebas de regresión y deja la publicación para TASK040, que
+requiere autorización específica del propietario.
 
 ## 3. Índice de tareas
 
@@ -104,7 +126,14 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 | TASK029 | Análisis y especificación del módulo de simulaciones | Completada (análisis y documentación); decisiones pendientes; sin implementación | [TASK029-simulations-preparation.md](01-tasks/TASK029-simulations-preparation.md) | — | Instrucción de la sesión; `docs/specs/003-simulations/` |
 | TASK030 | Cierre de decisiones y contrato del primer incremento de simulaciones | Completada (documentación); cuatro decisiones aprobadas; sin implementación | [TASK030-simulations-decisions-and-contract.md](01-tasks/TASK030-simulations-decisions-and-contract.md) | — | Instrucción de la sesión; `docs/specs/003-simulations/` |
 | TASK031 | Cierre definitivo de decisiones bloqueantes de simulaciones | Completada (documentación); ocho identificadores y nueve decisiones aprobadas, nueve diferidas; sin implementación | [TASK031-simulations-final-decisions.md](01-tasks/TASK031-simulations-final-decisions.md) | — | Instrucción de la sesión; `docs/specs/003-simulations/` |
-| TASK032 | Implementación del primer incremento de simulaciones | Completada y validada localmente; 240 pruebas superadas; cambios no publicados | [TASK032-simulations-implementation.md](01-tasks/TASK032-simulations-implementation.md) | — | Instrucción de la sesión; código, migración, pruebas y validaciones en el repositorio |
+| TASK032 | Implementación del primer incremento de simulaciones | Completada; auditada en TASK033; publicada en PR #5 | [TASK032-simulations-implementation.md](01-tasks/TASK032-simulations-implementation.md) | — | Instrucción de la sesión; código, migración, pruebas y validaciones en el repositorio |
+| TASK035 | Reconciliación de requisitos y planificación final del MVP | Completada (análisis y documentación); decisiones Q-18–Q-26 pendientes; sin implementación ni publicación | [TASK035-mvp-reconciliation.md](01-tasks/TASK035-mvp-reconciliation.md) | — | Instrucción de la sesión; enunciado original, documentos, código y pruebas actuales |
+| TASK036 | Clientes internacionales y ampliación de simulaciones | Implementada y validada localmente; 340 pruebas; sin publicación | [TASK036-international-customers-and-simulations.md](01-tasks/TASK036-international-customers-and-simulations.md) | Cubierta por TASK039; correcciones en TASK039B | Instrucción del propietario, SPEC-004, código y validaciones reales |
+| TASK037 | Impuestos y conversión multidivisa | Implementada localmente; 411 pruebas; sin publicación | [TASK037-taxes-and-currency-conversion.md](01-tasks/TASK037-taxes-and-currency-conversion.md) | Cubierta por TASK039; correcciones en TASK039B | Instrucción, SPEC-005/fuentes oficiales, huellas iniciales y pruebas reales |
+| TASK038 | Consultas, historial y previsualización | Implementada localmente; 538 pruebas; sin publicación | [TASK038-customer-queries-and-preview.md](01-tasks/TASK038-customer-queries-and-preview.md) | Cubierta por TASK039; correcciones en TASK039B | Instrucción, SPEC-006, huellas, SQL authorizer y flujo backend real |
+| TASK039 | Auditoría independiente del backend completo | Completada; APTA CON OBSERVACIONES; 15 hallazgos, ninguno bloqueante; sin publicación | [TASK039-backend-independent-audit.md](01-tasks/TASK039-backend-independent-audit.md) | — | Instrucción, código, pruebas, documentación y baseline de 538 pruebas |
+| TASK039B | Remediación autorizada de la auditoría TASK039 | Implementada localmente; 579 pruebas; sin publicación | [TASK039B-backend-audit-remediation.md](01-tasks/TASK039B-backend-audit-remediation.md) | — | Instrucción, TASK039, código, pruebas y documentación corregida |
+| TASK040 | Publicación controlada del backend completo del MVP | Preparación validada; publicación y PR pendientes | [TASK040-mvp-backend-publication.md](01-tasks/TASK040-mvp-backend-publication.md) | — | Instrucción autorizada, estado Git, inventario, validaciones y revisión de seguridad |
 
 ### 3.1 Publicaciones
 
@@ -114,8 +143,9 @@ En TASK012, el propietario facilitó un ZIP `TASKS.zip` con los diez archivos `T
 | [#2](https://github.com/Toni2Morales/SaaS-O-Matic/pull/2) | `feature/backend-scaffold` | `main` | Fusionado por el propietario el 2026-11-15T16:10:42Z | `be755a68a52392fd562eb3901e317bc85b1ed8e9` | [TASK017](01-tasks/TASK017-backend-publication.md) |
 | [#3](https://github.com/Toni2Morales/SaaS-O-Matic/pull/3) | `feature/customer-registration` | `main` | Fusionado por el propietario el 2026-11-16T15:48:44+01:00 | `88816201a01677760a68ded5b8be21565bf737fc` | [TASK023](01-tasks/TASK023-customer-publication.md) |
 | [#4](https://github.com/Toni2Morales/SaaS-O-Matic/pull/4) | `feature/progressive-pricing` | `main` | Fusionado por el propietario el 2026-11-16T17:15:26+01:00 | `9cd553fff035de640e12a5eb5530f0791ed7b9e7` | TASK028 (sin archivo de registro); [TASK025](01-tasks/TASK025-progressive-pricing-implementation.md) y [TASK027](01-tasks/TASK027-progressive-pricing-audit-fixes.md) |
+| [#5](https://github.com/Toni2Morales/SaaS-O-Matic/pull/5) | `feature/simulations` | `main` | Fusionado por el propietario el 2026-11-17T15:47:05Z | `b3c5ca81d23d279b478ed466757bada031aa1e1e` | TASK033 (auditoría) y TASK034 (publicación), sin archivo de registro; [TASK032](01-tasks/TASK032-simulations-implementation.md) y [TASK035](01-tasks/TASK035-mvp-reconciliation.md) |
 
-Los merges del PR #1, del PR #2, del PR #3 y del PR #4 fueron ejecutados personalmente por el propietario. El agente no ejecutó merge ni force-push. TASK024 registra el cierre documental del PR #3. TASK028 no generó archivo de registro; su evidencia es el PR #4 y el commit de merge `9cd553f`.
+Los merges del PR #1, del PR #2, del PR #3, del PR #4 y del PR #5 fueron ejecutados personalmente por el propietario. El agente no ejecutó merge ni force-push. TASK024 registra el cierre documental del PR #3. TASK028 no generó archivo de registro; su evidencia es el PR #4 y el commit de merge `9cd553f`. TASK033 y TASK034 tampoco generaron archivo de registro; su evidencia es el PR #5, el commit de merge `b3c5ca8` y el informe TASK035.
 
 ## 4. Índice de auditorías
 
@@ -127,6 +157,7 @@ Los merges del PR #1, del PR #2, del PR #3 y del PR #4 fueron ejecutados persona
 | [TASK009-audit.md](02-audits/TASK009-audit.md) | Informe del agente | `TASK009.md` (TASKS.zip) y respuesta de TASK009 en la sesión | No es una validación independiente. |
 | [TASK011-audit.md](02-audits/TASK011-audit.md) | Informe del agente | Instrucción y respuesta de TASK011 en la sesión de OpenCode | No es una validación independiente; veredicto APTA CON OBSERVACIONES. |
 | [TASK015-audit.md](02-audits/TASK015-audit.md) | Informe del agente | Instrucción y respuesta de TASK015 en la sesión de OpenCode | No es una validación independiente; veredicto APTA CON OBSERVACIONES; hallazgos M1, M2 y B1–B4. |
+| TASK033 (sin archivo) | Auditoría independiente | PR #5 y [TASK035](01-tasks/TASK035-mvp-reconciliation.md) | Veredicto APTA CON OBSERVACIONES; hallazgos no bloqueantes H-01, H-02 y H-04–H-08. |
 
 ## 5. Reglas de reconstrucción histórica
 
@@ -167,12 +198,12 @@ Los merges del PR #1, del PR #2, del PR #3 y del PR #4 fueron ejecutados persona
 - Las instrucciones originales `TASK001.md`–`TASK010.md` están disponibles en `TASKS.zip`, pero el ZIP no se incorpora al repositorio.
 - No constan los informes originales de ejecución de TASK001, TASK002, TASK004, TASK006 ni TASK008. El assessment resume TASK004, TASK006 y TASK008; los archivos actuales permiten verificar parte de TASK002.
 - No constan los informes originales de auditoría de TASK003, TASK005 ni TASK007. `TASK004.md` referencia los hallazgos de TASK003; `TASK006.md` referencia los hallazgos bloqueantes de TASK005; `TASK008.md` referencia el veredicto NO APTA de TASK007.
-- TASK009, TASK010, TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020, TASK022, TASK023, TASK024, TASK025, TASK027, TASK029, TASK030, TASK031 y TASK032 disponen de registros o informes del agente, pero no consta una revisión independiente humana. TASK021 fue una auditoría en sesión sin archivo de registro; TASK028 no generó archivo de registro.
-- TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020, TASK022, TASK023, TASK024, TASK025, TASK027, TASK029, TASK030, TASK031 y TASK032 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
+- TASK009, TASK010, TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020, TASK022, TASK023, TASK024, TASK025, TASK027, TASK029, TASK030, TASK031, TASK032 y TASK035 disponen de registros o informes del agente, pero no consta una revisión independiente humana. TASK021 fue una auditoría en sesión sin archivo de registro; TASK028, TASK033 y TASK034 no generaron archivo de registro.
+- TASK011, TASK012, TASK013, TASK014, TASK015, TASK016, TASK017, TASK018, TASK019, TASK020, TASK022, TASK023, TASK024, TASK025, TASK027, TASK029, TASK030, TASK031, TASK032 y TASK035 no forman parte de `TASKS.zip`; su origen es la sesión de OpenCode.
 - `docs/specs/001-customer-registration/` contiene la especificación cerrada: D-01 a D-15 están aprobadas; D-02 se aprobó en TASK020 con el único plan `standard` y D-15 en TASK022 para `legal_name`; el endpoint y la migración están implementados y publicados en el PR #3.
 - `docs/specs/002-progressive-pricing/` contiene la especificación, el plan y las tareas del motor de precios progresivos. TASK025 implementó el dominio `pricing` y registró las decisiones Q-02, PP-Q-01, Q-08 y Q-12; los cambios se publicaron en el PR #4.
-- `docs/specs/003-simulations/` contiene la especificación, el plan y las tareas del primer incremento de simulaciones. TASK029 los preparó, TASK030 aprobó persistencia, cliente obligatorio, formato monetario HTTP como cadena decimal exacta y alcance limitado al coste de usuarios, y TASK031 cerró el máximo técnico de API, el `404` de cliente inexistente, el almacenamiento monetario como texto decimal y la ruta sin prefijo. TASK032 implementó localmente el incremento, con 240 pruebas superadas y sin publicar. Impuestos, divisas, almacenamiento, API, plan, lectura e idempotencia siguen diferidos.
-- Existe un backend con dominio fiscal, caso de uso operativo, modelo SQLAlchemy, repositorio, migración Alembic, `POST /customers`, dominio puro de precios progresivos y `POST /simulations` implementado localmente. No hay frontend ni endpoints de listado, detalle, edición o eliminación de simulaciones.
+- `docs/specs/003-simulations/` contiene la especificación, el plan y las tareas del primer incremento de simulaciones. TASK029 los preparó, TASK030 aprobó persistencia, cliente obligatorio, formato monetario HTTP como cadena decimal exacta y alcance limitado al coste de usuarios, y TASK031 cerró el máximo técnico de API, el `404` de cliente inexistente, el almacenamiento monetario como texto decimal y la ruta sin prefijo. TASK032 implementó el incremento, TASK033 lo auditó con veredicto APTA CON OBSERVACIONES y TASK034 lo publicó en el PR #5, fusionado en `b3c5ca81d23d279b478ed466757bada031aa1e1e`. Impuestos, divisas, almacenamiento, API, plan, lectura e idempotencia siguen diferidos.
+- Existe un backend con dominio fiscal, caso de uso operativo, modelo SQLAlchemy, repositorio, migración Alembic, `POST /customers`, dominio puro de precios progresivos y `POST /simulations`. No hay frontend ni endpoints de listado, detalle, edición o eliminación de simulaciones.
 - El entorno virtual `backend/.venv` es local y no se versiona. `TASKS.zip` permanece sin seguimiento y está excluido localmente mediante `.git/info/exclude`; esa regla no se versiona.
 - La estrategia de dependencias usa restricciones de versión, no un lock estricto con hashes; la build isolation queda fuera de `requirements.lock`.
 - La prueba de arquitectura es estática y no cubre imports dinámicos.

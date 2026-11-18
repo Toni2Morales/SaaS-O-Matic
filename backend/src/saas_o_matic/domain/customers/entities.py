@@ -9,7 +9,7 @@ from uuid import UUID
 from saas_o_matic.domain.customers.value_objects import (
     CountryCode,
     PlanCode,
-    SpanishTaxId,
+    TaxId,
     normalize_legal_name,
 )
 
@@ -24,7 +24,7 @@ class Customer:
 
     id: UUID
     legal_name: str
-    tax_id: SpanishTaxId
+    tax_id: TaxId
     email: str
     country: CountryCode
     plan: PlanCode

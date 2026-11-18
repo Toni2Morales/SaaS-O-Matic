@@ -1,15 +1,36 @@
 # Especificación 003 - Simulaciones de costes
 
+> Vigente TASK038: Q-09/Q-24/Q-25/SIM-P10/SIM-P11 implementados conforme a
+> [SPEC-006](../006-customer-queries-and-preview/spec.md): historial paginado e
+> inmutable, preview sin DML/id/created_at persistidos y cálculo compartido.
+> Rutas de lectura: clientes, detalle e historial por cliente; no GET individual
+> de simulación ni cambios de Location. Decisiones diferidas previas se interpretan
+> con esta actualización; evidencias de tareas anteriores siguen históricas.
+
+> TASK037/Q-16/Q-17/SIM-P14: contrato ampliado por [SPEC-005](../005-taxes-and-currency-conversion/spec.md).
+> IVA general según cliente, total mensual EUR y conversión EUR/USD/GBP con snapshot.
+> Display_currency opcional EUR; error externo 503 problem+json; contratos TASK036 válidos.
+> Resultados de TASK032–TASK036 siguen siendo evidencias históricas, no el contrato completo actual.
+
+> **Contrato vigente TASK036:** [SPEC-004](../004-international-customers-and-simulations/spec.md)
+> amplía este primer incremento. Petición obligatoria: customer_id, user_count,
+> storage_gb, api_calls_per_month; `extra="forbid"`. Respuesta añade consumos y
+> billing_period mensual. Históricos con consumos NULL. Rompe peticiones anteriores.
+> Validar entrada → comprobar cliente → calcular → persistir. H-01/H-02/H-04/H-05
+> corregidos localmente; H-06/H-07 justificados en TASK036. Las secciones de
+> resultados TASK032/TASK033/TASK034 conservan su significado histórico.
+
 | Campo | Valor |
 | --- | --- |
 | ID | SPEC-003 |
 | Título | Simulaciones de costes y reutilización del motor de precios |
-| Estado | **Ocho identificadores SIM-P aprobados (nueve decisiones conceptuales, porque SIM-P09 cubre API y UI); nueve decisiones diferidas; contrato HTTP implementado localmente en TASK032; pendiente de auditoría independiente y publicación.** |
+| Estado | **Ocho identificadores SIM-P aprobados (nueve decisiones conceptuales, porque SIM-P09 cubre API y UI); nueve decisiones diferidas; primer incremento implementado, auditado en TASK033 y publicado en PR #5. Estado vigente verificado en TASK035.** |
 | Fecha | 2026-11-17 |
+| Actualización | 2026-11-17 (TASK035) |
 | Rama | `feature/simulations` |
 | Base | `origin/main` en `9cd553fff035de640e12a5eb5530f0791ed7b9e7` (PR #4 fusionado) |
 | Alcance | Primer incremento: crear y persistir una simulación de coste de usuarios asociada a un cliente registrado |
-| Implementación | TASK032 implementó localmente el primer incremento. Suite completa: 240 pruebas superadas. Sin commit, push, PR ni merge |
+| Implementación | TASK032 implementó el primer incremento; TASK033 lo auditó; PR #5 fue fusionado por el propietario en `b3c5ca81d23d279b478ed466757bada031aa1e1e`. Suite completa: 240 pruebas superadas |
 
 ## 1. Decisiones aprobadas y correspondencia de identificadores
 
@@ -23,7 +44,7 @@ Hay **ocho identificadores SIM-P únicos aprobados** y **nueve decisiones concep
 | SIM-P02 | Cada simulación está vinculada a un cliente previamente registrado. |
 | SIM-P08 / Q-08 | Los importes HTTP se devuelven como cadenas decimales exactas. El cálculo interno usa `Decimal`. |
 | SIM-P09 / Q-12 (API) | La API acepta entre 1 y 1.000.000 de usuarios, ambos inclusive. Sin coerciones. |
-| SIM-P09 / Q-12 (UI) | La futura UI usará un slider de 1 a 1.000 usuarios y una entrada manual de hasta 1.000.000. No se implementa ahora. |
+| SIM-P09 / Q-12 (UI) | Slider futuro de 0 a 1.000; entrada manual hasta 1.000.000 (TASK036). |
 | SIM-P12 | Un UUID válido de cliente inexistente devuelve `404` con `application/problem+json`; no se persiste nada. Un UUID malformado es `422`. |
 | SIM-P13 | El importe se almacena en SQLite como texto decimal canónico y se reconstruye como `Decimal`. |
 | SIM-P15 | La ruta es `POST /simulations`, sin prefijo `/api/v1`. |
@@ -124,10 +145,10 @@ El primer incremento no satisface por sí solo FR-04, FR-06, FR-10 ni FR-11 comp
 
 | Referencia | Decisión |
 | --- | --- |
-| Q-02 | Mínimo 1 usuario; cero se rechaza. |
-| PP-Q-01 | Solo enteros positivos estrictos; se rechazan cero, negativos, no enteros y `bool`, sin coerciones. |
+| Q-02 | Sustituida Q-19/TASK036: mínimo 0, subtotal 0.00. |
+| PP-Q-01 | Enteros no negativos; rechazar negativos, no enteros y `bool`, sin coerciones. |
 | Q-08 | Cálculo exacto con `Decimal` en EUR, sin `float` ni redondeo de negocio. La representación HTTP aprobada es cadena decimal exacta. |
-| Q-12 | Sin máximo comercial en el dominio. La API fija un máximo técnico de 1.000.000; la UI usará slider de 1 a 1.000 y entrada manual de hasta 1.000.000. |
+| Q-12 | Dominio 0+ sin máximo; API 0..1.000.000; slider 0..1.000 y manual hasta 1.000.000. |
 | D-02 | Único plan `standard`; el plan es obligatorio en el cliente, no modifica los tramos y no añade precios o prestaciones. |
 | CON-03 | EUR es la divisa base. |
 | CON-04 | Almacenamiento y llamadas API se registran y muestran, pero no generan cargos. |
@@ -162,7 +183,9 @@ Sin prefijo `/api/v1`. Se mantienen las convenciones actuales hasta que exista u
 | Campo | Tipo | Obligatoriedad | Validación |
 | --- | --- | --- | --- |
 | `customer_id` | UUID | Obligatorio (SIM-P02). | UUID válido y cliente existente. |
-| `user_count` | Entero estricto | Obligatorio. | Entre 1 y 1.000.000, ambos inclusive; rechazar `bool`, `float`, cadena, cero, negativos y valores superiores. Sin coerciones. |
+| `user_count` | Entero estricto | Obligatorio. | Entre 0 y 1.000.000; rechazar bool, float, cadena, negativos y superiores. |
+| `storage_gb` | Entero estricto | Obligatorio desde TASK036. | 0..1.000.000; sin cargos. |
+| `api_calls_per_month` | Entero estricto | Obligatorio desde TASK036. | 0..1.000.000.000; sin cargos. |
 
 No se incluyen `plan`, `storage`, `api_calls`, `display_currency`, impuestos, descuentos ni otros campos comerciales no aprobados. No hay modo efímero ni híbrido: SIM-P01 aprobó persistencia.
 
@@ -324,7 +347,7 @@ Ventajas:
 | --- | --- | --- | --- |
 | `id` | UUID | Clave primaria, no nula. | Generado con `uuid4()`. |
 | `customer_id` | UUID | No nulo; clave foránea a `customers.id`. | Cliente obligatorio. |
-| `user_count` | Entero | No nulo; `>= 1` y `<= 1000000`. | Límite técnico del incremento; no es máximo comercial. |
+| `user_count` | Entero | No nulo; `>= 0` y `<= 1000000`. | Límite técnico; dominio sin máximo comercial. |
 | `user_subtotal_eur` | Texto decimal | No nulo. | Cadena canónica exacta; no se usa para aritmética SQL. |
 | `created_at` | Fecha/hora UTC | No nulo. | Restaurar UTC al leer si SQLite devuelve naive. |
 
@@ -368,13 +391,13 @@ Si en el futuro se modifican los tramos o se exige reconstruir el cálculo, se n
 
 | Capa | Responsabilidad |
 | --- | --- |
-| Dominio `pricing` | Mínimo 1; entero positivo estricto; rechazo de `bool`, no enteros y negativos; sin máximo comercial. No se modifica. |
-| Aplicación | Validación defensiva del rango 1..1.000.000; comprobación de cliente; cálculo; persistencia; sin efectos ante error. |
-| Presentación | UUID válido; entero estricto; rango 1..1.000.000; `422` para entradas inválidas; `application/problem+json`. |
+| Dominio `pricing` | Mínimo 0; entero no negativo; rechazo de bool/no enteros; sin máximo comercial. |
+| Aplicación | Validar consumos y rango 0..1.000.000; comprobar cliente antes de calcular; persistir. |
+| Presentación | UUID y enteros estrictos con rangos; forbid; 422 problem+json. |
 | Persistencia | `CHECK` de `user_count` entre 1 y 1.000.000; FK; transacción; sin registros parciales. |
-| UI futura | Slider de 1 a 1.000; entrada manual de hasta 1.000.000. No se implementa en este incremento. |
+| UI futura | Slider 0..1.000; entrada manual hasta 1.000.000. No implementada. |
 
-La validación de Pydantic no sustituye al dominio: el caso de uso sigue llamando a `calculate_user_subtotal`, que rechaza `bool`, no enteros y valores menores que 1.
+Pydantic no sustituye al dominio: pricing rechaza bool, no enteros y negativos; admite cero desde TASK036.
 
 ## 10. Validaciones del contrato
 
@@ -384,14 +407,14 @@ La validación de Pydantic no sustituye al dominio: el caso de uso sigue llamand
 | `customer_id` mal formado | `422`. |
 | `customer_id` válido inexistente | `404` con `problem+json`; no se persiste. |
 | `user_count` ausente | `422`. |
-| `user_count` = 0 | `422`; Q-02. |
+| `user_count` = 0 | `201`, subtotal `0.00`; Q-19 sustituye Q-02. |
 | `user_count` negativo | `422`; PP-Q-01. |
 | `user_count` = 1.000.001 | `422`; límite técnico de API. |
 | `user_count` extremadamente grande | `422`; no se calcula ni persiste. |
 | `user_count` decimal, cadena o `bool` | `422` sin coerción; PP-Q-01. |
 | `user_count` nulo | `422`. |
-| `plan` en la entrada | Se ignora conforme a la política existente de campos adicionales; no se usa en el cálculo ni se persiste. |
-| `storage` / `api_calls` | Se ignoran; no se persisten; Q-15 sigue diferido. |
+| `plan` en la entrada | 422, campo desconocido (Q-26). |
+| `storage` / `api_calls` | 422, nombres desconocidos; usar storage_gb/api_calls_per_month obligatorios. |
 | Importe monetario | `Decimal` interno; salida como cadena exacta; sin `float` ni redondeo nuevo. |
 | Error de validación | `application/problem+json` con `ProblemDetails`. |
 
@@ -420,7 +443,7 @@ Verificación independiente del algoritmo:
 
 ### 11.2. Límites y entradas inválidas
 
-- 0 usuarios.
+- 0 usuarios aceptados desde TASK036; resto de esta lista inválido.
 - Usuarios negativos.
 - 1.000.001 usuarios.
 - Cantidades extremadamente grandes.
@@ -491,7 +514,7 @@ Esta aceptación no cancela requisitos, no modifica sus objetivos finales, no de
 | Q-07 | Divisas soportadas. | Pendiente. | No. | Bloquea FR-10. | Diferir. | Sí. |
 | Q-08 | Cálculo exacto y formato de salida. | Resuelta para HTTP: cadena decimal exacta. | Sí: salida `user_subtotal_eur` como cadena. | Ninguna en el alcance actual. | Probar exactitud y no usar `float`. | Decisión aprobada. |
 | Q-09 | Historial inmutable o editable. | Pendiente. | No hay edición. | No se define política futura. | Diferir; no implementar `PATCH`/`PUT`/`DELETE`. | Sí. |
-| Q-12 | Máximo de usuarios en UI/API. | Resuelta para API y UI de este incremento. | API 1..1.000.000; UI slider 1..1.000 y manual hasta 1.000.000. | El dominio sigue sin máximo comercial. | Implementar el límite solo en API/aplicación/persistencia. | Decisión aprobada. |
+| Q-12 | Límites UI/API. | Actualizada TASK036. | API 0..1.000.000; slider 0..1.000 y manual hasta 1.000.000. | Dominio sin máximo. | Límites en API/aplicación/persistencia. | Aprobada. |
 | Q-15 | Unidades de almacenamiento y llamadas. | Pendiente. | No se incluyen. | FR-04 parcial. | Diferir. | Sí. |
 | Q-16 | Magnitud del importe base. | Pendiente. | No se usa `base_amount_eur`. | FR-11 parcial. | Mantener subtotal separado; decidir antes de impuestos/divisas. | Sí. |
 | Q-17 | Obligatoriedad de fecha/fuente de tasa. | Pendiente. | No aplica sin divisas. | FR-11 parcial. | Diferir. | Sí. |
@@ -508,7 +531,7 @@ Esta aceptación no cancela requisitos, no modifica sus objetivos finales, no de
 | SIM-P06 | Q-05: impuesto. | Diferida. | No se calcula. | Diferir. | No. |
 | SIM-P07 | Q-06/Q-07/Q-17: divisas. | Diferida. | No se incluyen. | Diferir. | No. |
 | SIM-P08 | Q-08: formato monetario. | Aprobada. | Salida `user_subtotal_eur`. | Implementar serialización exacta. | No. |
-| SIM-P09 | Q-12: límites API/UI. | Aprobada. | API 1..1.000.000; UI 1..1.000 y manual hasta 1.000.000. | Implementar solo API/aplicación/persistencia; no pricing. | No. |
+| SIM-P09 | Q-12 límites API/UI. | Actualizada TASK036. | API 0..1.000.000; UI 0..1.000, manual hasta 1.000.000. | Sin máximo comercial en pricing. | No. |
 | SIM-P10 | Q-09: inmutabilidad/edición. | Diferida. | No hay edición. | Diferir. | No. |
 | SIM-P11 | Endpoints de lectura. | Diferida. | No se implementan. | Diferir. | No. |
 | SIM-P12 | Cliente inexistente. | Aprobada. | `404` con `problem+json`; UUID malformado `422`. | Implementar error y manejador. | No. |
@@ -534,16 +557,16 @@ Esta aceptación no cancela requisitos, no modifica sus objetivos finales, no de
 
 Estas decisiones quedan diferidas, no canceladas. No se introducen edición, borrado, endpoints de lectura, dashboard, autenticación, autorización, multitenancy ni reglas de idempotencia inventadas.
 
-## 14. Actualizaciones documentales globales pendientes
+## 14. Actualizaciones documentales globales
 
-No se modifican los requisitos generales en TASK031. Quedan registradas para una tarea posterior:
+TASK031 no modificó los requisitos generales. TASK035 los actualizó:
 
-- Q-08: actualizar la pregunta global para reflejar que la serialización HTTP ya está resuelta por SPEC-003/TASK031.
-- Q-12: actualizar la pregunta global para reflejar el máximo de API de 1.000.000 y los rangos de UI, manteniendo el dominio sin máximo comercial.
-- FR-04, FR-06, FR-10 y FR-11: registrar la aceptación parcial del primer incremento sin declarar los requisitos completados.
-- FR-08 y FR-09: mantener su estado futuro; no se implementan en este incremento.
-- Q-15, Q-16 y Q-17: mantener abiertas.
-- Q-09 y SIM-P16: mantener abiertas.
+- Q-08: resuelta para HTTP como cadena decimal exacta en los requisitos globales.
+- Q-12: actualizada con el máximo de API de 1.000.000 y los rangos de UI, manteniendo el dominio sin máximo comercial.
+- FR-04, FR-06, FR-10 y FR-11: registrados como parciales; no se declaran completados.
+- FR-08 y FR-09: siguen pendientes; no se implementan en este incremento.
+- Q-15, Q-16 y Q-17: se mantienen abiertas y se concretan en Q-21, Q-22 y Q-23.
+- Q-09 y SIM-P16: se mantienen abiertas; Q-24 recomienda historial inmutable.
 
 ## 15. Riesgos
 
@@ -574,7 +597,7 @@ No se modifican los requisitos generales en TASK031. Quedan registradas para una
 11. Las suites existentes siguen pasando.
 12. No se implementan impuestos, divisas, almacenamiento, API, plan ni cargos sin decisión expresa.
 
-TASK032 considera satisfechos los doce criterios en el alcance local. La auditoría independiente y la publicación siguen pendientes.
+TASK032 consideró satisfechos los doce criterios en su alcance local. TASK033 auditó el incremento y emitió veredicto **APTA CON OBSERVACIONES**, sin hallazgos críticos, altos, medios ni bloqueantes. El PR #5 fue fusionado por el propietario en `b3c5ca81d23d279b478ed466757bada031aa1e1e`.
 
 ## 17. Estado de implementación TASK032
 
@@ -610,6 +633,14 @@ TASK032 considera satisfechos los doce criterios en el alcance local. La auditor
 ### 17.4. Límites del incremento
 
 Siguen diferidos SIM-P03, SIM-P04/Q-15, SIM-P05/Q-16, SIM-P06/Q-05, SIM-P07/Q-06/Q-07/Q-17, SIM-P10/Q-09, SIM-P11, SIM-P14 y SIM-P16. No hay historial accesible por API, edición, borrado, idempotencia, impuestos, divisas, almacenamiento, llamadas API, autenticación, multitenancy ni CI. FR-04, FR-06, FR-10 y FR-11 siguen parcialmente satisfechos.
+
+### 17.5. Estado vigente TASK035
+
+- TASK033 emitió veredicto **APTA CON OBSERVACIONES**: sin hallazgos críticos, altos, medios ni bloqueantes.
+- Hallazgos no bloqueantes registrados: H-01 (trampas de `Decimal`), H-02 (cobertura de regresión), H-04 (orden de cálculo y comprobación del cliente), H-05 (campos desconocidos ignorados), H-06 (potencial condición de carrera), H-07 (sin restricciones monetarias en SQLite) y H-08 (incoherencias documentales). H-03 es una decisión histórica de pricing y no se modifica.
+- TASK034 confirmó 240 pruebas superadas, Ruff, Ruff format, mypy, `pip check` y 35 pines de lock sin discrepancias.
+- PR #5 fusionado en `b3c5ca81d23d279b478ed466757bada031aa1e1e`.
+- La deuda anterior se planifica en TASK036 según la hoja de ruta [`docs/planning/mvp-roadmap.md`](../../planning/mvp-roadmap.md).
 
 ## 18. Referencias
 

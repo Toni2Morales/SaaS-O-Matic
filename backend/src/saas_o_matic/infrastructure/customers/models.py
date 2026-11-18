@@ -22,7 +22,7 @@ class CustomerModel(Base):
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
     legal_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    tax_id: Mapped[str] = mapped_column(String(9), nullable=False)
+    tax_id: Mapped[str] = mapped_column(String(64), nullable=False)
     email: Mapped[str] = mapped_column(String(320), nullable=False)
     country: Mapped[str] = mapped_column(String(2), nullable=False)
     plan: Mapped[str] = mapped_column(String(32), nullable=False)

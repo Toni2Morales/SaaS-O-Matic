@@ -4,8 +4,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from decimal import Decimal, InvalidOperation, localcontext
+from decimal import Context, Decimal, DecimalException, localcontext
+from typing import Literal
 from uuid import UUID
+
+from saas_o_matic.domain.simulations.calculation import MonthlyCalculation
 
 _CENT = Decimal("0.01")
 
@@ -15,11 +18,11 @@ class SimulationDomainError(ValueError):
 
 
 class InvalidSimulationUserCount(SimulationDomainError):
-    """El número de usuarios no es un entero positivo."""
+    """El número de usuarios no es un entero no negativo."""
 
     def __init__(self, value: object) -> None:
         self.value = value
-        super().__init__("El número de usuarios debe ser un entero positivo.")
+        super().__init__("El número de usuarios debe ser un entero no negativo.")
 
 
 class InvalidSimulationAmount(SimulationDomainError):
@@ -39,10 +42,13 @@ def format_eur_amount(value: Decimal) -> str:
         raise InvalidSimulationAmount("El importe debe ser un Decimal finito y no negativo.")
 
     try:
-        with localcontext() as context:
-            context.prec = max(28, len(value.as_tuple().digits) + 2)
+        with localcontext(Context()) as context:
+            context.clear_traps()
+            context.prec = max(28, len(value.as_tuple().digits) + 2, value.adjusted() + 3)
             quantized = value.quantize(_CENT)
-    except InvalidOperation as exc:
+            if not quantized.is_finite():
+                raise InvalidSimulationAmount("El importe no es representable.")
+    except DecimalException as exc:
         raise InvalidSimulationAmount(
             "El importe no se puede representar con dos decimales."
         ) from exc
@@ -64,6 +70,10 @@ class Simulation:
     user_count: int
     user_subtotal_eur: Decimal
     created_at: datetime
+    storage_gb: int | None = None
+    api_calls_per_month: int | None = None
+    billing_period: Literal["monthly"] = "monthly"
+    calculation: MonthlyCalculation | None = None
 
     def __post_init__(self) -> None:
         """Protege las invariantes básicas de la entidad."""
@@ -71,11 +81,22 @@ class Simulation:
         if (
             isinstance(self.user_count, bool)
             or not isinstance(self.user_count, int)
-            or self.user_count < 1
+            or self.user_count < 0
         ):
             raise InvalidSimulationUserCount(self.user_count)
+
+        for name, value in (
+            ("storage_gb", self.storage_gb),
+            ("api_calls_per_month", self.api_calls_per_month),
+        ):
+            if value is not None and (type(value) is not int or value < 0):
+                raise SimulationDomainError(f"{name} debe ser un entero no negativo o nulo.")
+        if self.billing_period != "monthly":
+            raise SimulationDomainError("La periodicidad debe ser mensual.")
 
         if not isinstance(self.user_subtotal_eur, Decimal):
             raise InvalidSimulationAmount("El subtotal debe ser un Decimal.")
         if not self.user_subtotal_eur.is_finite() or self.user_subtotal_eur < 0:
             raise InvalidSimulationAmount("El subtotal debe ser un Decimal finito y no negativo.")
+        if self.calculation is not None:
+            self.calculation.validate_against(self.user_subtotal_eur)

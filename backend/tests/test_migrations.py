@@ -18,7 +18,7 @@ from saas_o_matic.infrastructure.customers.repositories import SqlAlchemyCustome
 from saas_o_matic.infrastructure.database import create_session_factory
 
 ALEMBIC_INI = Path(__file__).resolve().parents[1] / "alembic.ini"
-EXPECTED_REVISION = "0002_create_simulations"
+EXPECTED_REVISION = "0004_add_simulation_taxes_and_fx"
 
 
 def _config(database_url: str) -> Config:
@@ -81,6 +81,10 @@ def test_alembic_upgrade_schema_persistence_downgrade_and_reupgrade(
             column["name"]: column for column in inspector.get_columns("simulations")
         }
         assert set(simulation_columns) == {
+            "calculation_snapshot",
+            "storage_gb",
+            "api_calls_per_month",
+            "billing_period",
             "id",
             "customer_id",
             "user_count",

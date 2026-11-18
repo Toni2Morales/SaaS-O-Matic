@@ -3,6 +3,8 @@
 import ast
 from pathlib import Path
 
+import pytest
+
 import saas_o_matic.domain as domain_package
 
 PROJECT_PACKAGE = "saas_o_matic"
@@ -180,3 +182,22 @@ def test_analyzer_does_not_flag_local_relative_import() -> None:
 
     assert "saas_o_matic.domain.application" in modules
     assert _forbidden_modules("domain", modules) == set()
+
+
+@pytest.mark.parametrize(
+    "layer,forbidden",
+    [
+        ("domain", "presentation"),
+        ("application", "infrastructure"),
+        ("infrastructure", "application"),
+        ("presentation", "domain"),
+    ],
+)
+def test_analyzer_detects_forbidden_layer_edges(layer: str, forbidden: str) -> None:
+    """Regresión sencilla de las cuatro fronteras, sin infraestructura adicional."""
+
+    modules = _imported_modules_from_source(
+        f"from saas_o_matic.{forbidden} import example",
+        f"saas_o_matic.{layer}",
+    )
+    assert _forbidden_modules(layer, modules)

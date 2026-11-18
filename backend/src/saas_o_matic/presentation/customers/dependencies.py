@@ -6,6 +6,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
+from saas_o_matic.application.customers.queries import CustomerQueries
 from saas_o_matic.application.customers.use_cases import CreateCustomer
 
 
@@ -19,3 +20,10 @@ CreateCustomerUseCaseDep = Annotated[
     CreateCustomer,
     Depends(get_create_customer_use_case),
 ]
+
+
+def get_customer_queries() -> CustomerQueries:
+    raise RuntimeError("Las consultas de clientes no están configuradas.")
+
+
+CustomerQueriesDep = Annotated[CustomerQueries, Depends(get_customer_queries)]

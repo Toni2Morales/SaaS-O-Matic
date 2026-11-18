@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import cast
@@ -12,7 +13,12 @@ from sqlalchemy import Table, select
 
 from saas_o_matic.domain.customers.entities import Customer
 from saas_o_matic.domain.customers.errors import DuplicateCustomerTaxId
-from saas_o_matic.domain.customers.value_objects import CountryCode, PlanCode, SpanishTaxId
+from saas_o_matic.domain.customers.value_objects import (
+    CountryCode,
+    GenericTaxId,
+    PlanCode,
+    SpanishTaxId,
+)
 from saas_o_matic.infrastructure.customers.mappers import to_domain
 from saas_o_matic.infrastructure.customers.models import CustomerModel
 from saas_o_matic.infrastructure.customers.repositories import SqlAlchemyCustomerRepository
@@ -117,3 +123,28 @@ def test_customer_model_requires_plan_and_has_composite_unique_constraint() -> N
         constraint.name for constraint in table.constraints if constraint.name is not None
     }
     assert "uq_customers_country_tax_id" in constraint_names
+
+
+def test_international_customer_reloaded_and_database_uniqueness(migrated_database: Path) -> None:
+    """El mapeador reconstruye internacional sin algoritmos ES, también en sesión nueva."""
+
+    engine = create_sqlite_engine(migrated_database)
+    factory = create_session_factory(engine)
+    customer = replace(_customer(), country=CountryCode.FR, tax_id=GenericTaxId.parse("ab-12 / 34"))
+    try:
+        with factory() as session:
+            repository = SqlAlchemyCustomerRepository(session)
+            repository.add(customer)
+            repository.add(replace(customer, id=uuid4(), country=CountryCode.PT))
+            with pytest.raises(DuplicateCustomerTaxId):
+                repository.add(replace(customer, id=uuid4()))
+        with factory() as session:
+            model = session.get(CustomerModel, customer.id)
+            assert model is not None
+            restored = to_domain(model)
+            assert restored == customer
+            assert restored.created_at.tzinfo is UTC
+            assert isinstance(restored.tax_id, GenericTaxId)
+            assert len(session.scalars(select(CustomerModel)).all()) == 2
+    finally:
+        engine.dispose()

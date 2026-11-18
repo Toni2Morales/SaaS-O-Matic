@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
-import os
 from logging.config import fileConfig
-from pathlib import Path
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from saas_o_matic.infrastructure.customers import models as customer_models  # noqa: F401
-from saas_o_matic.infrastructure.database import Base
+from saas_o_matic.infrastructure.database import (
+    Base,
+    database_path_from_url,
+    resolve_database_url,
+)
 from saas_o_matic.infrastructure.simulations import models as simulation_models  # noqa: F401
 
 config = context.config
@@ -21,26 +23,15 @@ target_metadata = Base.metadata
 
 
 def _database_url() -> str:
-    """Obtiene la URL de base de datos, permitiendo sustituirla por entorno."""
+    """Obtiene la URL común, permitiendo sustituirla por entorno."""
 
-    configured_url = config.get_main_option("sqlalchemy.url")
-    return (
-        os.environ.get("DATABASE_URL") or configured_url or "sqlite:///./var/saas_o_matic.sqlite3"
-    )
+    return resolve_database_url(config.get_main_option("sqlalchemy.url"))
 
 
 def _ensure_sqlite_parent() -> None:
     """Crea el directorio de la base SQLite si la URL apunta a un fichero."""
 
-    url = _database_url()
-    if not url.startswith("sqlite:///"):
-        return
-
-    path = url.removeprefix("sqlite:///")
-    if path == ":memory:":
-        return
-
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    database_path_from_url(_database_url()).parent.mkdir(parents=True, exist_ok=True)
 
 
 def run_migrations_offline() -> None:

@@ -90,6 +90,13 @@ La lista es provisional: los límites definitivos se fijarán en la especificaci
 
 ### Persistencia de conversiones
 
+**Actualización aprobada TASK037:** Q-16/Q-17/SIM-P14 fijan conversión del total EUR
+con impuestos y persistencia adicional del importe convertido como snapshot histórico,
+con tasas, fuentes y fechas. [SPEC-005](../specs/005-taxes-and-currency-conversion/spec.md)
+sustituye la conclusión previa siguiente sobre no necesitar persistir ese resultado.
+No cambia la dirección de dependencias. El puerto FX de aplicación se implementa
+estructuralmente, sin importación de aplicación desde infraestructura.
+
 FR-11 exige guardar el importe base en EUR, la divisa de visualización, el tipo de cambio aplicado y la fecha y fuente del tipo cuando estén disponibles. Con esos datos la conversión es reconstruible, por lo que **no es necesario persistir adicionalmente el importe convertido**. Esta conclusión no introduce ninguna regla de negocio nueva: se limita a aplicar FR-11. La magnitud económica exacta que se convierte y persiste como importe base queda pendiente de Q-16.
 
 ## Alternativas consideradas

@@ -1,11 +1,15 @@
 # Tareas 003 - Simulaciones de costes
 
+> TASK036 amplía el contrato en [TASKS-004](../004-international-customers-and-simulations/tasks.md):
+> consumos obligatorios, mensual, cero y forbid. Las evidencias de TASK032 siguen históricas.
+
 | Campo | Valor |
 | --- | --- |
 | ID | TASKS-003 |
 | Título | Desglose del primer incremento de simulaciones |
-| Estado | **Implementación local completada en TASK032; 240 pruebas superadas; auditoría y publicación pendientes** |
+| Estado | **Implementado en TASK032, auditado en TASK033 y publicado en PR #5; 240 pruebas superadas. Estado vigente verificado en TASK035** |
 | Fecha | 2026-11-17 |
+| Actualización | 2026-11-17 (TASK035) |
 | Especificación | [spec.md](spec.md) |
 | Plan | [plan.md](plan.md) |
 | Preparación | [TASK029](../../../ai-workspace/01-tasks/TASK029-simulations-preparation.md), [TASK030](../../../ai-workspace/01-tasks/TASK030-simulations-decisions-and-contract.md) y [TASK031](../../../ai-workspace/01-tasks/TASK031-simulations-final-decisions.md) |
@@ -25,8 +29,8 @@ Hay **ocho identificadores SIM-P únicos aprobados** y **nueve decisiones concep
 | SIM-P01 | Persistencia. | Aprobada. |
 | SIM-P02 | Cliente obligatorio. | Aprobada. |
 | SIM-P08 / Q-08 | Cadena decimal exacta. | Aprobada. |
-| SIM-P09 / Q-12 (API) | Rango 1..1.000.000. | Aprobada. |
-| SIM-P09 / Q-12 (UI) | Slider 1..1.000; manual hasta 1.000.000. | Aprobada. |
+| SIM-P09 / Q-12 (API) | Rango 0..1.000.000. | Actualizada Q-19/TASK036. |
+| SIM-P09 / Q-12 (UI) | Slider 0..1.000; manual hasta 1.000.000. | Actualizada TASK036. |
 | SIM-P12 | Cliente inexistente: `404`; UUID malformado: `422`. | Aprobada. |
 | SIM-P13 | Texto decimal canónico en SQLite. | Aprobada. |
 | SIM-P15 | `POST /simulations` sin prefijo. | Aprobada. |
@@ -63,7 +67,7 @@ Hay **nueve decisiones diferidas**. No bloquean el primer incremento.
 - [x] **A-03:** crear `application/simulations/dto.py` con comando y resultado.
 - [x] **A-04:** crear `application/simulations/errors.py`.
 - [x] **A-05:** implementar `CreateSimulation` con `calculate_user_subtotal`.
-- [x] **A-06:** validar defensivamente el rango 1..1.000.000 en aplicación.
+- [x] **A-06:** validar defensivamente el rango 0..1.000.000 en aplicación (TASK036).
 - [x] **A-07:** traducir `InvalidUserCount` a error de aplicación.
 - [x] **A-08:** traducir cliente inexistente a error de aplicación.
 - [x] **A-09:** comprobar que no se duplican tramos, precios ni validaciones.
@@ -98,7 +102,7 @@ Hay **nueve decisiones diferidas**. No bloquean el primer incremento.
 ## 8. Fase 4. Presentación y bootstrap
 
 - [x] **H-01:** crear esquemas Pydantic v2 de entrada y salida.
-- [x] **H-02:** validar `customer_id` como UUID y `user_count` como entero estricto 1..1.000.000.
+- [x] **H-02:** validar UUID, usuarios 0..1.000.000 y consumos estrictos (TASK036).
 - [x] **H-03:** crear router `POST /simulations`.
 - [x] **H-04:** serializar `user_subtotal_eur` como cadena decimal exacta.
 - [x] **H-05:** añadir manejadores de error de simulación.
@@ -153,9 +157,9 @@ Hay **nueve decisiones diferidas**. No bloquean el primer incremento.
 - [x] **C-05:** ejecutar `git diff --check`.
 - [x] **C-06:** verificar que no se incluyen secretos, bases SQLite, `.venv` ni artefactos.
 - [x] **C-07:** actualizar la especificación, el plan y las tareas con las decisiones aprobadas.
-- [ ] **C-08:** auditoría independiente.
-- [ ] **C-09:** publicación mediante una tarea específica autorizada.
-- [ ] **C-10:** merge ejecutado por el propietario.
+- [x] **C-08:** auditoría independiente (TASK033, APTA CON OBSERVACIONES).
+- [x] **C-09:** publicación mediante una tarea específica autorizada (TASK034, PR #5).
+- [x] **C-10:** merge ejecutado por el propietario (`b3c5ca81d23d279b478ed466757bada031aa1e1e`).
 
 **Criterio de verificación:** el informe final contiene resultados reales, archivos afectados, decisiones y riesgos.
 
@@ -171,7 +175,7 @@ El primer incremento se considerará terminado cuando:
 6. La documentación y el informe de tarea estén actualizados.
 7. La publicación y el merge hayan sido autorizados.
 
-TASK032 cumple localmente los criterios 1–6. El criterio 7 sigue pendiente porque no se autorizaron publicación ni merge.
+TASK032 cumplió localmente los criterios 1–6. TASK033 auditó el incremento, TASK034 lo publicó y el propietario fusionó el PR #5 en `b3c5ca81d23d279b478ed466757bada031aa1e1e`; el criterio 7 queda cumplido.
 
 ## 12. Resultado real TASK032
 
@@ -181,7 +185,14 @@ TASK032 cumple localmente los criterios 1–6. El criterio 7 sigue pendiente por
 - Migraciones: 1 superada; arquitectura: 7; pricing: 67.
 - Ruff check, Ruff format --check, mypy y `pip check`: sin errores.
 - Los siete subtotales aprobados y los códigos `201`, `404`, `422` y `500` quedaron cubiertos.
-- Sin cambios en `pricing`, sin archivos staged, sin commit, push, PR ni merge.
+- Sin cambios en `pricing`, sin archivos staged, sin commit, push, PR ni merge en TASK032.
+
+### 12.1. Cierre posterior
+
+- TASK033: auditoría independiente con veredicto **APTA CON OBSERVACIONES**; sin hallazgos críticos, altos, medios ni bloqueantes.
+- TASK034: publicación del commit `3629843881d5ade962b2d1a287b49e98d35b89b0` y creación del PR #5.
+- Merge del PR #5 por el propietario: `b3c5ca81d23d279b478ed466757bada031aa1e1e`.
+- TASK035 verificó el estado vigente y planificó la deuda H-01, H-02 y H-04–H-08.
 
 ## 13. Referencias
 
