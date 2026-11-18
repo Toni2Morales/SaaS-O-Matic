@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.3 (TASK039B) |
+| Versión | 1.6 (TASK043) |
 | Fecha | 2026-11-18 |
-| Estado | Componentes backend del alcance MVP implementados localmente y auditados en TASK039; correcciones TASK039B aplicadas; sin publicación; frontend y despliegue pendientes. |
+| Estado | Backend integrado en main; dashboard/clientes y simulador implementados y validados localmente TASK042–043; revisión visual APTA CON OBSERVACIONES; auditoría independiente, publicación e instalación/despliegue finales pendientes. |
 | Fuente | Enunciado original del reto facilitado por el propietario (documento externo no versionado) y brief funcional del propietario |
 
 Este documento separa **requisitos funcionales**, **restricciones**, **supuestos** y **preguntas abiertas**. Todo lo que no aparece aquí como requisito no debe implementarse por iniciativa propia.
@@ -32,8 +32,14 @@ Q-09/Q-24/Q-25 y SIM-P10/SIM-P11 vigentes TASK038: listado/búsqueda/detalle e
 historial inmutable con limit20/máximo100/offset, orden estable y NULL históricos;
 preview sin escrituras con mismo cálculo de guardado. Contratos en
 [SPEC-006](../specs/006-customer-queries-and-preview/spec.md).
-P-01/P-05 siguen pendientes para frontend/despliegue.
+P-01 se resolvió en TASK041: Angular 22.2.6/TypeScript 6.0.3/Vitest 5.1.1; véase
+[ADR 0003](../adr/0003-angular-frontend-stack.md). P-05 sigue pendiente para despliegue.
 Contrato y reglas genéricas exactas: [SPEC-004](../specs/004-international-customers-and-simulations/spec.md).
+La implementación local de dashboard, listado/búsqueda, alta, ficha e historial se
+especifica en [SPEC-008](../specs/008-customer-management-frontend/spec.md). TASK043
+implementa el simulador en [SPEC-009](../specs/009-interactive-subscription-simulator/spec.md);
+la preview/guardado consumen los contratos existentes y no introducen métricas
+agregadas ni cálculos económicos en Angular.
 
 ## 1. Requisitos funcionales
 
@@ -113,10 +119,10 @@ El ejemplo de 15 usuarios coincide con el enunciado y tiene pruebas dedicadas de
 | CON-07 | Autenticación, autorización, multi-tenancy, Stripe, generación de PDF y envío de correo quedan fuera de alcance salvo decisión posterior del propietario. |
 | CON-08 | La API se documenta con OpenAPI. |
 | CON-09 | El backend se valida con Pytest, HTTPX, Ruff y mypy. |
-| CON-10 | El frontend se prueba con Vitest, sujeto a compatibilidad con la versión de Angular que se elija. |
+| CON-10 | El frontend utiliza Vitest 5.1.1, compatible con Angular CLI 22.2.6; decisión P-01 en ADR 0003. |
 | CON-11 | La interfaz debe ser responsive, accesible de forma básica y mostrar estados de carga, vacío y error. |
 | CON-12 | La entrega debe incluir el directorio `ai-workspace/` con planificación, arquitectura, evidencias del proceso asistido por IA y resultados de calidad. |
-| CON-13 | El README debe permitir ejecutar backend y frontend en pocos pasos, con variables de entorno y migraciones documentadas. |
+| CON-13 | README raíz, backend y frontend documentan el arranque local y las migraciones. La instalación limpia npm ci permanece pendiente de revisión de scripts; P-05/despliegue también sigue pendiente. |
 | CON-14 | El documento original del reto no se versiona en el repositorio; se cita como fuente externa y no se publica en GitHub. |
 
 ---
@@ -233,22 +239,24 @@ Estos requisitos son **propuestas técnicas** alineadas con el stack aprobado; r
 
 ## 7. Estado actual de implementación
 
-La distinción entre backend y extremo a extremo es deliberada. Ningún requisito que necesite frontend o integración se declara completado.
+La distinción entre backend y extremo a extremo es deliberada. Las filas reflejan
+implementación y validación local; no equivalen a auditoría independiente, publicación
+ni entrega final del MVP.
 
 | Requisito | Backend | Extremo a extremo | Observación |
 | --- | --- | --- | --- |
-| FR-01 | Completado localmente | Pendiente | Seis países y único plan `standard`. |
-| FR-02 | Completado localmente | Pendiente | Algoritmos ES intactos; resto genérico no oficial. |
-| FR-03 | Completado backend local | Pendiente | Consumos, mensual, snapshot y lectura histórica inmutable. |
-| FR-04 | Completado localmente | Pendiente | Usuarios, GB y llamadas mensuales; históricos NULL. |
-| FR-05 | Completado localmente | Pendiente | Cero admitido; tarifas intactas. |
-| FR-06 | Completado localmente en alcance simplificado | Pendiente | IVA general de seis países; no regímenes especiales. |
-| FR-07 | Completado backend local | Pendiente | Listado/búsqueda Unicode paginados; dashboard visual pendiente. |
-| FR-08 | Completado backend local | Pendiente | Detalle e historial inmutable con NULL; tarjetas responsive pendientes. |
-| FR-09 | Completado backend local | Pendiente | Preview sin persistencia y guardado explícito; slider/formulario Angular pendiente. |
-| FR-10 | Completado backend local | Pendiente | EUR/USD/GBP, API pública y caché; UI pendiente. |
-| FR-11 | Completado localmente | Pendiente | Snapshot exacto impuesto/total/FX; históricos desconocidos NULL. |
-| FR-12 | Completado localmente | Pendiente | Mensual explícito; UI pendiente. |
+| FR-01 | Completado localmente | Flujo UI integrado localmente | Seis países; plan enviado explícitamente; alta y duplicado comprobados. No publicado. |
+| FR-02 | Completado localmente | Integración local | El servidor valida ES y aplica reglas genéricas no oficiales fuera de ES; UI explica la distinción. |
+| FR-03 | Completado backend local | Implementado/integrado localmente TASK043 | Guardado explícito y persistencia/reload verificados en SQLite temporal; cambios sin publicar. |
+| FR-04 | Completado localmente | Implementado/integrado localmente TASK043 | Límites frontend/backend; almacenamiento y llamadas informativos, sin cargos. |
+| FR-05 | Completado localmente | Implementado/integrado localmente TASK043 | FastAPI calcula; UI explica bandas y cantidades, el subtotal procede del backend. |
+| FR-06 | Completado localmente en alcance simplificado | Implementado/integrado localmente TASK043 | ES/PT sintéticos comprobados; no regímenes especiales. |
+| FR-07 | Completado backend local | Implementado/integrado localmente TASK042 | Dashboard obtiene total/página acotada; búsqueda Unicode y paginación server-side. Sin métricas agregadas. |
+| FR-08 | Completado backend local | Implementado/integrado localmente TASK042 | Ficha e historial paginado; snapshots antiguos nulos como desconocidos y sin recálculo. |
+| FR-09 | Completado backend local | Implementado/integrado localmente TASK043 | Slider/manual, preview cancelable, invalidación inmediata y guardado explícito; revisión independiente pendiente. |
+| FR-10 | Completado backend local | Implementado localmente TASK043 | Selector EUR/USD/GBP; FX real USD/GBP consultado puntualmente, no como suite determinista. |
+| FR-11 | Completado localmente | Implementado/integrado parcialmente TASK043 | Snapshots exactos/historial; UI real persistió EUR; FX UI externo fue smoke puntual. |
+| FR-12 | Completado localmente | Implementado/integrado localmente TASK043 | Mensualidad indicada; guardado e historial real verificados. |
 
 ### 7.1 Estado técnico verificado
 
@@ -260,8 +268,10 @@ La distinción entre backend y extremo a extremo es deliberada. Ningún requisit
 - TASK038: 538 pruebas superadas localmente, sin migraciones ni dependencias nuevas; flujo completo backend y ausencia de DML en preview probados.
 - TASK039: auditoría del backend acumulado con dictamen APTA CON OBSERVACIONES; 15 hallazgos, ninguno bloqueante.
 - TASK039B: correcciones autorizadas A39-01/02/03/04/06 y documentación de A39-05; 579 pruebas superadas, Ruff/formato/mypy/pip check correctos, 35 pines sin cambios. Sin publicación.
-- No existe frontend Angular, no hay CI y no hay despliegue.
-- El PR #5 fue fusionado por el propietario en `b3c5ca81d23d279b478ed466757bada031aa1e1e`.
+- TASK042: 35 pruebas unitarias frontend; Playwright Chromium 12/12 superadas con backend real y mocks identificados; alta ES/PT, búsqueda, ficha, historial y persistencia se verificaron en SQLite temporal. Sin cambios de dependencias ni backend.
+- TASK043: 37 pruebas Vitest; Playwright estándar 17 pasadas y 2 pruebas opt-in omitidas explícitamente; integración real y captura visual opt-in superadas en ejecuciones dedicadas. TypeScript, ESLint, Prettier, build, npm audit/audit de producción correctos; 579 pruebas backend, Ruff, Ruff format, mypy y pip check correctos. Integración real y FX puntual constan en el informe TASK043. Sin publicación ni auditoría independiente del frontend.
+- Frontend Angular TASK041–043 implementado y validado localmente. Instalación limpia npm ci, WCAG AA formal, CI, despliegue y revisión independiente siguen pendientes; no se declara entrega definitiva.
+- Los PR #5 y #6 fueron fusionados por el propietario; merge vigente #6 en `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`.
 - La auditoría TASK033 emitió veredicto **APTA CON OBSERVACIONES**, sin hallazgos críticos, altos, medios ni bloqueantes.
 
 ---
@@ -288,7 +298,9 @@ Las recomendaciones opcionales de la hoja de ruta no se convierten en requisitos
 
 - Matriz completa del reto: [`requirements-traceability.md`](requirements-traceability.md).
 - Hoja de ruta optimizada: [`../planning/mvp-roadmap.md`](../planning/mvp-roadmap.md).
-- Especificaciones: [`SPEC-001`](../specs/001-customer-registration/spec.md), [`SPEC-002`](../specs/002-progressive-pricing/spec.md) y [`SPEC-003`](../specs/003-simulations/spec.md).
+- Especificaciones: [`SPEC-001`](../specs/001-customer-registration/spec.md), [`SPEC-002`](../specs/002-progressive-pricing/spec.md), [`SPEC-003`](../specs/003-simulations/spec.md), [`SPEC-008`](../specs/008-customer-management-frontend/spec.md) y [`SPEC-009`](../specs/009-interactive-subscription-simulator/spec.md).
+- Evidencias TASK042: [`informe`](../../ai-workspace/01-tasks/TASK042-customer-management-frontend.md) y [`manifiesto inicial`](../../ai-workspace/01-tasks/TASK042-initial-hashes.json).
+- Evidencias TASK043/TASK043P: [`informe TASK043`](../../ai-workspace/01-tasks/TASK043-interactive-subscription-simulator.md), [`manifiesto inicial`](../../ai-workspace/01-tasks/TASK043-initial-hashes.json) e [`informe de publicación intermedia`](../../ai-workspace/01-tasks/TASK043P-frontend-intermediate-publication.md).
 - Registro de tareas y auditorías: [`ai-workspace/README.md`](../../ai-workspace/README.md).
 
 ## 10. Historial de cambios
@@ -301,3 +313,6 @@ Las recomendaciones opcionales de la hoja de ruta no se convierten en requisitos
 | 1.1 | 2026-11-17 | TASK037: IVA general verificado, Frankfurter v2 único, caché y snapshot fiscal/FX; Q-16/Q-17/SIM-P14; SPEC-005. |
 | 1.2 | 2026-11-18 | TASK038: Q-09/Q-24/Q-25/SIM-P10/SIM-P11, consultas paginadas Unicode, historial y preview; FR-07/08/09 backend, no UI. |
 | 1.3 | 2026-11-18 | TASK039/TASK039B: auditoría APTA CON OBSERVACIONES, correcciones autorizadas, SQLite compartido y límites FX; 579 pruebas. |
+| 1.4 | 2026-11-18 | TASK041: P-01 resuelta con ADR 0003; scaffold Angular local; interfaz comercial, E2E funcional y despliegue pendientes. |
+| 1.5 | 2026-11-18 | TASK042: dashboard y gestión frontend de clientes conectados localmente; SPEC-008; simulator/TASK043 y despliegue pendientes. |
+| 1.6 | 2026-11-18 | TASK043: simulador, preview/guardado e integración real local; SPEC-009. Revisión/publicación, npm ci limpio, auditoría formal y despliegue pendientes. |

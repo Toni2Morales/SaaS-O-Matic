@@ -40,7 +40,7 @@ La propuesta inicial del propietario era Node.js/TypeScript con React. Antes de 
 | Formularios | Reactive Forms | Validación tipada y control programático. |
 | Navegación | Angular Router | Estándar del framework, con carga diferida por funcionalidad. |
 | HTTP | HttpClient | Cliente oficial con interceptores. |
-| Pruebas | Vitest | Runner propuesto. Angular ha incorporado soporte para Vitest en versiones recientes, pero la compatibilidad con la versión que se elija **no está verificada** y sigue pendiente (P-01). |
+| Pruebas | Vitest 5.1.1 | Angular 22.2.6 CLI unit-test builder declara soporte Vitest 4/5; selección y compatibilidad resueltas en [ADR 0003](0003-angular-frontend-stack.md) (TASK041). |
 
 ### Transversal
 
@@ -80,7 +80,7 @@ Estado de las decisiones sujetas a validación; P-02 se aplicó en TASK014 y que
 
 | ID | Decisión pendiente | Responsable |
 | --- | --- | --- |
-| P-01 | Versión concreta de Angular y confirmación de Vitest como runner. | Propietario |
+| P-01 | Resuelta en TASK041: Angular 22.2.6, TypeScript 6.0.3, Vitest 5.1.1; compatibilidad oficial documentada en ADR 0003. | TASK041; pendiente revisión del propietario técnico |
 | P-02 | Fijar Python 3.13 en el proyecto. **Aplicada en TASK014; pendiente de revisión del resultado:** Python 3.13.17 instalado y fijado en `backend/pyproject.toml` con `>=3.13,<3.14`. | Propietario (instrucción TASK014) |
 | P-03 | Resuelta para el MVP en TASK037: Frankfurter v2 único, verificado conforme a Q-23/SPEC-005; biblioteca estándar urllib, sin nuevas dependencias. | Propietario (TASK037) |
 | P-04 | Resuelta en alcance simplificado TASK037: tipos generales de seis países contrastados con Comisión Europea y fuentes oficiales nacionales; catálogo versionado. No regímenes especiales ni vigencias inventadas. | Propietario (TASK037) |

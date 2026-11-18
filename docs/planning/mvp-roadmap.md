@@ -1,12 +1,19 @@
 # Hoja de ruta optimizada del MVP — SaaS-O-Matic
 
-**Vigente TASK039B:** TASK039 auditó el backend acumulado con dictamen APTA CON
+**Vigente TASK043:** el backend se integró en main mediante PR #6, merge
+`23cc43b486d20f7995a2cf29375e3f724f3c7c3f`. TASK041 estableció el shell y P-01;
+TASK042 implementa localmente dashboard y gestión de clientes (listado/búsqueda,
+registro, detalle e historial) con integración real y pruebas. TASK043 implementa
+localmente el simulador y su integración real. Revisión/publicación, CI y despliegue
+siguen pendientes; P-05 permanece abierta. Cambios sin publicar.
+
+**Contexto TASK039B:** TASK039 auditó el backend acumulado con dictamen APTA CON
 OBSERVACIONES y sin hallazgos bloqueantes. TASK039B corrige A39-01/02/03/04/06,
 documenta A39-05 y revisa A39-07 a A39-11; A39-12 a A39-15 quedan diferidos o
 aceptados. Runtime y Alembic comparten la resolución SQLite; las tasas FX
-patológicas se rechazan antes de la caché con `503`. 579 pruebas. TASK040 prepara
-la publicación del backend en rama/PR; integración en `main` pendiente. Frontend,
-integración y despliegue son posteriores, con P-01/P-05 pendientes.
+patológicas se rechazan antes de la caché con `503`. Backend: 579 pruebas. TASK040
+publicó el backend mediante PR #6; el propietario lo fusionó. P-01 resuelta en TASK041;
+P-05/despliegue sigue pendiente. Las tablas inferiores mantienen el contexto histórico.
 Los estados de TASK036/037/038 inferiores conservan su contexto de planificación previa.
 
 **TASK037 (histórico):** impuestos generales y FX EUR/USD/GBP implementados
@@ -18,10 +25,10 @@ son contexto previo.
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.1 (TASK036) |
-| Fecha | 2026-11-17 |
-| Estado | Incrementos revisados por instrucción TASK036; numeración posterior provisional, sin autorización de publicación |
-| Base | `origin/main` en `b3c5ca81d23d279b478ed466757bada031aa1e1e` (PR #5 fusionado) |
+| Versión | 1.4 (TASK043) |
+| Fecha | 2026-11-18 |
+| Estado | TASK041–TASK043 implementadas/validadas localmente; revisión visual APTA CON OBSERVACIONES; TASK043P en curso; auditoría independiente y entrega final pendientes |
+| Base | `origin/main` en `23cc43b486d20f7995a2cf29375e3f724f3c7c3f` (PR #6 fusionado) |
 | Referencia principal | Enunciado original del reto, conservado fuera de Git |
 | Trazabilidad | [`../requirements/requirements-traceability.md`](../requirements/requirements-traceability.md) |
 
@@ -34,7 +41,7 @@ son contexto previo.
 5. **Publicación controlada.** El propietario autoriza cada operación Git y fusiona personalmente los pull requests.
 6. **Sin datos inventados.** Tasas, divisas, precios y reglas no documentadas quedan como decisiones pendientes.
 
-## 2. Estado de partida
+## 2. Estado de partida (referencia histórica TASK035)
 
 | Elemento | Estado |
 | --- | --- |
@@ -63,7 +70,7 @@ TASK036 aprueba Q-18–Q-21/Q-26 y el alcance futuro Q-22–Q-25, no todos sus d
 | Q-24 | Búsqueda, detalle e historial | Endpoints de lectura con paginación; historial inmutable. |
 | Q-25 | Previsualización | `POST /simulations/preview` sin persistencia; guardado explícito. |
 | Q-26 | Campos desconocidos | `extra="forbid"` en simulación y preview. |
-| P-01 | Versión concreta Angular y confirmación Vitest | Pendiente; resolver antes del frontend. |
+| P-01 | Versión concreta Angular y confirmación Vitest | Resuelta TASK041/ADR 0003: Angular 22.2.6, Vitest 5.1.1; shell base local. |
 | P-05 | Estrategia de despliegue y SQLite fuera de desarrollo | Pendiente; no bloquea TASK036. |
 
 Las recomendaciones de contratos, caché, fuentes, tasas, precisión y paginación de las fases siguientes no se consideran aprobadas por inferencia. TASK036 no implementa impuestos, divisas, consultas ni preview.
@@ -175,6 +182,13 @@ Las diez fases siguientes son la descomposición funcional del reto; la sección
 - **Riesgos:** llamadas excesivas; redondeo visual distinto del backend; slider inaccesible.
 - **Auditoría/publicación:** revisión de paridad visual/backend y de accesibilidad.
 
+**Resultado TASK043:** SPEC-009 implementada localmente. Se conectaron cliente,
+formulario, slider/manual, preview cancelable, monedas, guardado explícito e historial.
+Vitest, E2E e integración real Angular–FastAPI–SQLite constan en el registro TASK043;
+FX USD/GBP se consultó puntualmente fuera de la suite. La revisión visual fue APTA CON
+OBSERVACIONES: V43-01–07 quedan abiertas para TASK044. La implementación no está
+publicada, no se considera auditada independientemente y no equivale a entrega del MVP.
+
 ### R9. Integración y pruebas de extremo a extremo
 
 - **Objetivo:** verificar el flujo completo y la facilidad de ejecución.
@@ -206,14 +220,15 @@ Las diez fases siguientes son la descomposición funcional del reto; la sección
 | TASK038 | R4–R5 | Consultas e historial paginados y preview implementados localmente. | Sin publicación | 538 pruebas satisfactorias |
 | TASK039 | Backend | Auditoría independiente del backend completo; APTA CON OBSERVACIONES. | Informe | Completada; 15 hallazgos no bloqueantes |
 | TASK039B | Backend | Remediación autorizada A39-01/02/03/04/06, pruebas y documentación. | Sin publicación | 579 pruebas satisfactorias |
-| TASK040 | Backend | Publicación controlada del backend, solo con autorización específica. | Por decidir | Por estimar |
-| TASK041 | R6 | Base Angular y navegación, tras resolver P-01. | Por decidir | Provisional |
-| TASK042 | R7 | Alta, búsqueda y dashboard. | Por decidir | Provisional |
-| TASK043 | R7 | Detalle e historial. | Por decidir | Provisional |
-| TASK044 | R8 | Simulador. | Por decidir | Provisional |
-| TASK045 | R9 | Integración, E2E y documentación. | Por decidir | Provisional |
-| TASK046 | R10 | Auditoría independiente global. | Por decidir | Provisional |
-| TASK047 | R10 | Entrega y despliegue según P-05. | Por decidir | Provisional |
+| TASK040 | Backend | Publicación controlada del backend. | PR #6 fusionado por el propietario | 579 pruebas satisfactorias |
+| TASK041 | R6 | Base Angular, shell, navegación, HTTP y pruebas. | Local, sin publicación | Completada localmente |
+| TASK042 | R7 | Dashboard, listado/búsqueda, alta, ficha e historial de clientes; integración UI real. | Local, sin publicación | Completada localmente; 35 unit, 12 E2E integrados |
+| TASK043 | R8 | Simulador, preview/guardado explícito e historial; integración real. | Local, sin publicación | Completada localmente, APTA CON OBSERVACIONES visuales; revisión independiente pendiente |
+| TASK043P | Publicación intermedia | Subsanación documental, validación, staging selectivo, commit y push autorizados. | Rama `feature/mvp-frontend` | En curso; PR/merge no autorizados |
+| TASK044 | R9 | Investigar V43-01–07, corregir observaciones autorizadas y validar estabilidad/documentación. | Pendiente | Pendiente |
+| TASK045 | Seguridad/dependencias | Reevaluar advisories npm, instalación limpia y autorización de scripts. | Pendiente | Pendiente |
+| TASK046 | Auditoría | Auditoría independiente del MVP completo. | Pendiente | Pendiente |
+| TASK047 | R10 | Entrega y despliegue según P-05. | Pendiente | Pendiente |
 
 Numeración posterior provisional. La estimación agregada de TASK035 no es compromiso ni autorización para estas tareas.
 
@@ -227,12 +242,15 @@ Numeración posterior provisional. La estimación agregada de TASK035 no es comp
 ### 5.2. Dependencias entre tareas
 
 ```text
-TASK036 → TASK037 → TASK038 → TASK039 → TASK039B → TASK040
-                                                   |
-                                          TASK041..TASK047
+TASK036 → TASK037 → TASK038 → TASK039 → TASK039B → TASK040 (integrado en main)
+                                                           |
+                                     TASK041 (base) → TASK042 (clientes) → TASK043 (simulador)
 ```
 
-P-01 sigue pendiente para el frontend; P-05 para despliegue y SQLite fuera de desarrollo. Ninguna es imprescindible en TASK036.
+P-01 está resuelta para el stack base en TASK041; P-05 para despliegue y SQLite
+fuera de desarrollo sigue pendiente. La nota de autorización previa ha sido sustituida:
+TASK043 se completó localmente bajo autorización expresa; TASK043P prepara la publicación
+intermedia y TASK044–TASK047 siguen pendientes de revisión/autorizaciones posteriores.
 
 ## 6. Estrategia de auditoría y publicación
 
@@ -243,7 +261,11 @@ P-01 sigue pendiente para el frontend; P-05 para despliegue y SQLite fuera de de
 | TASK039 | Auditoría independiente backend; APTA CON OBSERVACIONES. | Informe. |
 | TASK039B | Correcciones autorizadas y pruebas de regresión. | Sin publicación. |
 | TASK040 | Autorización Git específica. | Publicación controlada; merge del propietario. |
-| TASK046–TASK047 | Auditoría global y entrega. | Según autorización futura. |
+| TASK041 | Especificación, plan, versiones compatibles y rama feature autorizada. | Base local revisable; sin staging/commit/push/PR. |
+| TASK042 | Implementación local de clientes, SPEC-008 y pruebas autorizadas. | Local revisable; en aquel corte no autorizaba el inicio de TASK043 ni publicación. |
+| TASK043 | Implementación local del simulador según SPEC-009; dictamen visual APTA CON OBSERVACIONES. | TASK043P autoriza publicación intermedia; sin PR/merge. |
+| TASK043P | Subsanar contradicciones documentales; validar, stage, commit y push en la rama. | Commit y push autorizados; PR y merge no. |
+| TASK044–TASK047 | Hallazgos visuales, instalación/dependencias, auditoría global y entrega. | Pendientes de TASK043P y de autorizaciones futuras. |
 
 Reglas:
 
@@ -257,12 +279,14 @@ Reglas:
 
 | Criterio | Peso | Evidencias a producir |
 | --- | --- | --- |
-| Planificación y diseño | 35 % | Requisitos, matriz de trazabilidad, ADRs, SPEC-004/005, planes, tareas y decisiones aprobadas. |
-| Criterio técnico y calidad | 25 % | Arquitectura, pruebas, auditorías, correcciones, deuda registrada y revisión de seguridad. |
-| Calidad del software | 30 % | Backend completo, frontend responsive, validaciones, persistencia, divisas, estados de carga/error. |
-| README y despliegue | 10 % | README raíz/backend/frontend, comandos verificados, `.env.example`, migraciones y despliegue local. |
+| Planificación y diseño | 35 % | Requisitos, matriz, ADRs, SPEC-001–009, planes, tareas y decisiones aprobadas. |
+| Criterio técnico y calidad | 25 % | Arquitectura, suites ejecutadas, auditorías disponibles y riesgos registrados; auditoría independiente y seguridad formal pendientes. |
+| Calidad del software | 30 % | Backend/frontend implementados y validados localmente; integración real; hallazgos V43-01–07 aún abiertos. |
+| README y despliegue | 10 % | READMEs y arranque conjunto verificados; instalación npm ci limpia, CI y P-05/despliegue pendientes. |
 
-No se fabricarán conversaciones, capturas ni resultados. Las evidencias de UI se generarán cuando la UI exista.
+No se fabricarán conversaciones, capturas ni resultados. TASK042/043 conservan capturas
+de navegador y pruebas reales/interceptadas identificadas en sus informes; no equivalen a
+auditoría formal ni a publicación.
 
 ## 8. Definición de terminado del MVP
 
@@ -306,7 +330,7 @@ No forman parte de esta hoja de ruta, salvo decisión expresa:
 
 ## 11. Siguiente paso
 
-TASK039 está completada y TASK039B deja las correcciones autorizadas preparadas
-localmente. El siguiente paso es que el propietario revise TASK039B y decida si
-autoriza TASK040 (publicación controlada). Publicación, frontend e integración
-requieren autorizaciones futuras específicas; este documento no las concede.
+TASK040 está integrada en `main` tras el merge del propietario. TASK042 completó
+localmente dashboard y gestión de clientes sin publicarlos. El siguiente incremento
+planificado es TASK043 (simulador), sujeto a revisión y autorización específica del
+propietario; esta tarea no autoriza su inicio.

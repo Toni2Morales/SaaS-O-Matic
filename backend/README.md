@@ -1,6 +1,6 @@
 # Backend de SaaS-O-Matic
 
-## Estado vigente TASK039B
+## Estado vigente TASK041 (base frontend)
 
 TASK039 auditó el backend acumulado con dictamen **APTA CON OBSERVACIONES** y sin
 hallazgos bloqueantes. TASK039B corrige la trazabilidad, el README, `.env.example`,
@@ -8,9 +8,11 @@ la configuración de SQLite y la validación defensiva de tasas FX. El runtime y
 Alembic comparten ahora la resolución de `DATABASE_URL`; la base predeterminada
 sigue siendo `backend/var/saas_o_matic.sqlite3`. Las tasas externas fuera de los
 límites técnicos se rechazan antes de la caché y producen `503
-application/problem+json`. La suite local tiene 579 pruebas. El backend sigue
-implementado localmente y **no publicado**; Angular, E2E, seguridad de despliegue
-y CI continúan pendientes.
+application/problem+json`. La suite backend tiene 579 pruebas. El backend se integró
+en `main` mediante PR #6 (merge `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`).
+TASK042 implementa localmente dashboard y gestión de clientes Angular e integra el
+flujo navegador–FastAPI–SQLite temporal. El simulador, el E2E completo del MVP,
+seguridad de despliegue y CI continúan pendientes; no se modificó el backend.
 
 ## Delta TASK038 (conservado)
 
@@ -105,7 +107,8 @@ ninguna prueba automatizada requiere Internet. Sin staging ni publicación.
 Backend Python 3.13/FastAPI, monolito modular. Alta para ES/PT/FR/DE/IT/NL,
 plan único `standard`, simulaciones mensuales persistidas desde cero usuarios,
 impuestos generales, conversión FX, lecturas, historial y preview. TASK036–039B
-son locales, sin publicación. UI Angular pendiente; P-01/P-05 sin resolver.
+se integraron mediante PR #6. TASK041/042 implementan localmente la base y gestión
+frontend de clientes; P-01 se resolvió en ADR 0003 y P-05 sigue pendiente.
 
 ## Requisitos
 
