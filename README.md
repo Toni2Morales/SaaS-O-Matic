@@ -1,8 +1,9 @@
 # SaaS-O-Matic
 
-> **Vigente TASK044:** backend integrado en `main` (PR #6). Dashboard, clientes y
-> simulador interactivo implementados localmente en Angular; preview/guardado usan
-> FastAPI y el cálculo económico permanece exclusivamente en el backend. Sin publicar.
+> **Vigente TASK045B:** backend integrado en `main` (PR #6). Dashboard, clientes y
+> simulador interactivo en Angular; preview/guardado usan FastAPI y el cálculo económico
+> permanece exclusivamente en el backend. TASK044P/TASK045BP publican el frontend
+> refinado/corregido en `feature/mvp-frontend`; no está integrado en `main`.
 > Cálculo mensual con IVA general de seis
 > países y conversión EUR/USD/GBP mediante Frankfurter v2. Decimal exacto, HALF_UP,
 > caché en memoria 24 h, timeout5s y snapshots históricos. `display_currency` opcional
@@ -16,7 +17,7 @@
 
 Herramienta interna para que el equipo comercial simule y estime el coste mensual de suscripciones SaaS corporativas: clientes, planes, consumo estimado, tramos de usuarios, impuestos por país y conversión de divisas.
 
-> **Estado real del MVP:** backend integrado en `main` (PR #6, merge `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`). TASK044 refina localmente interfaz, foco, validación y estados; verifica respuestas 15/16 usuarios con Angular–FastAPI–SQLite y actualiza fixtures visuales. V43-01 se reproduce en el fixture visual, no confirmado como defecto del producto; V43-02 se reproduce como artefacto de captura full-page. Cambios TASK044 no publicados ni integrados en `main`; revisión del propietario y auditoría independiente pendientes. **No existe CI ni despliegue.**
+> **Estado real del MVP:** backend integrado en `main` (PR #6, merge `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`). TASK044P/TASK045BP publican el frontend refinado/corregido en `feature/mvp-frontend`; sigue sin integrarse en `main`. TASK045 identificó observaciones medias de contraste/estado FX y TASK045B las corrige y refuerza la QA. P-05, CI y despliegue continúan pendientes. **No se declara listo para producción pública.**
 >
 > **Estado de publicación:** PR #6 fue fusionado por el propietario; merge commit `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`.
 >
@@ -28,25 +29,25 @@ Resumen; el detalle está en el [ADR 0001](docs/adr/0001-technology-stack.md) y 
 
 - **Backend:** Python 3.13, FastAPI, Pydantic v2, SQLAlchemy 2, SQLite y Alembic.
 - **Calidad backend:** Pytest, HTTPX, Ruff y mypy.
-- **Frontend:** Angular 22.2.6, TypeScript 6.0.3, Material/CDK, standalone components, Signals, RxJS, Router y HttpClient. Dashboard, clientes, simulador y refinamientos TASK044 implementados localmente; revisión independiente y publicación pendientes.
+- **Frontend:** Angular 22.2.6, TypeScript 6.0.3, Material/CDK, standalone components, Signals, RxJS, Router y HttpClient. Incrementos TASK044P/TASK045BP publicados en `feature/mvp-frontend`; aún no integrados en `main`.
 - **Contrato de API:** OpenAPI. **Divisa base:** EUR.
 - **Arquitectura:** monolito modular con dependencias hacia dentro (`presentation → application → domain`, `infrastructure → domain`).
 
 ## Estado funcional
 
-| Área | Estado |
-| --- | --- |
-| Alta de clientes | Seis países, único plan `standard`; genérico no oficial fuera de ES. |
-| Validación fiscal | DNI/NIF, NIE y CIF/NIF con algoritmos de control. |
-| Precios progresivos | Cero = 0.00; tarifas de los tres tramos intactas. |
-| Simulaciones | Mensuales persistidas, cliente y usuarios. |
-| Almacenamiento y llamadas API | Obligatorios nuevos; históricos NULL; sin cargos. |
-| Impuestos | IVA general por país, verificado; alcance simplificado, sin regímenes especiales. |
-| Divisas | Frankfurter v2, EUR/USD/GBP, caché24h y snapshot. |
-| Búsqueda, detalle e historial | GET implementados; paginación20/100/offset, orden estable y NULL históricos. |
-| Previsualización sin persistencia | POST /simulations/preview; mismo cálculo y sin escrituras SQLite. |
-| Frontend Angular | Dashboard, clientes y simulador implementados localmente; preview/guardado consumen la API y FastAPI conserva la autoridad económica. Revisión y publicación pendientes. |
-| CI y despliegue | Pendientes. |
+| Área                              | Estado                                                                                                                  |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Alta de clientes                  | Seis países, único plan `standard`; genérico no oficial fuera de ES.                                                    |
+| Validación fiscal                 | DNI/NIF, NIE y CIF/NIF con algoritmos de control.                                                                       |
+| Precios progresivos               | Cero = 0.00; tarifas de los tres tramos intactas.                                                                       |
+| Simulaciones                      | Mensuales persistidas, cliente y usuarios.                                                                              |
+| Almacenamiento y llamadas API     | Obligatorios nuevos; históricos NULL; sin cargos.                                                                       |
+| Impuestos                         | IVA general por país, verificado; alcance simplificado, sin regímenes especiales.                                       |
+| Divisas                           | Frankfurter v2, EUR/USD/GBP, caché24h y snapshot.                                                                       |
+| Búsqueda, detalle e historial     | GET implementados; paginación20/100/offset, orden estable y NULL históricos.                                            |
+| Previsualización sin persistencia | POST /simulations/preview; mismo cálculo y sin escrituras SQLite.                                                       |
+| Frontend Angular                  | Incrementos TASK044P/TASK045BP en `feature/mvp-frontend`; no integrado en `main`. FastAPI conserva autoridad económica. |
+| CI y despliegue                   | Pendientes.                                                                                                             |
 
 El detalle de la reconciliación con el enunciado original está en la [matriz de trazabilidad](docs/requirements/requirements-traceability.md). La propuesta de entrega está en la [hoja de ruta del MVP](docs/planning/mvp-roadmap.md).
 
@@ -97,9 +98,9 @@ El backend está implementado e integrado en `main`. El frontend implementa loca
 
 ## Puesta en marcha del frontend
 
-Requiere Node.js 24 LTS y npm 11. Desde `frontend/`, iniciar con `npm start` si las
-dependencias ya están instaladas. La instalación limpia `npm ci` queda pendiente de
-revisión/autorización de cuatro scripts de instalación; no se aprobaron durante TASK043P.
+Requiere Node.js 24 LTS y npm 11. Desde `frontend/`, instala de forma reproducible sin
+ejecutar scripts de terceros mediante `npm ci --ignore-scripts`; después inicia con
+`npm start`. Esta modalidad conserva bloqueados los cuatro scripts nativos opcionales.
 En otra terminal, iniciar el backend siguiendo [backend/README.md](backend/README.md).
 Angular escucha en `127.0.0.1:4200` y usa el proxy `/api` hacia FastAPI en
 `127.0.0.1:8000`. Ver [frontend/README.md](frontend/README.md) para scripts, pruebas,

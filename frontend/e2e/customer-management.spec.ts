@@ -93,7 +93,7 @@ test('searches with debounce, keeps server pagination, and requests the current 
   });
 
   await page.goto('/customers');
-  await expect(page.getByText('No hay clientes')).toHaveCount(0);
+  await expect(page.getByText('Todavía no hay clientes')).toBeVisible();
   const search = page.getByRole('searchbox', {
     name: 'Buscar por razón social o identificador fiscal',
   });
@@ -147,7 +147,9 @@ test('registers an international customer and navigates only after a successful 
 
   await page.goto('/customers/new');
   await page.getByLabel('Razón social').fill('  Empresa Portugal  ');
-  await page.getByRole('combobox', { name: 'País' }).click();
+  const country = page.getByRole('combobox', { name: 'País' });
+  await country.click();
+  await expect(page.getByRole('listbox')).toBeVisible();
   await page.getByRole('option', { name: 'Portugal' }).click();
   await page.getByLabel('Identificador fiscal').fill('PT-ACME 2026');
   await page.getByLabel('Email de contacto').fill(' contacto@example.com ');

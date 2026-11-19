@@ -20,3 +20,15 @@
 - [x] Generar 21 evidencias de navegador fuera del repositorio; 19 interceptadas, 2 integradas reales.
 - [x] Actualizar documentación vigente, completar informe TASK044 y comprobar hashes/protección.
 - [ ] Confirmar sin staging/commit/push/PR/merge y detenerse antes de TASK045.
+
+## Adenda TASK045B (posterior, sin reescribir el checklist TASK044)
+
+- [x] Corregir A45-01/A45-02 con regresiones, manteniendo FastAPI autoridad económica.
+- [x] Verificar V44-07 y las transiciones visuales de menú/selectores.
+- [x] Ejecutar axe, coverage, browsers Playwright e integración real aislada; registrar
+      resultados observados y la corrida fallida del árbol habitual.
+- [x] Limitar dependencias nuevas a las dos herramientas QA autorizadas; mantener scripts
+      bloqueados con `--ignore-scripts`.
+- [x] Registrar resultados, CA01–CA50, recursos retenidos y estado final en
+      [informe TASK045B](../../../ai-workspace/01-tasks/TASK045B-final-frontend-corrections.md).
+- [x] Sin staging/commit/push/PR/merge; no iniciar TASK045BP/TASK046/TASK047.

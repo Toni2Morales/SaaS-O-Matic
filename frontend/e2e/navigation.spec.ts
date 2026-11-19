@@ -50,7 +50,7 @@ test('opens and closes the mobile navigation with keyboard and route changes', a
 
   const menuButton = page.getByRole('button', { name: 'Menú', exact: true });
   await menuButton.focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press('Space');
   await expect(menuButton).toHaveAttribute('aria-expanded', 'true');
   await page.keyboard.press('Escape');
   await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
@@ -82,6 +82,7 @@ test('provides a keyboard skip link to the main content', async ({ page }) => {
   await page.keyboard.press('Tab');
   const skipLink = page.getByRole('link', { name: 'Saltar al contenido principal' });
   await expect(skipLink).toBeFocused();
+  await expect(skipLink).toBeInViewport();
   await page.keyboard.press('Enter');
   await expect(page.locator('#main-content')).toBeFocused();
 });

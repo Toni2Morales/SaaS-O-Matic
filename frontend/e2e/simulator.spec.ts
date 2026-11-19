@@ -113,6 +113,74 @@ test('does not clamp a manual user value above the slider range and responds to 
   await expect(page.getByText('Estimación actualizada.')).toBeVisible({ timeout: 5000 });
 });
 
+test('does not announce a terminal FX error as a preview still preparing', async ({ page }) => {
+  await page.route(`**/api/customers/${customerId}`, (route) => route.fulfill({ json: company }));
+  let failFx = false;
+  await page.route('**/api/simulations/preview', async (route) => {
+    if (failFx) {
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/problem+json',
+        json: { type: 'about:blank', title: 'Unavailable', status: 503, detail: 'FX unavailable' },
+      });
+      return;
+    }
+    const body = route.request().postDataJSON() as { display_currency: string; user_count: number };
+    const result = estimate(body.display_currency, body.user_count);
+    await route.fulfill({
+      json: {
+        ...result,
+        exchange_rate: body.display_currency === 'EUR' ? '1' : '1.0998',
+        converted_total: body.display_currency === 'EUR' ? result.total_eur : '186.31',
+      },
+    });
+  });
+
+  await page.goto(`/customers/${customerId}/simulations/new`);
+  await expect(page.locator('.total')).toHaveText('169,40 €');
+  failFx = true;
+  await page.getByRole('combobox', { name: 'Divisa de visualización' }).click();
+  await page.getByRole('option', { name: 'USD — Dólar estadounidense' }).click();
+
+  const alert = page.getByRole('alert').getByText(/No se pudo obtener un tipo de cambio/);
+  await expect(alert).toBeVisible();
+  await expect(page.locator('.status')).not.toContainText(/preparando|calculando/i);
+  await expect(page.getByText(/Estimación anterior: los parámetros han cambiado/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Guardar simulación' })).toBeDisabled();
+
+  failFx = false;
+  await page.getByRole('button', { name: 'Reintentar estimación' }).click();
+  await expect(page.locator('.total')).toHaveText('186,31 US$');
+  await expect(page.getByText('Estimación actualizada.')).toBeVisible();
+});
+
+test('exposes the invalid manual user count and its specific error accessibly', async ({
+  page,
+}) => {
+  let previewCount = 0;
+  await page.route(`**/api/customers/${customerId}`, (route) => route.fulfill({ json: company }));
+  await page.route('**/api/simulations/preview', (route) => {
+    previewCount++;
+    return route.fulfill({ json: estimate() });
+  });
+  await page.goto(`/customers/${customerId}/simulations/new`);
+  await expect(page.locator('.total')).toHaveText('169,40 €');
+  const users = page.locator('#user-count');
+  const beforeInvalid = previewCount;
+  await users.fill('1000001');
+  await users.blur();
+
+  const error = page.locator('#users-error');
+  await expect(error).toBeVisible();
+  await expect(error).toHaveText('El valor máximo es 1.000.000.');
+  await expect(users).toHaveAttribute('aria-describedby', /users-error/);
+  await expect(users).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('.tiers')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Guardar simulación' })).toBeDisabled();
+  await expect(page.getByText(/Estimación anterior: los parámetros han cambiado/)).toBeVisible();
+  expect(previewCount).toBe(beforeInvalid);
+});
+
 test('cancels an obsolete preview and never lets a late response replace current inputs', async ({
   page,
 }) => {

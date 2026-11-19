@@ -6,18 +6,25 @@ reactiva y persistencia explícita. FastAPI es la autoridad exclusiva de precios
 impuestos y conversiones; los importes/tipos se conservan como cadenas decimales.
 TASK044 refina mensajes, validación, accesibilidad de navegación y controles responsive.
 En móvil el resumen de la estimación es compacto y no sticky para evitar tapar campos.
+TASK045 auditó el frontend y confirmó observaciones sobre contraste de texto y el estado
+accesible tras un error FX. TASK045B corrige esas observaciones y refuerza la cobertura;
+TASK045BP publica las correcciones en `feature/mvp-frontend`; aún no están integradas en
+`main`.
 
 ## Versiones
 
 - Node.js 24 LTS (local verificado: 24.22.0; rango requerido `>=24.15.0 <25`).
 - npm 11 (local verificado: 11.19.1; `packageManager` fijado en el manifiesto).
 - Angular/CLI/Material/CDK 22.2.6, TypeScript 6.0.3, RxJS 7.8.2.
-- Vitest 5.1.1, Playwright Test 1.65.1.
+- Vitest 5.1.1, Playwright Test 1.65.1, axe-playwright 4.14.0 (MPL-2.0, dev) y
+  coverage-v8 5.1.1 (MIT, dev).
 - ESLint 10.15.0, angular-eslint 22.8.0, Prettier 3.8.1.
 
 Las dependencias directas están fijadas sin rangos y se conserva `package-lock.json`.
-La primera instalación reproducible es `npm ci` desde este directorio. No se requiere
-CLI global ni cambiar Node/npm global.
+Para instalar el árbol reproducible sin ejecutar scripts de terceros (incluidos los
+cuatro scripts opcionales aún bloqueados), usa `npm ci --ignore-scripts` desde este
+directorio. No se requiere CLI global ni cambiar Node/npm global. El build, los tests y
+los browsers Playwright se deben validar después de la instalación.
 
 ## Arranque local
 
@@ -32,7 +39,7 @@ Terminal 1, desde `backend/`:
 Terminal 2, desde `frontend/`:
 
 ```powershell
-npm ci
+npm ci --ignore-scripts
 npm start
 ```
 
@@ -40,11 +47,14 @@ Abrir `http://127.0.0.1:4200`. Angular sólo enlaza a loopback. El proxy de desa
 reenvía `/api/...` a `http://127.0.0.1:8000/...` quitando el prefijo artificial
 `/api`, puesto que los endpoints reales no tienen prefijo. No se ha añadido CORS ni
 modificado el backend. El proxy no se incluye en builds de producción; P-05 sigue
-pendiente. La aplicación no llama a Frankfurter: cualquier FX futuro pasa por FastAPI.
+pendiente. Angular no llama directamente a Frankfurter: las previews pasan por FastAPI,
+que conserva la autoridad económica y obtiene las referencias FX.
 
-TASK044 mantiene pendientes la revisión independiente y publicación; no constituye
-certificación WCAG AA. La integración real utiliza SQLite temporal con migraciones
-0001–0004; no reutilice la base de datos predeterminada para pruebas.
+TASK045 encontró dos defectos de severidad media (contraste de algunos textos y anuncio de
+estado después de error FX); TASK045B los corrige. La integración real utiliza SQLite
+temporal con migraciones 0001–0004; no reutilice la base de datos predeterminada para
+pruebas. Las auditorías de accesibilidad son parciales y no constituyen certificación
+WCAG AA.
 
 No se debe usar la base SQLite predeterminada para pruebas de integración; crear una
 SQLite temporal y migrarla hasta `0004_add_simulation_taxes_and_fx`.
@@ -57,7 +67,7 @@ SQLite temporal y migrarla hasta `0004_add_simulation_taxes_and_fx`.
 - `src/app/features/customers/data-access/`: servicios HTTP tipados de clientes e historial.
 - `src/app/shared/utils/display-format.ts`: presentación decimal exacta y fechas.
 - `src/proxy.conf.json`: proxy de desarrollo validado con Angular CLI 22.
-- `e2e/`: smoke tests Playwright en Chromium.
+- `e2e/`: pruebas Playwright en Chromium, Firefox y WebKit.
 
 El contrato se copia fielmente del OpenAPI real. Importes y tipos de cambio son
 `string`; UUID son strings; fechas son strings ISO; los campos históricos desconocidos
@@ -69,19 +79,20 @@ se evaluará si la sincronización manual se vuelve costosa.
 
 Desde `frontend/`:
 
-| Comando                           | Uso                                                          |
-| --------------------------------- | ------------------------------------------------------------ |
-| `npm start`                       | Servidor local en `127.0.0.1:4200`, con proxy API            |
-| `npm run build`                   | Compilación optimizada de producción                         |
-| `npm run watch`                   | Build de desarrollo en modo watch                            |
-| `npm run typecheck`               | TypeScript estricto para la app                              |
-| `npm run lint`                    | ESLint y reglas Angular/plantillas                           |
-| `npm test`                        | Vitest una sola ejecución (CLI Angular)                      |
-| `npm run test:watch`              | Vitest interactivo                                           |
-| `npm run e2e`                     | Playwright, Chromium, arranca y detiene el servidor web      |
-| `npx playwright install chromium` | Instala el navegador usado por E2E                           |
-| `npm run format:check`            | Verificación Prettier, sin escribir cambios                  |
-| `npm audit`                       | Consulta de advisories del registry; revisar antes de actuar |
+| Comando                                          | Uso                                                           |
+| ------------------------------------------------ | ------------------------------------------------------------- |
+| `npm start`                                      | Servidor local en `127.0.0.1:4200`, con proxy API             |
+| `npm run build`                                  | Compilación optimizada de producción                          |
+| `npm run watch`                                  | Build de desarrollo en modo watch                             |
+| `npm run typecheck`                              | TypeScript estricto para la app                               |
+| `npm run lint`                                   | ESLint y reglas Angular/plantillas                            |
+| `npm test`                                       | Vitest una sola ejecución (CLI Angular)                       |
+| `npm run test:coverage`                          | Vitest con V8; coverage texto/resumen JSON                    |
+| `npm run test:watch`                             | Vitest interactivo                                            |
+| `npm run e2e`                                    | Playwright en tres motores; arranca y detiene el servidor web |
+| `npx playwright install chromium firefox webkit` | Instala los tres browsers oficiales de Playwright             |
+| `npm run format:check`                           | Verificación Prettier, sin escribir cambios                   |
+| `npm audit`                                      | Consulta de advisories del registry; revisar antes de actuar  |
 
 No ejecutar `npm audit fix` automáticamente ni ignorar peer conflicts con force.
 
@@ -99,16 +110,34 @@ integración real y captura visual se ejecutaron en corridas dedicadas (1 pasada
 una). TypeScript, ESLint, Prettier y build de producción pasan. Backend: 579 pruebas
 Pytest superadas. No se midió coverage.
 
-El `npm audit` del corte actual no reporta vulnerabilidades (incluido `--omit=dev`).
-La única advisory high del registro TASK041, GHSA-fc5q-39xc-vjpf sobre picomatch, se
-retiró en GitHub el 2026-11-18; no se cambiaron paquetes ni lock. Volver a evaluar en
-TASK045. npm mantiene cuatro scripts opcionales no aprobados; las pruebas, build y E2E
-funcionan sin aprobarlos. No se ejecutó `npm ci` para evitar ejecutar scripts bloqueados;
-no se aprobó ninguno ni se modificó el manifiesto/lock. No ejecutar `npm audit fix`.
+TASK045B incorpora `@axe-core/playwright` 4.14.0 (dev, MPL-2.0; axe-core MPL-2.0) y
+`@vitest/coverage-v8` 5.1.1 (dev, MIT; peer exacto Vitest). Las instalaciones se hacen
+con `--ignore-scripts`; no se ejecutan scripts de dependencias.
+
+Resultados TASK045B reproducidos en este corte: **Vitest 40/40**; statements 86,20 %,
+branches 81,86 %, functions 67,19 %, lines 86,84 %; build inicial 395,13 kB raw.
+Playwright en copia limpia: **79 pasadas / 20 skips opt-in de 99 ejecuciones** entre
+Chromium, Firefox y WebKit; la integración real y capturas se ejecutaron aparte con
+servicios/datos aislados. La auditoría axe pasa en nueve estados representativos de
+Chromium. El `npm run e2e` del árbol habitual tuvo una caída del servidor de desarrollo al
+cambiar de motor y no se cuenta como PASS; la repetición completa en copia limpia pasó.
+A45-01/02 y las incidencias axe confirmadas se corrigieron; no se certifica WCAG AA. La
+integración real TASK045B utiliza FastAPI/SQLite migrada y proveedor FX fixture inyectado;
+la consulta Frankfurter real se registra por separado. El backend permanece 579/579
+Pytest.
+
+Los cuatro scripts previamente pendientes (`@parcel/watcher`, `esbuild`, `lmdb`,
+`msgpackr-extract`) siguen bloqueados. No ejecutar `npm audit fix`.
 
 La navegación móvil y los estados funcionales aplican fundamentos de accesibilidad;
 WCAG 2.2 AA es objetivo, no conformidad auditada. No hay autenticación, SSR ni
 despliegue.
+
+`npm run test:coverage` mide statements, branches, functions y lines sobre
+`src/app/**/*.ts`; excluye specs `src/**/*.spec.ts`. Los informes quedan en
+`frontend/coverage/` (ignorado por Git). Las pruebas Playwright pueden ejecutarse con
+Chromium, Firefox y WebKit. La auditoría axe automatizada se integra en E2E; sus
+resultados son controles parciales, no certificación WCAG AA.
 
 Las capturas de TASK042 y TASK043 se guardan fuera del repositorio. Detalle de TASK043:
 [SPEC-009](../docs/specs/009-interactive-subscription-simulator/spec.md) e

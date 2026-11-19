@@ -1,5 +1,5 @@
 <div class="app-frame" tabindex="-1" (keydown)="onMenuKeydown($event)">
-  <a class="skip-link" href="#main-content" (click)="skipToMain($event)">
+  <a class="skip-link" href="#main-content" tabindex="0" (click)="skipToMain($event)">
     Saltar al contenido principal
   </a>
   <aside
@@ -13,7 +13,7 @@
     [cdkTrapFocusAutoCapture]="isMobile() && menuOpen()"
   >
     <div class="sidebar-header">
-      <a class="brand" routerLink="/" (click)="onNavigation()" aria-label="SaaS-O-Matic, inicio">
+      <a class="brand" routerLink="/" (click)="onNavigation()">
         <span class="brand-mark" aria-hidden="true">S</span>
         <span class="brand-name">SaaS-O-Matic</span>
       </a>

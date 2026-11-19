@@ -135,3 +135,23 @@ el defecto y se solicita autorización para backend si corresponde.
 Siguen fuera de alcance autenticación, precios/impuestos nuevos, nuevas divisas/proveedores,
 rediseño integral, nuevos servicios, despliegue, cambios backend sin autorización y cualquier
 publicación Git. La auditoría independiente se realizará en tarea posterior.
+
+## 10. Adenda de calidad TASK045B
+
+Adenda posterior a TASK044; no amplía alcance comercial ni cambia contratos. Las
+observaciones reproducidas en TASK045B se concretan así:
+
+- El token de texto secundario debe alcanzar contraste de texto normal 4,5:1 en las
+  superficies donde se usa; la regresión calcula luminancia relativa sobre los tokens y
+  axe analiza estados representativos. Esto no constituye certificación WCAG AA.
+- Un error terminal de preview/FX no anuncia preparación/cálculo en curso. Si se conserva
+  el resultado anterior, queda identificado como obsoleto y `canSave()` continúa bloqueando
+  el guardado. El alert anuncia el error; retry y selección EUR permanecen explícitos.
+- El thumb real de `mat-slider` recibe nombre y descripción accesibles; la validación
+  manual >1.000.000 conserva el error visible/asociado, no calcula ni guarda y no muestra
+  bandas para un valor inválido.
+- Los enlaces con nombre visible no lo sustituyen por un `aria-label` discordante. El
+  enlace de salto permanece enfocable por teclado en los motores Playwright probados.
+
+FastAPI sigue siendo la autoridad económica. axe-playwright y coverage-v8 se limitan a QA;
+no se ejecutan scripts de dependencias y la instalación limpia usa `npm ci --ignore-scripts`.

@@ -114,12 +114,12 @@ type SimulationForm = FormGroup<{
                 step="1"
                 discrete
                 [disabled]="saving() || !sliderEnabled()"
-                aria-label="Usuarios activos, de 0 a 1.000"
-                aria-describedby="users-help"
               >
                 <input
                   matSliderThumb
                   [value]="sliderValue()"
+                  aria-label="Usuarios activos, de 0 a 1.000"
+                  aria-describedby="users-help"
                   [attr.aria-valuetext]="sliderValue() + ' usuarios activos; rango de 0 a 1.000'"
                   (valueChange)="setSlider($event)"
                 />
@@ -425,9 +425,6 @@ type SimulationForm = FormGroup<{
       overflow-wrap: anywhere;
       font-variant-numeric: tabular-nums;
     }
-    .stale {
-      opacity: 0.75;
-    }
     dl {
       display: grid;
       gap: var(--space-3);
@@ -727,6 +724,7 @@ export class SimulationPageComponent {
   }
   protected statusMessage(): string {
     if (this.saving()) return 'Guardando simulación…';
+    if (this.errorMessage()) return '';
     if (this.preparing()) return 'Preparando nueva estimación…';
     if (this.calculating()) return 'Calculando estimación…';
     if (this.form.invalid) return 'Completa los campos correctamente para calcular.';
@@ -770,6 +768,8 @@ export class SimulationPageComponent {
       .subscribe({
         next: (result) => {
           const previousPreview = this.preview();
+          this.errorMessage.set(null);
+          this.fxUnavailable.set(false);
           const changed =
             !!previousPreview &&
             (result.total_eur !== previousPreview.total_eur ||

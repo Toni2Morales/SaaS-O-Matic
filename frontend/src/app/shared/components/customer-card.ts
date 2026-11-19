@@ -17,11 +17,7 @@ const countryNames: Record<CustomerResponse['country'], string> = {
   template: `
     <article class="customer-card">
       <div class="customer-main">
-        <a
-          class="customer-name"
-          [routerLink]="['/customers', customer().id]"
-          [attr.aria-label]="customer().legal_name"
-        >
+        <a class="customer-name" [routerLink]="['/customers', customer().id]">
           <span>{{ customer().legal_name }}</span>
           <span class="detail-cue" aria-hidden="true">Abrir ficha →</span>
         </a>
@@ -124,7 +120,7 @@ const countryNames: Record<CustomerResponse['country'], string> = {
       font-size: 0.78rem;
       font-weight: 600;
     }
-    @media (max-width: 767px) {
+    @media (max-width: 980px) {
       .customer-card {
         grid-template-columns: 1fr;
         gap: var(--space-4);
