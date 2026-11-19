@@ -79,8 +79,6 @@ cleanup_on_error() {
 trap cleanup_on_error EXIT
 
 if [[ "${1:-}" == "--stop" || "${1:-}" == "-s" ]]; then
-  python_exe="$(command -v python3.13 || true)"
-  if [[ -z "$python_exe" ]]; then fail 'Python 3.13 se necesita para comprobar puertos/parada.'; exit 1; fi
   stop_services
   trap - EXIT
   exit 0

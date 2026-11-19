@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [switch]$Stop
 )
@@ -11,7 +11,7 @@ $runtimeDir = Join-Path $env:LOCALAPPDATA 'SaaS-O-Matic\run'
 $stateFile = Join-Path $runtimeDir 'services.json'
 
 function Write-Info([string]$Message) { Write-Host "[SaaS-O-Matic] $Message" }
-function Write-Failure([string]$Message) { Write-Error "[SaaS-O-Matic] $Message" }
+function Write-Failure([string]$Message) { Write-Error "[SaaS-O-Matic] $Message" -ErrorAction Continue }
 
 function Get-ListeningProcess([int]$Port) {
     return Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction SilentlyContinue |
