@@ -112,7 +112,8 @@ mensajes no fatales de importación dinámica durante WebKit. Integración real 
 resultados son TASK047 local en clon Windows, no GitHub Actions.
 
 GitHub Actions de esta rama validarán backend, frontend, Playwright y Quick Start Windows/
-Linux. **Ejecuciones reales: pendientes** hasta comprobar runs de GitHub; no se muestran
+Linux. Véase la [guía de CI](docs/guides/continuous-integration.md).
+**Ejecuciones reales: pendientes** hasta comprobar runs de GitHub; no se muestran
 badges como satisfactorios antes de esa evidencia. Axe en nueve estados Chromium sin
 violaciones detectadas durante TASK046 no es certificación WCAG; responsive se comprobó en
 cinco viewports/rutas en Chromium, Firefox y WebKit.

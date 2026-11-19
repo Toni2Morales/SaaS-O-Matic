@@ -1,0 +1,248 @@
+name: Quality
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, docs/final-delivery]
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.13.17"
+      - name: Install backend and development dependencies
+        working-directory: backend
+        run: python -m pip install -e '.[dev]' -c requirements.lock
+      - name: Check installed dependencies
+        working-directory: backend
+        run: python -m pip check
+      - name: Ruff
+        working-directory: backend
+        run: python -m ruff check .
+      - name: Ruff format
+        working-directory: backend
+        run: python -m ruff format --check .
+      - name: mypy
+        working-directory: backend
+        run: python -m mypy .
+      - name: Pytest
+        working-directory: backend
+        env:
+          DATABASE_URL: sqlite:///./var/ci-backend.sqlite3
+        run: python -m pytest
+
+  frontend:
+    name: Frontend quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.22.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install locked dependencies without third-party scripts
+        working-directory: frontend
+        run: npm ci --ignore-scripts
+      - name: Typecheck
+        working-directory: frontend
+        run: npm run typecheck
+      - name: ESLint
+        working-directory: frontend
+        run: npm run lint
+      - name: Prettier
+        working-directory: frontend
+        run: npm run format:check
+      - name: Vitest with coverage
+        working-directory: frontend
+        run: npm run test:coverage
+      - name: Production build
+        working-directory: frontend
+        run: npm run build
+      - name: Dependency audit
+        working-directory: frontend
+        run: npm audit
+      - name: Production dependency audit
+        working-directory: frontend
+        run: npm audit --omit=dev
+
+  playwright:
+    name: Playwright (Chromium, Firefox, WebKit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.22.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.13.17"
+      - name: Install backend runtime for isolated integration
+        working-directory: backend
+        run: python -m pip install -e . -c requirements.lock
+      - name: Install locked dependencies without third-party scripts
+        working-directory: frontend
+        run: npm ci --ignore-scripts
+      - name: Install official Playwright browsers and runner dependencies
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Run cross-browser E2E suite
+        working-directory: frontend
+        env:
+          CI: "1"
+        run: npm run e2e
+      - name: Real Angular-FastAPI-SQLite integration with deterministic FX fixtures
+        shell: bash
+        env:
+          CI: "1"
+        run: |
+          set -euo pipefail
+          fixture_dir="$RUNNER_TEMP/task047-fixture-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          mkdir -p "$fixture_dir"
+          database_file="$fixture_dir/integration.sqlite3"
+          export DATABASE_URL="sqlite:///$database_file"
+          export PYTHONPATH="$fixture_dir:$GITHUB_WORKSPACE/backend/src"
+          python - <<'PY'
+          from pathlib import Path
+          import os
+
+          fixture = '''from collections.abc import Iterator
+          from datetime import UTC, date, datetime
+          from decimal import Decimal
+          from saas_o_matic.application.simulations.estimator import MonthlyEstimator
+          from saas_o_matic.application.simulations.use_cases import CreateSimulation, PreviewSimulation
+          from saas_o_matic.bootstrap.main import _get_session_factory, app
+          from saas_o_matic.bootstrap.simulations import build_preview_use_case, build_simulation_use_case
+          from saas_o_matic.domain.simulations.calculation import Currency, ExchangeQuote
+          from saas_o_matic.infrastructure.tax_catalog import configured_tax_catalog
+          from saas_o_matic.presentation.simulations.dependencies import get_create_simulation_use_case, get_preview_simulation_use_case
+
+          class Task047FixtureRates:
+              """Proveedor FX determinista de esta integración CI; no es una cotización real."""
+              def get_rate(self, currency: Currency) -> ExchangeQuote:
+                  rates = {Currency.USD: Decimal("1.0998"), Currency.GBP: Decimal("0.83348")}
+                  return ExchangeQuote(currency, rates[currency], date(2026, 11, 18), datetime.now(UTC), "frankfurter")
+
+          estimator = MonthlyEstimator(configured_tax_catalog(), Task047FixtureRates())
+
+          def preview_dependency() -> Iterator[PreviewSimulation]:
+              with _get_session_factory()() as session:
+                  yield build_preview_use_case(session, estimator)
+
+          def create_dependency() -> Iterator[CreateSimulation]:
+              with _get_session_factory()() as session:
+                  yield build_simulation_use_case(session, estimator)
+
+          app.dependency_overrides[get_preview_simulation_use_case] = preview_dependency
+          app.dependency_overrides[get_create_simulation_use_case] = create_dependency
+          '''
+          Path(
+              os.environ["RUNNER_TEMP"],
+              f"task047-fixture-{os.environ['GITHUB_RUN_ID']}-{os.environ['GITHUB_RUN_ATTEMPT']}",
+              "fixture_app.py",
+          ).write_text(fixture, encoding="utf-8")
+          PY
+          (
+            cd backend
+            python -m alembic upgrade head
+          )
+          api_pid=""
+          stop_api() {
+            if [[ -n "$api_pid" ]] && kill -0 "$api_pid" 2>/dev/null; then
+              command_line="$(ps -p "$api_pid" -o args= 2>/dev/null || true)"
+              if [[ "$command_line" != *"uvicorn fixture_app:app"* || "$command_line" != *"--port 8000"* ]]; then
+                echo "Refusing to stop unverified PID $api_pid: $command_line" >&2
+                return 1
+              fi
+              kill -TERM "$api_pid"
+              wait "$api_pid" || true
+              for _ in {1..40}; do
+                if python - <<'PY'
+          import socket
+          with socket.socket() as sock:
+              raise SystemExit(0 if sock.connect_ex(("127.0.0.1", 8000)) != 0 else 1)
+          PY
+                then
+                  api_pid=""
+                  return 0
+                fi
+                sleep 0.25
+              done
+              echo "Verified API PID $api_pid did not release port 8000 in time." >&2
+              return 1
+            fi
+            api_pid=""
+          }
+          start_api() {
+            python - <<'PY'
+          import socket
+          with socket.socket() as sock:
+              if sock.connect_ex(("127.0.0.1", 8000)) == 0:
+                  raise SystemExit("Port 8000 is unexpectedly occupied on the ephemeral runner.")
+          PY
+            (
+              cd backend
+              nohup python -m uvicorn fixture_app:app --host 127.0.0.1 --port 8000 >"$fixture_dir/api.log" 2>&1 &
+              echo "$!" > "$fixture_dir/api.pid"
+            )
+            api_pid="$(cat "$fixture_dir/api.pid")"
+            for _ in {1..40}; do
+              if python -c 'import json,urllib.request; data=json.load(urllib.request.urlopen("http://127.0.0.1:8000/health",timeout=1)); raise SystemExit(0 if data.get("status")=="ok" else 1)' >/dev/null 2>&1; then
+                return 0
+              fi
+              if ! kill -0 "$api_pid" 2>/dev/null; then cat "$fixture_dir/api.log"; return 1; fi
+              sleep 0.5
+            done
+            cat "$fixture_dir/api.log"
+            return 1
+          }
+          trap stop_api EXIT
+          start_api
+          (
+            cd frontend
+            TASK045B_REAL_API=1 \
+            TASK045B_API_BASE_URL=http://127.0.0.1:8000 \
+              npx playwright test --project chromium --grep 'integrates the Angular UI with FastAPI and migrated SQLite'
+          )
+          customer_id="$(python - <<'PY'
+          import json
+          import urllib.parse
+          import urllib.request
+          query = urllib.parse.urlencode({"search": "TASK045B Empresa ES", "limit": 100, "offset": 0})
+          with urllib.request.urlopen(f"http://127.0.0.1:8000/customers?{query}", timeout=5) as response:
+              page = json.load(response)
+          matches = [item for item in page["items"] if item["legal_name"].startswith("TASK045B Empresa ES ")]
+          if len(matches) != 1:
+              raise SystemExit(f"Expected one synthetic integration customer; found {len(matches)}")
+          print(matches[0]["id"])
+          PY
+          )"
+          stop_api
+          start_api
+          (
+            cd frontend
+            TASK045B_AFTER_RESTART=1 \
+            TASK045B_RESTART_CUSTOMER_ID="$customer_id" \
+              npx playwright test --project chromium --grep 'recovers the history after the isolated backend restarts'
+          )
+          stop_api
+          trap - EXIT
+          echo "Fixture-only browser/API/SQLite integration and post-restart history passed for $customer_id."

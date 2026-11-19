@@ -1,0 +1,129 @@
+name: Quick Start
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, docs/final-delivery]
+  workflow_dispatch:
+
+concurrency:
+  group: quick-start-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  startup:
+    name: ${{ matrix.os }} startup, HTTP flow, stop and restart
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.13.17"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.22.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Start all services (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: .\start.ps1
+
+      - name: Exercise customer, preview, save, and history (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $body = @{ legal_name = 'TASK047 Quick Start synthetic'; tax_id = 'B12345674'; email = 'task047@example.com'; country = 'ES'; plan = 'standard' } | ConvertTo-Json -Compress
+          $customer = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/customers' -ContentType 'application/json' -Body $body
+          $simulation = @{ customer_id = $customer.id; user_count = 15; storage_gb = 250; api_calls_per_month = 100000; display_currency = 'EUR' } | ConvertTo-Json -Compress
+          $preview = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/simulations/preview' -ContentType 'application/json' -Body $simulation
+          if ($preview.total_eur -ne '169.40') { throw "Unexpected preview total: $($preview.total_eur)" }
+          $before = Invoke-RestMethod -Uri "http://127.0.0.1:8000/customers/$($customer.id)/simulations"
+          if ($before.total -ne 0) { throw 'Preview persisted a simulation.' }
+          $saved = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/simulations' -ContentType 'application/json' -Body $simulation
+          if ($saved.total_eur -ne '169.40') { throw "Unexpected saved total: $($saved.total_eur)" }
+          $customer.id | Set-Content task047-customer-id.txt
+          "TASK047 customer=$($customer.id) simulation=$($saved.id) total=$($saved.total_eur)"
+
+      - name: Stop and restart services (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          .\start.ps1 -Stop
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .\start.ps1
+
+      - name: Verify persisted record after restart (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $customerId = (Get-Content task047-customer-id.txt).Trim()
+          $history = Invoke-RestMethod -Uri "http://127.0.0.1:8000/customers/$customerId/simulations"
+          if ($history.total -ne 1 -or $history.items[0].total_eur -ne '169.40') { throw 'Simulation history did not persist across service restart.' }
+
+      - name: Start all services (Linux)
+        if: runner.os == 'Linux'
+        run: bash start.sh
+
+      - name: Exercise customer, preview, save, and history (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          python3.13 - <<'PY'
+          import json
+          import urllib.request
+
+          def request(path: str, body: dict | None = None) -> dict:
+              data = None if body is None else json.dumps(body).encode()
+              req = urllib.request.Request(f"http://127.0.0.1:8000{path}", data=data, headers={"Content-Type": "application/json"} if data else {})
+              with urllib.request.urlopen(req, timeout=10) as response:
+                  return json.load(response)
+
+          customer = request("/customers", {"legal_name": "TASK047 Quick Start synthetic", "tax_id": "B12345674", "email": "task047@example.com", "country": "ES", "plan": "standard"})
+          payload = {"customer_id": customer["id"], "user_count": 15, "storage_gb": 250, "api_calls_per_month": 100000, "display_currency": "EUR"}
+          preview = request("/simulations/preview", payload)
+          assert preview["total_eur"] == "169.40", preview
+          assert request(f"/customers/{customer['id']}/simulations")["total"] == 0
+          saved = request("/simulations", payload)
+          assert saved["total_eur"] == "169.40", saved
+          with open("task047-flow.txt", "w", encoding="utf-8") as file:
+              file.write(customer["id"])
+          print(f"TASK047 customer={customer['id']} simulation={saved['id']} total={saved['total_eur']}")
+          PY
+
+      - name: Stop and restart services (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          bash start.sh --stop
+          bash start.sh
+
+      - name: Verify persisted record after restart (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          python3.13 - <<'PY'
+          import json
+          import urllib.request
+          customer_id = open("task047-flow.txt", encoding="utf-8").read().strip()
+          with urllib.request.urlopen(f"http://127.0.0.1:8000/customers/{customer_id}/simulations", timeout=10) as response:
+              history = json.load(response)
+          assert history["total"] == 1 and history["items"][0]["total_eur"] == "169.40", history
+          print("Simulation history survived service restart.")
+          PY
+
+      - name: Stop services safely (Windows)
+        if: always() && runner.os == 'Windows'
+        shell: powershell
+        run: .\start.ps1 -Stop
+
+      - name: Stop services safely (Linux)
+        if: always() && runner.os == 'Linux'
+        run: bash start.sh --stop
