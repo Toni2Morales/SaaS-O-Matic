@@ -33,7 +33,15 @@ Antes de escribir código, el propietario cambió el rumbo por dos motivos expl�
 
 El cambio no se produjo por un problema técnico detectado en la propuesta anterior, sino por los objetivos personales y profesionales del propietario. Se documenta como decisión consciente, no como corrección de un error.
 
-## 3. Cronología de fases
+## 3. Estado de evolución TASK044
+
+TASK043 extiende el frontend Angular existente con simulador reactivo y persistencia
+explícita. Los cálculos monetarios permanecen en FastAPI, que sigue siendo la única
+autoridad para tarifas, impuestos, FX y snapshots. No se añadieron dependencias ni se
+cambió backend/stack. TASK044 añade refinamientos de interfaz y regresiones integradas;
+FastAPI mantiene autoridad económica. Estado local sin publicación; véase TASK044.
+
+## 4. Cronología de fases
 
 | Fase | Estado | Resultado |
 | --- | --- | --- |
@@ -41,8 +49,8 @@ El cambio no se produjo por un problema técnico detectado en la propuesta anter
 | 2. Evaluación del repositorio | Completada | Inspección de estructura, Git, `.gitignore` y entorno; identificación de riesgos y huecos. |
 | 3. Fundamento documental | Completada; PR #1 fusionado | Requisitos, ADRs, proceso de trabajo, contexto de IA y configuración compartida. Sin código. |
 | 4. Scaffold de backend | Completada; PR #2 fusionado | Estructura inicial, entorno virtual, aplicación FastAPI mínima, pruebas y documentación; publicada y fusionada por el propietario. |
-| 5. Scaffold de frontend | No iniciada | Pendiente de aprobación. |
-| 6. Funcionalidades | Alta de clientes MVP completada y validada localmente | `docs/specs/001-customer-registration/` cerrada; catálogo `standard`, migración `0001_create_customers`, `POST /customers`, persistencia SQLite y pruebas de dominio, aplicación, infraestructura, migración y API. Cambios de TASK020 no publicados. |
+| 5. Scaffold de frontend | Completada localmente en TASK041 | Angular 22, shell, rutas, HTTP/proxy, Material, Vitest y Playwright; sin publicación. |
+| 6. Funcionalidades | Alta backend integrada en main; dashboard/gestión UI clientes completada localmente en TASK042 | SPEC-001 alta backend; SPEC-008 alta/búsqueda/listado/ficha/historial UI. Simulador TASK043 pendiente. |
 
 ## 4. Consecuencias del cambio
 
@@ -91,6 +99,26 @@ Estado de las decisiones arquitectónicas y técnicas:
 Las preguntas de negocio Q-01 a Q-17 no se reproducen aquí para evitar duplicidad y deriva: su fuente única es [`docs/requirements/functional-requirements.md`](../../docs/requirements/functional-requirements.md), sección 5. No se mezclan ambos espacios de identificadores en una misma tabla.
 
 El registro de tareas, evidencias y auditorías se mantiene en [`ai-workspace/README.md`](../README.md).
+
+## 8. Actualización vigente TASK041 (2026-11-18)
+
+El backend se integró en `main` mediante PR #6, merge
+`23cc43b486d20f7995a2cf29375e3f724f3c7c3f`. TASK041 resuelve P-01 en alcance
+frontend: Angular 22.2.6, TypeScript 6.0.3 y Vitest 5.1.1, con compatibilidad
+documentada en [ADR 0003](../../docs/adr/0003-angular-frontend-stack.md). Se creó
+el scaffold local dentro de `frontend/`; shell, navegación y rutas existen, pero las
+funcionalidades comerciales permanecen pendientes. P-05, CI y despliegue no quedan
+resueltos por esta actualización.
+
+## 9. Actualización vigente TASK042 (2026-11-18)
+
+Se implementó localmente sobre el scaffold aprobado el primer conjunto de flujos
+comerciales del frontend: dashboard con total/page backend, listado/búsqueda/paginación,
+alta internacional, ficha e historial paginado. Se conservan servicios HTTP por
+funcionalidad, estado Signals local y RxJS cancelable, Reactive Forms y la autoridad
+de validación/cálculo del backend. Un flujo real de navegador persistió clientes
+sintéticos ES/PT y consultó historial en SQLite temporal migrada a 0004. No cambia el
+stack, no se publican los cambios y el simulador sigue reservado a TASK043.
 
 ## 7. Lecciones registradas
 

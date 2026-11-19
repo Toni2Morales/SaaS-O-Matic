@@ -1,7 +1,9 @@
 # SaaS-O-Matic
 
-> **Vigente TASK040:** el backend se publica en `feature/mvp-backend` mediante un
-> Pull Request hacia `main`; integración pendiente de revisión y merge del propietario.
+> **Vigente TASK045B:** backend integrado en `main` (PR #6). Dashboard, clientes y
+> simulador interactivo en Angular; preview/guardado usan FastAPI y el cálculo económico
+> permanece exclusivamente en el backend. TASK044P/TASK045BP publican el frontend
+> refinado/corregido en `feature/mvp-frontend`; no está integrado en `main`.
 > Cálculo mensual con IVA general de seis
 > países y conversión EUR/USD/GBP mediante Frankfurter v2. Decimal exacto, HALF_UP,
 > caché en memoria 24 h, timeout5s y snapshots históricos. `display_currency` opcional
@@ -9,17 +11,17 @@
 > Listado/búsqueda Unicode, detalle e historial paginados y preview sin escritura disponibles.
 > TASK039 auditó el backend con observaciones no bloqueantes; TASK039B corrige
 > trazabilidad, README, `.env.example`, configuración SQLite compartida y límites FX.
-> Sin frontend; estimación simplificada, no factura. Véanse
+> Estimación simplificada, no factura. Véanse
 > [SPEC-005](docs/specs/005-taxes-and-currency-conversion/spec.md) y
 > [SPEC-006](docs/specs/006-customer-queries-and-preview/spec.md).
 
 Herramienta interna para que el equipo comercial simule y estime el coste mensual de suscripciones SaaS corporativas: clientes, planes, consumo estimado, tramos de usuarios, impuestos por país y conversión de divisas.
 
-> **Estado real del MVP:** componentes backend funcionales implementados (TASK036–039B) y publicados para revisión en `feature/mvp-backend`; integración en `main` pendiente. **No existe Angular, CI ni despliegue.** TASK039 completada con dictamen APTA CON OBSERVACIONES; TASK039B corrige los defectos autorizados y mantiene riesgos aceptados/diferidos. Desarrollo visual pendiente.
+> **Estado real del MVP:** backend integrado en `main` (PR #6, merge `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`). TASK044P/TASK045BP publican el frontend refinado/corregido en `feature/mvp-frontend`; sigue sin integrarse en `main`. TASK045 identificó observaciones medias de contraste/estado FX y TASK045B las corrige y refuerza la QA. P-05, CI y despliegue continúan pendientes. **No se declara listo para producción pública.**
 >
-> **Estado de publicación:** los PR #1 a #5 fueron fusionados por el propietario. El último merge es `b3c5ca81d23d279b478ed466757bada031aa1e1e` (PR #5, simulaciones).
+> **Estado de publicación:** PR #6 fue fusionado por el propietario; merge commit `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`.
 >
-> **Decisiones:** Q-18–Q-26 implementadas en alcance aprobado; historial inmutable por API. P-01/P-05 pendientes. Documento original no seguido ni publicado.
+> **Decisiones:** Q-18–Q-26 implementadas en alcance backend; P-01 resuelta en TASK041/ADR 0003; P-05 sigue pendiente. Documento original no seguido ni publicado.
 
 ## Stack
 
@@ -27,25 +29,25 @@ Resumen; el detalle está en el [ADR 0001](docs/adr/0001-technology-stack.md) y 
 
 - **Backend:** Python 3.13, FastAPI, Pydantic v2, SQLAlchemy 2, SQLite y Alembic.
 - **Calidad backend:** Pytest, HTTPX, Ruff y mypy.
-- **Frontend:** Angular con TypeScript, standalone components, Signals, RxJS, Reactive Forms, Router y HttpClient. **Pendiente de implementación.**
+- **Frontend:** Angular 22.2.6, TypeScript 6.0.3, Material/CDK, standalone components, Signals, RxJS, Router y HttpClient. Incrementos TASK044P/TASK045BP publicados en `feature/mvp-frontend`; aún no integrados en `main`.
 - **Contrato de API:** OpenAPI. **Divisa base:** EUR.
 - **Arquitectura:** monolito modular con dependencias hacia dentro (`presentation → application → domain`, `infrastructure → domain`).
 
 ## Estado funcional
 
-| Área | Estado |
-| --- | --- |
-| Alta de clientes | Seis países, único plan `standard`; genérico no oficial fuera de ES. |
-| Validación fiscal | DNI/NIF, NIE y CIF/NIF con algoritmos de control. |
-| Precios progresivos | Cero = 0.00; tarifas de los tres tramos intactas. |
-| Simulaciones | Mensuales persistidas, cliente y usuarios. |
-| Almacenamiento y llamadas API | Obligatorios nuevos; históricos NULL; sin cargos. |
-| Impuestos | IVA general por país, verificado; alcance simplificado, sin regímenes especiales. |
-| Divisas | Frankfurter v2, EUR/USD/GBP, caché24h y snapshot. |
-| Búsqueda, detalle e historial | GET implementados; paginación20/100/offset, orden estable y NULL históricos. |
-| Previsualización sin persistencia | POST /simulations/preview; mismo cálculo y sin escrituras SQLite. |
-| Frontend Angular | Pendiente. |
-| CI y despliegue | Pendientes. |
+| Área                              | Estado                                                                                                                  |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Alta de clientes                  | Seis países, único plan `standard`; genérico no oficial fuera de ES.                                                    |
+| Validación fiscal                 | DNI/NIF, NIE y CIF/NIF con algoritmos de control.                                                                       |
+| Precios progresivos               | Cero = 0.00; tarifas de los tres tramos intactas.                                                                       |
+| Simulaciones                      | Mensuales persistidas, cliente y usuarios.                                                                              |
+| Almacenamiento y llamadas API     | Obligatorios nuevos; históricos NULL; sin cargos.                                                                       |
+| Impuestos                         | IVA general por país, verificado; alcance simplificado, sin regímenes especiales.                                       |
+| Divisas                           | Frankfurter v2, EUR/USD/GBP, caché24h y snapshot.                                                                       |
+| Búsqueda, detalle e historial     | GET implementados; paginación20/100/offset, orden estable y NULL históricos.                                            |
+| Previsualización sin persistencia | POST /simulations/preview; mismo cálculo y sin escrituras SQLite.                                                       |
+| Frontend Angular                  | Incrementos TASK044P/TASK045BP en `feature/mvp-frontend`; no integrado en `main`. FastAPI conserva autoridad económica. |
+| CI y despliegue                   | Pendientes.                                                                                                             |
 
 El detalle de la reconciliación con el enunciado original está en la [matriz de trazabilidad](docs/requirements/requirements-traceability.md). La propuesta de entrega está en la [hoja de ruta del MVP](docs/planning/mvp-roadmap.md).
 
@@ -76,21 +78,35 @@ Las páginas contienen items/total/limit/offset. Búsqueda parcial literal por n
 o tax_id, Unicode casefold sin quitar acentos; search máximo255 tras recortar.
 Historial más reciente primero, sin recalcular datos antiguos ni consultar FX.
 Preview reutiliza el cuerpo de creación, devuelve200 sin id ni created_at persistidos;
-guardar sigue siendo POST /simulations. Panel, tarjetas y slider son trabajo de UI pendiente.
+guardar sigue siendo POST /simulations. Dashboard, alta, búsqueda, ficha e historial
+están conectados localmente. El simulador envía preview y guardado explícito; los
+cálculos económicos siguen siendo responsabilidad de FastAPI.
 
 ## Estructura
 
 ```text
 .
 ├─ backend/          # FastAPI, dominio, aplicación, infraestructura, migraciones y pruebas
-├─ frontend/         # Pendiente de scaffold
+├─ frontend/         # Angular; TASK041 base, TASK042 clientes, TASK043 simulador (local, no publicado)
 ├─ docs/             # Requisitos, ADRs, evaluación, proceso, especificaciones y planificación
 ├─ ai-workspace/     # Trazabilidad del desarrollo asistido por IA
 ├─ AGENTS.md         # Instrucciones para agentes de IA
 └─ .env.example      # Plantilla de configuración local
 ```
 
-El backend está implementado. El frontend todavía no se ha creado. La ubicación definitiva del composition root sigue siendo una propuesta provisional en `backend/src/saas_o_matic/bootstrap/`.
+El backend está implementado e integrado en `main`. El frontend implementa localmente dashboard, clientes y simulador (TASK041–043); los cambios siguen sin publicar y esperan revisión independiente. No se declara completo el MVP: P-05/despliegue y CI continúan pendientes. La ubicación definitiva del composition root sigue siendo una propuesta provisional en `backend/src/saas_o_matic/bootstrap/`.
+
+## Puesta en marcha del frontend
+
+Requiere Node.js 24 LTS y npm 11. Desde `frontend/`, instala de forma reproducible sin
+ejecutar scripts de terceros mediante `npm ci --ignore-scripts`; después inicia con
+`npm start`. Esta modalidad conserva bloqueados los cuatro scripts nativos opcionales.
+En otra terminal, iniciar el backend siguiendo [backend/README.md](backend/README.md).
+Angular escucha en `127.0.0.1:4200` y usa el proxy `/api` hacia FastAPI en
+`127.0.0.1:8000`. Ver [frontend/README.md](frontend/README.md) para scripts, pruebas,
+limitaciones y detalles de la configuración. La validación de TASK043 incluye integración
+real con FastAPI/SQLite; la instalación limpia, auditoría WCAG formal, revisión
+independiente y publicación siguen pendientes.
 
 ## Puesta en marcha del backend
 
@@ -142,6 +158,30 @@ correctos; 35 pines sin cambios. Añade resolución SQLite compartida runtime/Al
 prueba sobre base alternativa, límites FX defensivos, `503` sin filas parciales y
 corrupción de historial controlada. Sin publicación.
 
+TASK041 (frontend local): Vitest **9 pruebas superadas**; TypeScript estricto, ESLint,
+Prettier y build de producción correctos; Playwright Chromium **4 smoke tests**
+superados. El proxy respondió GET `/api/customers` con HTTP 200 frente a FastAPI y
+SQLite temporal migrada. El `npm audit` high comunicado entonces se reevaluó en
+TASK042: la advisory de picomatch fue retirada por GitHub y la auditoría actual está
+limpia; véase [TASK042](ai-workspace/01-tasks/TASK042-customer-management-frontend.md).
+
+TASK042 (frontend local): Vitest **35 pruebas superadas**, 11 archivos; Playwright
+Chromium **12 pruebas superadas** en ejecución con integración real contra FastAPI y
+SQLite temporal (11 pruebas de UI y un flujo integrado; no depende de Frankfurter).
+TypeScript, ESLint, Prettier y build de producción correctos; también pasan las 579
+pruebas backend. Sin dependencias nuevas ni cambios backend. En ese corte, TASK043 aún
+no se había iniciado.
+
+TASK043 (simulador local): Vitest **37/37**; Playwright general **17 pasadas y 2
+opt-in omitidas**; integración real y captura visual opt-in superadas en ejecuciones
+dedicadas. TypeScript, ESLint, Prettier y build de producción correctos; Ruff, formato,
+mypy, pip check y Pytest **579/579** correctos. `npm audit` y `npm audit --omit=dev`
+reportaron cero vulnerabilidades. La integración real cubrió preview no persistente,
+guardado explícito, historial/recarga y casos sintéticos ES/PT/cero. Conversión USD/GBP:
+consultas puntuales reales, separadas de la suite determinista. Cambios locales sin
+publicar; revisión técnica/visual pendiente. No se ejecutó `npm ci`; cuatro scripts de
+instalación requieren revisión/autorización. V43-01–07 quedan pendientes de TASK044.
+
 ## Documentación
 
 - [Requisitos funcionales](docs/requirements/functional-requirements.md)
@@ -149,12 +189,22 @@ corrupción de historial controlada. Sin publicación.
 - [Hoja de ruta optimizada del MVP](docs/planning/mvp-roadmap.md)
 - [ADR 0001 — Stack tecnológico](docs/adr/0001-technology-stack.md)
 - [ADR 0002 — Arquitectura](docs/adr/0002-architecture.md)
+- [ADR 0003 — Stack Angular](docs/adr/0003-angular-frontend-stack.md)
 - [Especificación 001 — Alta de clientes](docs/specs/001-customer-registration/spec.md)
 - [Especificación 002 — Precios progresivos](docs/specs/002-progressive-pricing/spec.md)
 - [Especificación 003 — Simulaciones](docs/specs/003-simulations/spec.md)
 - [Especificación 004 — Internacionalización y consumos](docs/specs/004-international-customers-and-simulations/spec.md)
 - [Especificación 005 — Impuestos y divisas](docs/specs/005-taxes-and-currency-conversion/spec.md)
 - [Especificación 006 — Consultas y previsualización](docs/specs/006-customer-queries-and-preview/spec.md)
+- [Especificación 007 — Fundamentos del frontend Angular](docs/specs/007-angular-frontend-foundation/spec.md)
+- [Especificación 008 — Gestión frontend de clientes](docs/specs/008-customer-management-frontend/spec.md)
+- [Especificación 009 — Simulador interactivo](docs/specs/009-interactive-subscription-simulator/spec.md)
+- [Registro TASK041](ai-workspace/01-tasks/TASK041-angular-frontend-foundation.md)
+- [Registro TASK042](ai-workspace/01-tasks/TASK042-customer-management-frontend.md)
+- [Manifiesto inicial TASK042](ai-workspace/01-tasks/TASK042-initial-hashes.json)
+- [Informe TASK043](ai-workspace/01-tasks/TASK043-interactive-subscription-simulator.md)
+- [Preparación TASK043P](ai-workspace/01-tasks/TASK043P-frontend-intermediate-publication.md)
+- [README frontend](frontend/README.md)
 - [Proceso de desarrollo asistido por IA](docs/process/ai-assisted-development.md)
 - [Índice de trazabilidad del desarrollo asistido por IA](ai-workspace/README.md)
 

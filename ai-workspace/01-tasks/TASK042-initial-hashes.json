@@ -1,0 +1,467 @@
+{
+  "task": "TASK042",
+  "captured_at_local": "2026-11-18",
+  "base_commit": "23cc43b486d20f7995a2cf29375e3f724f3c7c3f",
+  "branch": "feature/mvp-frontend",
+  "index_empty": true,
+  "challenge_document_excluded": "Prueba Devs con IA.docx",
+  "challenge_document_sha256": "63fbd74eed52eb5b8f2495e46ffd82e059c8421892c3b6b8517aaed2a9741cdf",
+  "candidate_count": 59,
+  "candidates": [
+    {
+      "path": ".gitignore",
+      "sha256": "69e39d059db1e9f01b12710574635bbb57309657ed183acd68a72ea4cf0535ef"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c1108768746e6283976b554cc4a9bb0f26b46feae93f4aab6758b2be700e52fa"
+    },
+    {
+      "path": "ai-workspace/00-project-context/architectural-evolution.md",
+      "sha256": "59382ffaf988e8fcec519aad415b0db1f8ad06bb765d2791c6b74c41d500328b"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK041-angular-frontend-foundation.md",
+      "sha256": "40ab1aee258c03ed93e63a63d6b308305a68591e58b410f5ac184b4036c5e6ce"
+    },
+    {
+      "path": "ai-workspace/README.md",
+      "sha256": "5cdd588b8eb9840c1729a7a0006476fed7d76c0d8394e035b1b55035075f7dca"
+    },
+    {
+      "path": "backend/README.md",
+      "sha256": "b09826b2ccd7b33b4fc7cb5fd90794a56d0e9e1682b61d5552d8085312f4b805"
+    },
+    {
+      "path": "docs/adr/0001-technology-stack.md",
+      "sha256": "dbf94b283d8bb61451363804b8452a3f406499b6c95ca84af92fcd02c450e199"
+    },
+    {
+      "path": "docs/adr/0003-angular-frontend-stack.md",
+      "sha256": "7d95504c643091361789a2428be2b22d7f0778f9a9d58d3c8f9d168b98d950f7"
+    },
+    {
+      "path": "docs/planning/mvp-roadmap.md",
+      "sha256": "3a884afe561771c38b224574f3983facf95b7f91bc17b13fa9103d431292806b"
+    },
+    {
+      "path": "docs/requirements/functional-requirements.md",
+      "sha256": "28554f984742d0ddaa2e7d30631e5fed2f46cc49651572cafe8ee2a2729a6713"
+    },
+    {
+      "path": "docs/requirements/requirements-traceability.md",
+      "sha256": "615b6e909b6537f59f0252e28476f11b55604fac8b2402cb22ea179ab80b67ab"
+    },
+    {
+      "path": "docs/specs/007-angular-frontend-foundation/plan.md",
+      "sha256": "29de98de1d2d57b9eeaa8a78fc5b17bff43400ed0e98c332baeb6d75e5fa1a79"
+    },
+    {
+      "path": "docs/specs/007-angular-frontend-foundation/spec.md",
+      "sha256": "723dacb04cf885ff98cae2745f0518b3af481eb097ee427e2ac16d2d4c17592a"
+    },
+    {
+      "path": "docs/specs/007-angular-frontend-foundation/tasks.md",
+      "sha256": "3c29a7f29cb90fb0f22302164727c8a1a829f51756e56a67a23fdbd3b5d82f4b"
+    },
+    {
+      "path": "frontend/.editorconfig",
+      "sha256": "9da1d179fa691e796ec7cb26d719e2308a073594b7c7c77756d1ba4560e295be"
+    },
+    {
+      "path": "frontend/.gitignore",
+      "sha256": "9b57d7526e92f7b790f58aa8d96e32f0bdfea5473ae3badc47fb4a9e8f64ce5f"
+    },
+    {
+      "path": "frontend/.npmrc",
+      "sha256": "3b88d1057add6f92ec23dc22dd017e312ded13a042deb0ba6f08bad85d936456"
+    },
+    {
+      "path": "frontend/.nvmrc",
+      "sha256": "a1c56e968c358e10872d64220b3ae759ffe7feaffc4da95fae425dbcca43fe44"
+    },
+    {
+      "path": "frontend/.prettierignore",
+      "sha256": "5d7a6a3e5cfbe912e129ff6dac34bd09a526f2e8ac365546c78741854b1b6071"
+    },
+    {
+      "path": "frontend/.prettierrc",
+      "sha256": "8cd4a6408c3eadd007f0e8986754f4f03e6f2ea451a0181040555671491069a9"
+    },
+    {
+      "path": "frontend/README.md",
+      "sha256": "a16edff91b7d4219aa0a60803edd62acc5f4ff59173066c775673c1a763c8cc5"
+    },
+    {
+      "path": "frontend/angular.json",
+      "sha256": "ae03c07a42c0dd345fdc4c437d9bd46f3e3639582902a33697b244fa42a565cc"
+    },
+    {
+      "path": "frontend/e2e/navigation.spec.ts",
+      "sha256": "24df3df4d64be572fec2bb38253e59ed357c4bebd40894e9342da5a65fdf39cb"
+    },
+    {
+      "path": "frontend/eslint.config.js",
+      "sha256": "c92a49968fab95fd7ea538ae9e7501567682fd3cb4c202775ef5a7ed2e49a4a7"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "sha256": "ed59b61d1838805d7d9a03c9b8358537c8fd370b17b0cb8f9870eae1b5e433f0"
+    },
+    {
+      "path": "frontend/package.json",
+      "sha256": "f3c10aa33f9a54cbfa17fa68d194bf1149b9e7e03c2ff94d4cf83f33aaf4b7f6"
+    },
+    {
+      "path": "frontend/playwright.config.ts",
+      "sha256": "2f9d63b093310e0baad2247588ec6fb93f1c0b0c2b34a6f8e595bf38d68f5c2f"
+    },
+    {
+      "path": "frontend/public/favicon.svg",
+      "sha256": "b56ecfbc689fd3427f207ad528b07cd809bb15f2d0182a739e71ae006fadd11f"
+    },
+    {
+      "path": "frontend/src/app/app.config.ts",
+      "sha256": "876adc9f26309b22903f2324f8a03e2549f7989e94324c2936a641323d83e839"
+    },
+    {
+      "path": "frontend/src/app/app.html",
+      "sha256": "8ca551bdbbd281bbeb04c67758d11ae77067b6f350d5c4921a7b19203f3ac25e"
+    },
+    {
+      "path": "frontend/src/app/app.routes.spec.ts",
+      "sha256": "b22338a976ed571dbbe241587e30b97457715d0b7c6f2afc4d9d701ec8aaca62"
+    },
+    {
+      "path": "frontend/src/app/app.routes.ts",
+      "sha256": "0031a35ca3f9e659327705b75a16dfe5ed1f28e5865ae82e50446bbf92be874c"
+    },
+    {
+      "path": "frontend/src/app/app.spec.ts",
+      "sha256": "bd5b5f0f042e2b8191badd9a74ace13bfd74e455170c1ce43ecc698621bfe820"
+    },
+    {
+      "path": "frontend/src/app/app.ts",
+      "sha256": "a18e74bb327fd3398f7dad9820b90c9d8bed4f317b6bff0e37a92f065129e21f"
+    },
+    {
+      "path": "frontend/src/app/core/config/api.config.ts",
+      "sha256": "b0f822e5f158214777902ee4e267ffc2a97c9b3f83497bbcf36feec24c99ebfc"
+    },
+    {
+      "path": "frontend/src/app/core/http/api-client.spec.ts",
+      "sha256": "627bfb4aa12b9504c3411daa384911fdb05a8c89d7ee9e5aaf89e4d07b6e27d3"
+    },
+    {
+      "path": "frontend/src/app/core/http/api-client.ts",
+      "sha256": "7782f12854fae0669da7a65c63bc55f28f53aba478fa80af2339d7a509be5b33"
+    },
+    {
+      "path": "frontend/src/app/core/http/api-error.interceptor.ts",
+      "sha256": "1bbdf21fedbd4517fc2951377b34ef80189183827c50735397669eaed94fe865"
+    },
+    {
+      "path": "frontend/src/app/core/http/api-error.spec.ts",
+      "sha256": "66603525302e38e5dbe33f426ecb3e387bbfe22687f1c8712f591c99c7240e8b"
+    },
+    {
+      "path": "frontend/src/app/core/http/api-error.ts",
+      "sha256": "7298e5712804628424eb0111c0294a6b7ce19c40d490c6d8fcffbf1c91bb0581"
+    },
+    {
+      "path": "frontend/src/app/core/layout/app-shell.html",
+      "sha256": "bd69178f10c9e0f4db16998c9248d7ea5f2ce1ad243c1af21178d1269caea0c7"
+    },
+    {
+      "path": "frontend/src/app/core/layout/app-shell.scss",
+      "sha256": "2b2b744d8d25befe5d410b769bb90e4c67fba07d25dbfc948db7a174c933e6df"
+    },
+    {
+      "path": "frontend/src/app/core/layout/app-shell.ts",
+      "sha256": "321fa15c6158fe35d48aa7c85651026ccbcfaa83ffb29c172dec5e942efb8b22"
+    },
+    {
+      "path": "frontend/src/app/features/customers/customer-create-page.ts",
+      "sha256": "3a4d181e368c22f4661c659892cdcfd514bb44109092662c5995434dd9fed92e"
+    },
+    {
+      "path": "frontend/src/app/features/customers/customer-detail-page.ts",
+      "sha256": "42fa350563494c77c471428d52ffc8180ec3f5f2e90012c52765120175a003f5"
+    },
+    {
+      "path": "frontend/src/app/features/customers/customers-page.ts",
+      "sha256": "80094e5979f511abf9168c8da7fc979e18975a69477d3b370d21d5626630810b"
+    },
+    {
+      "path": "frontend/src/app/features/dashboard/dashboard-page.ts",
+      "sha256": "17673ce2350b5e95ce2680c0cd999758e235fc0adaca45d12068dc06ed2593d7"
+    },
+    {
+      "path": "frontend/src/app/features/not-found/not-found-page.ts",
+      "sha256": "f1c67fee766277d3a730aee4cc52002fa849b2c5b3d48ea14434a6f609ffec74"
+    },
+    {
+      "path": "frontend/src/app/features/simulations/simulation-page.ts",
+      "sha256": "853c00d4332b09820f6225382594f517fabf6dd9f7e13c691d334f0da03caf05"
+    },
+    {
+      "path": "frontend/src/app/shared/components/page-placeholder.ts",
+      "sha256": "2dd743a704dd0c723966e3b881106ce9533c9641742d4ddcb21f7e48532ca7a7"
+    },
+    {
+      "path": "frontend/src/app/shared/components/section-heading.ts",
+      "sha256": "901175956795c1c4e63fdae1397c00edb1d409224211953942f73fc1962d0947"
+    },
+    {
+      "path": "frontend/src/app/shared/models/api.models.ts",
+      "sha256": "5e213764c40fa28e119d19ed793bb15f4cb84500ba87c23fb466f92165321996"
+    },
+    {
+      "path": "frontend/src/index.html",
+      "sha256": "6ecdbe71b591b21810f41319b8de21b92d65b049478f388b05b67eae57f3ef93"
+    },
+    {
+      "path": "frontend/src/main.ts",
+      "sha256": "7b4c52f0b429a5ae2256f898609a4338b259e111791e94ab5512c00a92f5523b"
+    },
+    {
+      "path": "frontend/src/proxy.conf.json",
+      "sha256": "f0e6a69c4aae66044d3ed5ddc923c42a9c13081fba35daa1262e2012d38f29d2"
+    },
+    {
+      "path": "frontend/src/styles.scss",
+      "sha256": "912d71f40cc96de1768b0b4834d0db198cdbce8121afc652b1081541e98fb481"
+    },
+    {
+      "path": "frontend/tsconfig.app.json",
+      "sha256": "3638a621553f472c05723a9487b6a5e2cb533e3a712b932e70a4cc30cc3d8b88"
+    },
+    {
+      "path": "frontend/tsconfig.json",
+      "sha256": "979d907cd3d7a376c396c64037678707bc354268cb284f3d3942d9a53c39b9a9"
+    },
+    {
+      "path": "frontend/tsconfig.spec.json",
+      "sha256": "7aeb8799d7e1d086d16d7b238769f664cfa73b3d135318df5dcc441fdc6a7e87"
+    }
+  ],
+  "protected_count": 14,
+  "protected": [
+    {
+      "path": "ai-workspace/01-tasks/TASK035-mvp-reconciliation.md",
+      "sha256": "c7ee424d43f50c2c612078efcdafc1b2a4d345c8ec500c8fd8e9d0484e0befc8"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK036-international-customers-and-simulations.md",
+      "sha256": "6672a8d0df85d928ef0d48ad733f37cb7447539bb48dd2ea0d39eede2a18f59c"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK037-taxes-and-currency-conversion.md",
+      "sha256": "d09531326edc302de8e691eca1d9f6e043cbbdfbef31301c03eadd363ffe8dd5"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK038-customer-queries-and-preview.md",
+      "sha256": "97701b82fc1f6de2216fb111812bd4344eb2d1e762489bd08c5035e19a22d5cf"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK039-backend-independent-audit.md",
+      "sha256": "5638ac1a1bb5a2231bc678666e6871da1118aff5e5df4c7ef2af8af774602330"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK039B-backend-audit-remediation.md",
+      "sha256": "f3da93cbd8b4e815428ccf6ece6e7a95a2147378a711050cd622ac0d7d9c8d56"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK040-mvp-backend-publication.md",
+      "sha256": "f109bb6765730a6e5a80e4a54a5fd1c50ba98ac8ca33bd0e77c20f44450bc742"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK041-angular-frontend-foundation.md",
+      "sha256": "40ab1aee258c03ed93e63a63d6b308305a68591e58b410f5ac184b4036c5e6ce"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "1a81fd16143d7903fba9253593e194bfbad3913eacbee9ef9bf66a06e7943ce9"
+    },
+    {
+      "path": "backend/requirements.lock",
+      "sha256": "65d982260a270652b91c97212ed29e636e2d702484fee1c101d68b94fc12d149"
+    },
+    {
+      "path": "backend/migrations/versions/0001_create_customers.py",
+      "sha256": "dd63e7e2336495ff5e4eece617871cdb2ecb0670fd3de4ce29bc6a6d7d583246"
+    },
+    {
+      "path": "backend/migrations/versions/0002_create_simulations.py",
+      "sha256": "b6abc461f252920203e56b9a15823329ab50c0dd7c37b3e53f10c6b547bc4660"
+    },
+    {
+      "path": "backend/migrations/versions/0003_international_simulations.py",
+      "sha256": "54201702e256ea97c348ef06cf03fbc08a7398c9a37a4a20fdf9cf2715bfeee8"
+    },
+    {
+      "path": "backend/migrations/versions/0004_add_simulation_taxes_and_fx.py",
+      "sha256": "53f04698389bdc9a89dd0cc20e71f3590af8549ed9783872026f631d48eeed9a"
+    }
+  ],
+  "historical_task_record_count": 39,
+  "historical_task_records_verified_against": "Initial candidate hashes for untracked TASK041 and Git HEAD for tracked records; working tree remained unchanged.",
+  "historical_task_records": [
+    {
+      "path": "ai-workspace/01-tasks/TASK001-pending.md",
+      "sha256": "af7f5bd26e0cf2c03faf6988b0a1bff19e305f0761acb4593b28ec6f07b33a36"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK002-pending.md",
+      "sha256": "80d495a56a90a21781a6bb49776ffc2ff223c1d431cba5444c507ecf315dd3dd"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK003-independent-review.md",
+      "sha256": "a936d595b4661efa638b959b80db095a3d9ccd5bf6b4dd8100f3cf6277794e54"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK004-review-corrections.md",
+      "sha256": "f385a21e4f7cbd64a6ba89c7203e3d6504c76f918595cbea92e658d3ee4d1a3a"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK005-pending.md",
+      "sha256": "ac83722a57d113f2182e980a3f7d3b78b692fa8161f3abdf4dad17462e74695a"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK006-audit-corrections.md",
+      "sha256": "d51624bc4fb460ae01b675e70e0d1289e842bc78d37e3592c5bb5e98fa038086"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK007-audit-task.md",
+      "sha256": "e0ef1fea18fd8e0999b68e3be39189508cd36eeef51b7d973b894529e056bae8"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK008-task007-corrections.md",
+      "sha256": "9bd5dd67454cd4d2da19daa7720507cb92f97e069e1ddc4aabf4c1cab0615d9d"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK009-final-audit-task.md",
+      "sha256": "c33e2b1b6ecaeb0cd2ec6d3d72775f0036e68b1b2619ba7b12008d20bf23c8d8"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK010-documentation-corrections.md",
+      "sha256": "7fb4f1425071e8d619f22d1952681a73306fa7d047b55348ce8d0651cf34b390"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK011-final-audit-task.md",
+      "sha256": "6758923865512454dc53ef2919ec0c09db33adcc5f3a1a406dc5ea8f53ec48d6"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK012-original-task-sources.md",
+      "sha256": "78ed9415272b03bfccc4d01413dbdd635d4148ac24e9570823ec66de2a0819f1"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK013-documentation-publication.md",
+      "sha256": "7904b030c9ed307dc0becf0e1d3655d9b8520af2d6ac2a9563b26d34773a830f"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK014-backend-scaffold.md",
+      "sha256": "82694fe66344c0c2096f8dcc6ae0d788a4f8552683008c338ba50e086dd5a36a"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK015-backend-scaffold-audit.md",
+      "sha256": "d2fdf8193f47efc2b934535fc3b9d339e6717df6a59149c1bcc58e3438aba784"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK016-scaffold-corrections.md",
+      "sha256": "7d65746b9f84110301b4a91cd9f325c8190058e4aeddf4351db6619311e2c723"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK017-backend-publication.md",
+      "sha256": "05d927abe5dbc0cdbb8cc3a448743fa79cf24f1225b2962bbc31f9ed6bfe0b19"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK018-customer-registration.md",
+      "sha256": "b4dc6c259f29cd5808f1ba29f5aed96810f9491ef6fb2f4b40c3c3feba5e30c5"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK019-customer-implementation.md",
+      "sha256": "c1cc95cc72cf9cfce1dc648a028cd444d40db94d74d97fc565d3df220ecf0bb7"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK020-customer-registration-completion.md",
+      "sha256": "aa785a034f3400d22a952f7e42977ccb12efaf038af1a60c3fda121c185fda9c"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK022-customer-validation-fix.md",
+      "sha256": "1954bd535acc4662d6ef12daf4243dbbea09e6fa3850982f2268dd0028ae3329"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK023-customer-publication.md",
+      "sha256": "b09c163c85e40a41ae7dde9662446ae6c570923dd4fe16f6eee5163393dafe5e"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK024-progressive-pricing-preparation.md",
+      "sha256": "276a271d469e3609300284fbe34333137feee642dc24e53d5d20dea8f86845dd"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK025-progressive-pricing-implementation.md",
+      "sha256": "358525bc773e8926ac2dc6995d8b62cdb65c65c6fcc4ce23685f3ac214a1501e"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK027-progressive-pricing-audit-fixes.md",
+      "sha256": "f0e9a9b77f63553545785851e56c03aaf07e47aea595ecc186e21c776f1e89cf"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK029-simulations-preparation.md",
+      "sha256": "9bc12a818856d9f1cfffe13dfd473acfcd3b0ef1fe821cf48a11f536ce4d356d"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK030-simulations-decisions-and-contract.md",
+      "sha256": "d1d095deb36f6260344bc9528a6849d044c19d4a1136b6ba96415cce919c3511"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK031-simulations-final-decisions.md",
+      "sha256": "28627ee954702f71b90ecc48b5abd69c84a79441f8a43e174e9a9b36a59fb3c1"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK032-simulations-implementation.md",
+      "sha256": "3cc4e0c924ad4865f9a9f256fc0122947e82eba944cc86a9b5e314408eaff44e"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK035-mvp-reconciliation.md",
+      "sha256": "c7ee424d43f50c2c612078efcdafc1b2a4d345c8ec500c8fd8e9d0484e0befc8"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK036-international-customers-and-simulations.md",
+      "sha256": "6672a8d0df85d928ef0d48ad733f37cb7447539bb48dd2ea0d39eede2a18f59c"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK037-initial-hashes.json",
+      "sha256": "c079be263e337d1103c4e535f3353fad2d22a878a0a455ebe6aa7bb4b8fd81e6"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK037-taxes-and-currency-conversion.md",
+      "sha256": "d09531326edc302de8e691eca1d9f6e043cbbdfbef31301c03eadd363ffe8dd5"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK038-customer-queries-and-preview.md",
+      "sha256": "97701b82fc1f6de2216fb111812bd4344eb2d1e762489bd08c5035e19a22d5cf"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK038-initial-hashes.json",
+      "sha256": "0ceb93dc288560f7cbfed30568ef4820739b5915306f68071372c111e64e0ed6"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK039-backend-independent-audit.md",
+      "sha256": "5638ac1a1bb5a2231bc678666e6871da1118aff5e5df4c7ef2af8af774602330"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK039B-backend-audit-remediation.md",
+      "sha256": "f3da93cbd8b4e815428ccf6ece6e7a95a2147378a711050cd622ac0d7d9c8d56"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK040-mvp-backend-publication.md",
+      "sha256": "f109bb6765730a6e5a80e4a54a5fd1c50ba98ac8ca33bd0e77c20f44450bc742"
+    },
+    {
+      "path": "ai-workspace/01-tasks/TASK041-angular-frontend-foundation.md",
+      "sha256": "40ab1aee258c03ed93e63a63d6b308305a68591e58b410f5ac184b4036c5e6ce"
+    }
+  ]
+}

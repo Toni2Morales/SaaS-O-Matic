@@ -1,0 +1,255 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.app-frame {
+  min-height: 100dvh;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: var(--space-3);
+  left: var(--space-3);
+  transform: translateY(-180%);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  color: #fff;
+  background: var(--color-navigation);
+  font-weight: 650;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.sidebar {
+  position: fixed;
+  z-index: 30;
+  inset: 0 auto 0 0;
+  display: flex;
+  width: 16rem;
+  flex-direction: column;
+  padding: var(--space-6) var(--space-4);
+  color: #fff;
+  background: var(--color-navigation);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.brand {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-2);
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  color: white;
+  background: var(--color-primary);
+}
+
+.brand-name {
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.nav-caption {
+  margin: var(--space-10) var(--space-3) var(--space-2);
+  color: #cbd5e1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.primary-nav {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.primary-nav a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  justify-content: flex-start;
+  min-height: 2.75rem;
+  color: #e2e8f0;
+  text-align: left;
+}
+
+.nav-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.primary-nav a:hover,
+.primary-nav a.nav-link--active {
+  color: #fff;
+  background: rgb(255 255 255 / 12%);
+}
+
+.primary-nav a.nav-link--active {
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: var(--space-3);
+}
+
+.mvp-badge {
+  color: #cbd5e1;
+  font-size: 0.75rem;
+}
+
+.workspace {
+  min-height: 100dvh;
+  margin-left: 16rem;
+}
+
+.topbar {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  min-height: 4rem;
+  justify-content: flex-start;
+  border-bottom: 1px solid var(--color-border);
+  background: rgb(255 255 255 / 94%);
+  color: var(--color-text);
+  backdrop-filter: blur(12px);
+}
+
+.topbar-context {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.topbar-spacer {
+  flex: 1;
+}
+
+.topbar-status {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.main-content {
+  width: min(100%, 90rem);
+  min-height: calc(100dvh - 4rem);
+  margin-inline: auto;
+  padding: clamp(var(--space-5), 4vw, var(--space-10));
+  scroll-margin-top: 4rem;
+}
+
+.page-context {
+  margin-bottom: var(--space-8);
+  scroll-margin-top: calc(4rem + var(--space-4));
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: var(--color-text-strong);
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  letter-spacing: -0.04em;
+}
+
+.menu-toggle,
+.scrim,
+.sidebar-close {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    width: min(17rem, calc(100vw - 3rem));
+    transform: translateX(-105%);
+    transition: transform 160ms ease;
+    visibility: hidden;
+  }
+
+  .sidebar--mobile-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .workspace {
+    margin-left: 0;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    margin-right: var(--space-2);
+  }
+
+  .sidebar-close {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 24%);
+    border-radius: var(--radius-sm);
+    color: #fff;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .sidebar-close svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-width: 2;
+  }
+
+  .scrim {
+    position: fixed;
+    z-index: 20;
+    inset: 0;
+    display: block;
+    border: 0;
+    background: rgb(15 23 42 / 48%);
+  }
+
+  .topbar-status {
+    font-size: 0.72rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    transition: none;
+  }
+}

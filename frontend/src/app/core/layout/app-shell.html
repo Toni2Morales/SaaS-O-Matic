@@ -1,0 +1,111 @@
+<div class="app-frame" tabindex="-1" (keydown)="onMenuKeydown($event)">
+  <a class="skip-link" href="#main-content" tabindex="0" (click)="skipToMain($event)">
+    Saltar al contenido principal
+  </a>
+  <aside
+    class="sidebar"
+    [class.sidebar--mobile-open]="isMobile() && menuOpen()"
+    [attr.aria-hidden]="isMobile() && !menuOpen() ? 'true' : null"
+    [attr.role]="isMobile() && menuOpen() ? 'dialog' : null"
+    [attr.aria-modal]="isMobile() && menuOpen() ? 'true' : null"
+    aria-label="Navegación principal"
+    [cdkTrapFocus]="isMobile() && menuOpen()"
+    [cdkTrapFocusAutoCapture]="isMobile() && menuOpen()"
+  >
+    <div class="sidebar-header">
+      <a class="brand" routerLink="/" (click)="onNavigation()">
+        <span class="brand-mark" aria-hidden="true">S</span>
+        <span class="brand-name">SaaS-O-Matic</span>
+      </a>
+      @if (isMobile()) {
+        <button
+          id="sidebar-close-button"
+          class="sidebar-close"
+          cdkFocusInitial
+          type="button"
+          aria-label="Cerrar menú"
+          (click)="dismissMenu()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      }
+    </div>
+
+    <p class="nav-caption">Espacio de trabajo</p>
+    <nav id="primary-navigation" class="primary-nav" aria-label="Navegación principal">
+      <a
+        mat-button
+        routerLink="/"
+        routerLinkActive="nav-link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+        (click)="onNavigation()"
+      >
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="m3.5 10 8.5-7 8.5 7v10a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z" />
+        </svg>
+        <span>Inicio</span>
+      </a>
+      <a
+        mat-button
+        routerLink="/customers"
+        routerLinkActive="nav-link--active"
+        ariaCurrentWhenActive="page"
+        (click)="onNavigation()"
+      >
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="9" cy="8" r="3.2" />
+          <path
+            d="M3 20v-1.3a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5V20zM16 4.9a3.2 3.2 0 0 1 0 6.2M18 14a4 4 0 0 1 3 3.9V20h-3"
+          />
+        </svg>
+        <span>Clientes</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="mvp-badge">Área comercial</span>
+    </div>
+  </aside>
+
+  @if (isMobile() && menuOpen()) {
+    <button
+      class="scrim"
+      type="button"
+      aria-label="Cerrar navegación"
+      (click)="dismissMenu()"
+    ></button>
+  }
+
+  <div class="workspace">
+    <mat-toolbar class="topbar">
+      @if (isMobile()) {
+        <button
+          #menuButton
+          mat-button
+          class="menu-toggle"
+          id="mobile-menu-toggle"
+          type="button"
+          [attr.aria-expanded]="menuOpen()"
+          aria-controls="primary-navigation"
+          (click)="toggleMenu()"
+        >
+          Menú
+        </button>
+      }
+      <span class="topbar-context">SaaS-O-Matic</span>
+      <span class="topbar-spacer"></span>
+      <span class="topbar-status">Entorno local</span>
+    </mat-toolbar>
+
+    <main id="main-content" class="main-content" tabindex="-1">
+      <div class="page-context">
+        <p class="eyebrow">Dynamic Billing &amp; Subscription Optimizer</p>
+        <h1 id="page-title" tabindex="-1">{{ pageTitle() }}</h1>
+      </div>
+      <router-outlet />
+    </main>
+  </div>
+</div>

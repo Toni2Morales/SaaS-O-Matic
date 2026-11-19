@@ -1,0 +1,1109 @@
+{
+    "task":  "TASK046",
+    "captured_at_utc":  "2026-11-19T13:54:00.8208881Z",
+    "repository":  "Toni2Morales/SaaS-O-Matic",
+    "branch":  "feature/mvp-frontend",
+    "head":  "b1367923f251cde79305b028b514daf03478b62c",
+    "hash_algorithm":  "SHA-256",
+    "tracked_file_count":  273,
+    "tracked_files":  [
+                          {
+                              "path":  ".editorconfig",
+                              "sha256":  "aa6d4acbe1edab75c9ec6ab23045379f13e42a68310d9835442408d05f8ad53e"
+                          },
+                          {
+                              "path":  ".env.example",
+                              "sha256":  "b5aec083c64e619f8d325860e9e78f14cb3ee7b19c2a7b997300c2086f5ba759"
+                          },
+                          {
+                              "path":  ".gitattributes",
+                              "sha256":  "c798ef88424e3d79561a1f9b3b68fc301078fdf31a75ecd8a7513845d4e482aa"
+                          },
+                          {
+                              "path":  ".gitignore",
+                              "sha256":  "69e39d059db1e9f01b12710574635bbb57309657ed183acd68a72ea4cf0535ef"
+                          },
+                          {
+                              "path":  "AGENTS.md",
+                              "sha256":  "094e033337b0aad04ef03f0877aaab5036d17aff57958408814042dcd946a7ae"
+                          },
+                          {
+                              "path":  "LICENSE",
+                              "sha256":  "1a81fd16143d7903fba9253593e194bfbad3913eacbee9ef9bf66a06e7943ce9"
+                          },
+                          {
+                              "path":  "README.md",
+                              "sha256":  "a4ad9cabaa21072c371ea93559bcaa5317da89f6ad76f381991c0a4b652d25d8"
+                          },
+                          {
+                              "path":  "ai-workspace/00-project-context/ai-tools-and-roles.md",
+                              "sha256":  "ff1d477695845f5d60158bff71917c8aa9251c3eca7869281e8edd209eb0dbdd"
+                          },
+                          {
+                              "path":  "ai-workspace/00-project-context/architectural-evolution.md",
+                              "sha256":  "4690fcc46288200fe8fe1188e85a64c6cb4a8f321ad062a82846ba9b21b5da39"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK001-pending.md",
+                              "sha256":  "af7f5bd26e0cf2c03faf6988b0a1bff19e305f0761acb4593b28ec6f07b33a36"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK002-pending.md",
+                              "sha256":  "80d495a56a90a21781a6bb49776ffc2ff223c1d431cba5444c507ecf315dd3dd"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK003-independent-review.md",
+                              "sha256":  "a936d595b4661efa638b959b80db095a3d9ccd5bf6b4dd8100f3cf6277794e54"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK004-review-corrections.md",
+                              "sha256":  "f385a21e4f7cbd64a6ba89c7203e3d6504c76f918595cbea92e658d3ee4d1a3a"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK005-pending.md",
+                              "sha256":  "ac83722a57d113f2182e980a3f7d3b78b692fa8161f3abdf4dad17462e74695a"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK006-audit-corrections.md",
+                              "sha256":  "d51624bc4fb460ae01b675e70e0d1289e842bc78d37e3592c5bb5e98fa038086"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK007-audit-task.md",
+                              "sha256":  "e0ef1fea18fd8e0999b68e3be39189508cd36eeef51b7d973b894529e056bae8"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK008-task007-corrections.md",
+                              "sha256":  "9bd5dd67454cd4d2da19daa7720507cb92f97e069e1ddc4aabf4c1cab0615d9d"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK009-final-audit-task.md",
+                              "sha256":  "c33e2b1b6ecaeb0cd2ec6d3d72775f0036e68b1b2619ba7b12008d20bf23c8d8"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK010-documentation-corrections.md",
+                              "sha256":  "7fb4f1425071e8d619f22d1952681a73306fa7d047b55348ce8d0651cf34b390"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK011-final-audit-task.md",
+                              "sha256":  "6758923865512454dc53ef2919ec0c09db33adcc5f3a1a406dc5ea8f53ec48d6"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK012-original-task-sources.md",
+                              "sha256":  "78ed9415272b03bfccc4d01413dbdd635d4148ac24e9570823ec66de2a0819f1"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK013-documentation-publication.md",
+                              "sha256":  "7904b030c9ed307dc0becf0e1d3655d9b8520af2d6ac2a9563b26d34773a830f"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK014-backend-scaffold.md",
+                              "sha256":  "82694fe66344c0c2096f8dcc6ae0d788a4f8552683008c338ba50e086dd5a36a"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK015-backend-scaffold-audit.md",
+                              "sha256":  "d2fdf8193f47efc2b934535fc3b9d339e6717df6a59149c1bcc58e3438aba784"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK016-scaffold-corrections.md",
+                              "sha256":  "7d65746b9f84110301b4a91cd9f325c8190058e4aeddf4351db6619311e2c723"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK017-backend-publication.md",
+                              "sha256":  "05d927abe5dbc0cdbb8cc3a448743fa79cf24f1225b2962bbc31f9ed6bfe0b19"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK018-customer-registration.md",
+                              "sha256":  "b4dc6c259f29cd5808f1ba29f5aed96810f9491ef6fb2f4b40c3c3feba5e30c5"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK019-customer-implementation.md",
+                              "sha256":  "c1cc95cc72cf9cfce1dc648a028cd444d40db94d74d97fc565d3df220ecf0bb7"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK020-customer-registration-completion.md",
+                              "sha256":  "aa785a034f3400d22a952f7e42977ccb12efaf038af1a60c3fda121c185fda9c"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK022-customer-validation-fix.md",
+                              "sha256":  "1954bd535acc4662d6ef12daf4243dbbea09e6fa3850982f2268dd0028ae3329"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK023-customer-publication.md",
+                              "sha256":  "b09c163c85e40a41ae7dde9662446ae6c570923dd4fe16f6eee5163393dafe5e"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK024-progressive-pricing-preparation.md",
+                              "sha256":  "276a271d469e3609300284fbe34333137feee642dc24e53d5d20dea8f86845dd"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK025-progressive-pricing-implementation.md",
+                              "sha256":  "358525bc773e8926ac2dc6995d8b62cdb65c65c6fcc4ce23685f3ac214a1501e"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK027-progressive-pricing-audit-fixes.md",
+                              "sha256":  "f0e9a9b77f63553545785851e56c03aaf07e47aea595ecc186e21c776f1e89cf"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK029-simulations-preparation.md",
+                              "sha256":  "9bc12a818856d9f1cfffe13dfd473acfcd3b0ef1fe821cf48a11f536ce4d356d"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK030-simulations-decisions-and-contract.md",
+                              "sha256":  "d1d095deb36f6260344bc9528a6849d044c19d4a1136b6ba96415cce919c3511"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK031-simulations-final-decisions.md",
+                              "sha256":  "28627ee954702f71b90ecc48b5abd69c84a79441f8a43e174e9a9b36a59fb3c1"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK032-simulations-implementation.md",
+                              "sha256":  "3cc4e0c924ad4865f9a9f256fc0122947e82eba944cc86a9b5e314408eaff44e"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK035-mvp-reconciliation.md",
+                              "sha256":  "c7ee424d43f50c2c612078efcdafc1b2a4d345c8ec500c8fd8e9d0484e0befc8"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK036-international-customers-and-simulations.md",
+                              "sha256":  "6672a8d0df85d928ef0d48ad733f37cb7447539bb48dd2ea0d39eede2a18f59c"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK037-initial-hashes.json",
+                              "sha256":  "c079be263e337d1103c4e535f3353fad2d22a878a0a455ebe6aa7bb4b8fd81e6"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK037-taxes-and-currency-conversion.md",
+                              "sha256":  "d09531326edc302de8e691eca1d9f6e043cbbdfbef31301c03eadd363ffe8dd5"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK038-customer-queries-and-preview.md",
+                              "sha256":  "97701b82fc1f6de2216fb111812bd4344eb2d1e762489bd08c5035e19a22d5cf"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK038-initial-hashes.json",
+                              "sha256":  "0ceb93dc288560f7cbfed30568ef4820739b5915306f68071372c111e64e0ed6"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK039-backend-independent-audit.md",
+                              "sha256":  "5638ac1a1bb5a2231bc678666e6871da1118aff5e5df4c7ef2af8af774602330"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK039B-backend-audit-remediation.md",
+                              "sha256":  "f3da93cbd8b4e815428ccf6ece6e7a95a2147378a711050cd622ac0d7d9c8d56"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK040-mvp-backend-publication.md",
+                              "sha256":  "f109bb6765730a6e5a80e4a54a5fd1c50ba98ac8ca33bd0e77c20f44450bc742"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK041-angular-frontend-foundation.md",
+                              "sha256":  "40ab1aee258c03ed93e63a63d6b308305a68591e58b410f5ac184b4036c5e6ce"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK042-customer-management-frontend.md",
+                              "sha256":  "eca7f2a3fafb92b8f9cd1a88d71fc762866dfeb6c0eee276c976e5516ed07c33"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK042-initial-hashes.json",
+                              "sha256":  "800c177bba795c67d57b3930d611dac601ccb1e754ea6809ec645049a53f6a79"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK043-initial-hashes.json",
+                              "sha256":  "4025ba24b639ce7fdea6473cdbbb35cfda8958f2a07cfd14a0ccadfe27f7f1d7"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK043-interactive-subscription-simulator.md",
+                              "sha256":  "476de17835d42ea96353f704411aafa768d01d87d15299417898252d0880e55a"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK043P-frontend-intermediate-publication.md",
+                              "sha256":  "539b0f109ecd37d7471c749e96231aa9845cefff3a2c9d5c0ec6d7bb7126b9b2"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK044-frontend-refinement-and-e2e.md",
+                              "sha256":  "c99013a76dcc0026bc37e5d373780926a34e89e8e2e9abec48f35f6781c63a85"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK044-initial-hashes.json",
+                              "sha256":  "2e6afb9c648c5e8eca9f92ee1b17aed10931e3b2a7a4ce4aaa5eae198802b484"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK044P-frontend-incremental-publication.md",
+                              "sha256":  "39ce820f1fb6217a19e524ab1b336970722fa604b635dcf1edff5d01deaadfc7"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK045-frontend-audit-plan.md",
+                              "sha256":  "f715226e9eae331973debd1613c17fc8c0781121e2879d543340c0b7cdef7564"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK045-independent-frontend-audit.md",
+                              "sha256":  "09137d5c90952a322b3bfe4f1a470cd10ef508b329f80661e3b36c0ca6da9fe8"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK045-initial-hashes.json",
+                              "sha256":  "5aa21970b071671a201aa79e0d18e18b8508a36d1fa8d775ffb2093cd34ab685"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK045B-final-frontend-corrections.md",
+                              "sha256":  "98101babef840fa11b85ad7e3755abfcf324cd1731224acce5b432da60002722"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK045B-frontend-corrections-plan.md",
+                              "sha256":  "e18a10bd6f8e9bcae464f3e94c6f2bd12bda983482f16fefefc3585c144269ed"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK045B-initial-hashes.json",
+                              "sha256":  "b878df452e3866f67cf676565622581716bdf8a4d37f15628e65e79ecce22569"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/TASK045BP-final-frontend-corrections-publication.md",
+                              "sha256":  "2f9252bc01196a7bd69971ef7638ad3b5d9fd54dafb01b66c460158d187733e8"
+                          },
+                          {
+                              "path":  "ai-workspace/01-tasks/_TEMPLATE.md",
+                              "sha256":  "2359b59e797219b63314e0a0e5e54cb446385c2c03ef3ea856df1d05da32b0df"
+                          },
+                          {
+                              "path":  "ai-workspace/02-audits/TASK003-audit.md",
+                              "sha256":  "378f95deaea11394f638333a67403b23849e953ea0aeab4e9ef7df93540b7f9b"
+                          },
+                          {
+                              "path":  "ai-workspace/02-audits/TASK005-audit.md",
+                              "sha256":  "ce9d2421b41228d7a14fee5ebef685a13f779a32b1cfd80729f51dd8daac8af1"
+                          },
+                          {
+                              "path":  "ai-workspace/02-audits/TASK007-audit.md",
+                              "sha256":  "356467b4040245eb9c7d8dbff263b85a9c9ef7ab96df941812618997d2144b32"
+                          },
+                          {
+                              "path":  "ai-workspace/02-audits/TASK009-audit.md",
+                              "sha256":  "0e8fa2583677fc317623d9afa53277f5124ed6ceb62970aafe1ec941163db66a"
+                          },
+                          {
+                              "path":  "ai-workspace/02-audits/TASK011-audit.md",
+                              "sha256":  "d839abd6636c520c8cb076a3101f5f4c4e477d9f9bee302d7c58431e756e093b"
+                          },
+                          {
+                              "path":  "ai-workspace/02-audits/TASK015-audit.md",
+                              "sha256":  "d52382a3eff6d1e40e51fa654d5b0f267f9d7e11c179250ba0e0ad5f459fe448"
+                          },
+                          {
+                              "path":  "ai-workspace/README.md",
+                              "sha256":  "9a9abf119ee58b6ad89cee87c44cf59d3050bac80455aacb60f6124599c19170"
+                          },
+                          {
+                              "path":  "backend/README.md",
+                              "sha256":  "5614f09f22eb18f7c04f68e08d4fa852307ce4cb7e1e06a4b36b918416e27216"
+                          },
+                          {
+                              "path":  "backend/alembic.ini",
+                              "sha256":  "841213edaf47617a8b664313ab67c0c468a85cf14cc405214a879e08d7b9c0ae"
+                          },
+                          {
+                              "path":  "backend/migrations/env.py",
+                              "sha256":  "9f12ba062e654bdfc9eaa2f25ba2d047f5f65a041e4e5aeb3baa25f56c70f832"
+                          },
+                          {
+                              "path":  "backend/migrations/script.py.mako",
+                              "sha256":  "1d1004a5ef318eb7e3531a5548b7a112da1504e09600ec9dcc0a85376c398473"
+                          },
+                          {
+                              "path":  "backend/migrations/versions/0001_create_customers.py",
+                              "sha256":  "dd63e7e2336495ff5e4eece617871cdb2ecb0670fd3de4ce29bc6a6d7d583246"
+                          },
+                          {
+                              "path":  "backend/migrations/versions/0002_create_simulations.py",
+                              "sha256":  "b6abc461f252920203e56b9a15823329ab50c0dd7c37b3e53f10c6b547bc4660"
+                          },
+                          {
+                              "path":  "backend/migrations/versions/0003_international_simulations.py",
+                              "sha256":  "54201702e256ea97c348ef06cf03fbc08a7398c9a37a4a20fdf9cf2715bfeee8"
+                          },
+                          {
+                              "path":  "backend/migrations/versions/0004_add_simulation_taxes_and_fx.py",
+                              "sha256":  "53f04698389bdc9a89dd0cc20e71f3590af8549ed9783872026f631d48eeed9a"
+                          },
+                          {
+                              "path":  "backend/migrations/versions/README.md",
+                              "sha256":  "d5cd662e02fcc411cccf8c57c0600919a19d36651fc6e81fa481b83919172c19"
+                          },
+                          {
+                              "path":  "backend/pyproject.toml",
+                              "sha256":  "2acf9f68ec1edf663a609b0fbf2e611eb2aa14a1fc6ac085d0fcdb4734d04f47"
+                          },
+                          {
+                              "path":  "backend/requirements.lock",
+                              "sha256":  "65d982260a270652b91c97212ed29e636e2d702484fee1c101d68b94fc12d149"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/__init__.py",
+                              "sha256":  "5bdce3b13929b43a4c435d1c1e490de2f64c1435606fa764d33ab9dc0e50077f"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/__init__.py",
+                              "sha256":  "48c5304c7b543da2e80c3b24f86300856e45d51594ee2afd7d299bda43957eab"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/customers/__init__.py",
+                              "sha256":  "91c7f7d8253d49ad917ad08980e4acd2800461c892d85a1621aeec087d2a5799"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/customers/catalogs.py",
+                              "sha256":  "c07fcdfa029dd08b7a677dd418ed0b960a660b069436c5cdc1dd8efb7fd29890"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/customers/dto.py",
+                              "sha256":  "2c516a999f7c227bc029972bf504930a06392b0aec8d7b9cf6c400cb12fb1694"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/customers/errors.py",
+                              "sha256":  "926c718fc752efa03795333e6a05702eed4fa24a055319d2d0dc0871c81cc1da"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/customers/queries.py",
+                              "sha256":  "8a520de7de9dcdc575266a09f2b7528bdc565364e0b7655ea2c7c9cc59d04854"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/customers/use_cases.py",
+                              "sha256":  "c73c572dcd8698f9dbd032563a4c86a601643db1238bacdda6c028683073192d"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/pagination.py",
+                              "sha256":  "ef6dad97eaa22857ec520e8ef1b1bff4190a7b950f2f57435b91efe40a57eb36"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/simulations/__init__.py",
+                              "sha256":  "9a0463c62ab8048c1b77787d9cc83c391db4b057fb49f8cc6fb8b5168a1f0d5b"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/simulations/calculator.py",
+                              "sha256":  "a81438e2727df348fd1b95162b3403f43fa4e0517ada22b7eef3aa70b0f91575"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/simulations/dto.py",
+                              "sha256":  "b26f314172b9012a766595f137a489619bb33e0e490cdd0ea7b28aecf7acf376"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/simulations/errors.py",
+                              "sha256":  "8796399328e1b50fd034981ec57b57dcce61a545a8f2f356e1eb52947d5cb4f2"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/simulations/estimator.py",
+                              "sha256":  "ce675b7fa4013d6101bf58e877ce2549856e8b2d2fd137472d6d36deda812c27"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/simulations/queries.py",
+                              "sha256":  "402fc1502e7b9fe93c66d95f77e6f153dfa7102afd4c027309b7a199b7eb4f8e"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/application/simulations/use_cases.py",
+                              "sha256":  "9e5a2b649fe6dbeb6ee7e78fb86726150ed701605475fd8d40f9fe49fe07745c"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/bootstrap/__init__.py",
+                              "sha256":  "afd88955ca30c246bdef308760c65965cdd1c5da0c7ba46690c7e11bb1512d0e"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/bootstrap/customers.py",
+                              "sha256":  "3c076dbb679f63603672b1011f41510b043f6c464bc803c4b04e40765ca2ff73"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/bootstrap/main.py",
+                              "sha256":  "47c470d51b2fdb3e078d5db28412713d3e15c80e27d0eb84b20c502386725ecf"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/bootstrap/simulations.py",
+                              "sha256":  "cf5ee12a96f81875a316e33df997791a3eb0c37e74766c3243e829ef873e8c3f"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/__init__.py",
+                              "sha256":  "d89581411fdc9c5c6c66cb89647997de614c612fc92156e9dd9ad094344bea2c"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/customers/__init__.py",
+                              "sha256":  "ae78ad6526fd2181757cc13605d69961507697ff62f13e153958eb6dfe25efa1"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/customers/entities.py",
+                              "sha256":  "a481f1c92494f149be6169e55c34d46d7a9679ce9b80214c487efb09a59a15b1"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/customers/errors.py",
+                              "sha256":  "cbc874953d9cab4a39f390eef29297bb3740b62cc20a88732edf8dcd5902d2ee"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/customers/ports.py",
+                              "sha256":  "6464405db1fe1a6d966fbef063114c32d69be1cb9a9bab74d69cd8f24e360176"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/customers/value_objects.py",
+                              "sha256":  "5985cd1d1d0622ff3ca983af9cb03bf52631d9e24a6f61d07788d8370b870083"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/pricing/__init__.py",
+                              "sha256":  "910de4c6c8d9f523e14eb508e6eee7742989d18df90ff930acced06cbee6da44"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/pricing/errors.py",
+                              "sha256":  "c933f25af2036a01b3785536a95d5ad4eb6172695a7117a9d8f42ede72106b3a"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/pricing/schedule.py",
+                              "sha256":  "d4942830589ac9bab6d30b98e2c4a892927a263a9bcfb377376efcaa6f4b3813"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/pricing/services.py",
+                              "sha256":  "03a9b50fdc4fa7715900a43135153f2fdc5f061b4d055d78a8d1f7f66c5ed23f"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/pricing/value_objects.py",
+                              "sha256":  "4748470bba007a83ec3e7a2b407f2ea4869b1b64576ffecf9a675251d34b8260"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/simulations/__init__.py",
+                              "sha256":  "ab3f0f4dbbb5eea85059e2c398008907eb316a4202b9d81a1a2af35b4064771b"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/simulations/calculation.py",
+                              "sha256":  "c4e5a428c2e576afea74a378febdc5a8fef43be3088c137ecea193b75bfd1434"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/simulations/entities.py",
+                              "sha256":  "e5e58b5c4d4e6d71e323c2a110593bdc4fadffaf519c00a03d86eb44709a6bd5"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/domain/simulations/ports.py",
+                              "sha256":  "66d6abf06e239f7479ba4bf36e00a31a94d3cb40bd644f5234a5ad29e94a8303"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/__init__.py",
+                              "sha256":  "f45614898c457e6f0b7b733bf902c652a8d597ed398d683dd89d260c1c69e6cb"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/customers/__init__.py",
+                              "sha256":  "07e357c315e4c0aedf47930844860856a5364e943104e854d1e48ce9212c07ef"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/customers/mappers.py",
+                              "sha256":  "20d20e8701401a649b951a042e612d82199a77644bc7ee9339baa402e776876b"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/customers/models.py",
+                              "sha256":  "4151341a1a50491e5d0f2eccc1c45f9591d3ec6dff769a93aadd01331ad0663e"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/customers/repositories.py",
+                              "sha256":  "e11dc90afb381c5e0243f01878ff325c7724b64bc04b46d155fd03b55351ae37"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/database.py",
+                              "sha256":  "7c210e7d801a8d7ab7ad8a9aa23ed6b3ca59252d705afc668cad9567b444e662"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/frankfurter.py",
+                              "sha256":  "74f0b2572486e107a2f4d89eaab1806349b5caa7d82b5ece4679a5fa7fdd6daa"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/simulations/__init__.py",
+                              "sha256":  "8be73f80d7fb432c8cb073d85635c9c9011d646333c3e0b8459d36966360b6f5"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/simulations/mappers.py",
+                              "sha256":  "8c55e61450974f8c5ea87acf207aefdd94737645f7069f2a8f457173fbff75b8"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/simulations/models.py",
+                              "sha256":  "b3a62621e32a78f7827b5550f2df0ebc24341dd3da4628dc28e14ca82a351af8"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/simulations/repositories.py",
+                              "sha256":  "a8aac6b20c249dbe6b102e23542e057c4b5c40e377d0a88130377819e64432c5"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/infrastructure/tax_catalog.py",
+                              "sha256":  "dad4fa336acebe6b5984194a55d0486da5c68aa7387963a499c1bccb496306ea"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/__init__.py",
+                              "sha256":  "3ca4729c3731f05d7147a729a86972f2dcd1dd1c9f2fe335de77532ff307d282"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/app.py",
+                              "sha256":  "c9799de301ce3faf9a5c53ff79ccda2387f6653f76a39cc6c0d4e1cb9d43a3b7"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/customers/__init__.py",
+                              "sha256":  "fa9240113fb03f3aab4a476eb779113cbc48e8b96de3321d90cb99b5333684ee"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/customers/dependencies.py",
+                              "sha256":  "3ac3cd79f6ec2ace60662619023738318d76675e510a21f195f45f6a942583a0"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/customers/router.py",
+                              "sha256":  "4cf6e3011de4c9fc08fe639e7d8351ab305d63b5e12f04d0e523c77349b2d88a"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/customers/schemas.py",
+                              "sha256":  "ec927c2f775d87101d738345d075b6c397a568c68909dfb8107bb8e680507d3d"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/health.py",
+                              "sha256":  "ec78b854db9333c34d49bc4dc0c8e0d10f7c29fa62a50bb021c968c2f3e51347"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/pagination.py",
+                              "sha256":  "5137819c60125e8879bdf91821c819b634a15a65aced09c95e212735381aedc5"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/problems.py",
+                              "sha256":  "fc3ae9f6d3f32ae768f6577b7398eb12aef35955b4cc00c9ffb629fb017a2ef7"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/simulations/__init__.py",
+                              "sha256":  "9266d2e5eb1723585f7e92aadc1805f5f54a4e4637b6a4541062ffc7438baf0c"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/simulations/dependencies.py",
+                              "sha256":  "a55a85bffbbbb9e2587713a8640a2269037740f7b74c0f4b3452ab8175421bfa"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/simulations/router.py",
+                              "sha256":  "87c71ce9d198bc6254d20c180f9d8e0f3d9e198feed49ba0828a06869105c808"
+                          },
+                          {
+                              "path":  "backend/src/saas_o_matic/presentation/simulations/schemas.py",
+                              "sha256":  "e8951ee33a69b79569e6648a34708ba49788b51797910d93b014a8eedd18dc8b"
+                          },
+                          {
+                              "path":  "backend/tests/conftest.py",
+                              "sha256":  "2eec46f20c3c9697c54323f7c43c6c38dbbf474d467ebe24c7b4d0522a46b257"
+                          },
+                          {
+                              "path":  "backend/tests/test_architecture.py",
+                              "sha256":  "833c8ab4f0e40c27388d8ac42a08df761f4073e9eac7da61ff89b8109a8d6298"
+                          },
+                          {
+                              "path":  "backend/tests/test_customer_api.py",
+                              "sha256":  "a69aa01d2d3a5382b438da326ebe00f2b2d94729c2a058a85d34be64c54f3019"
+                          },
+                          {
+                              "path":  "backend/tests/test_customer_repository.py",
+                              "sha256":  "11f836a4dd1076eb55ff823982a59affb2ce3c66258fd8f7654b5e216913a20e"
+                          },
+                          {
+                              "path":  "backend/tests/test_customer_schemas.py",
+                              "sha256":  "de566a417eed6e19b1b2c6caae8f56220991bdf017a1ea49e0deedb77e85a48f"
+                          },
+                          {
+                              "path":  "backend/tests/test_customer_use_case.py",
+                              "sha256":  "0016cdbe4649b5b2c53a4316d2ab871f3f9b696dff14a837a4151b0efd29588d"
+                          },
+                          {
+                              "path":  "backend/tests/test_database_config.py",
+                              "sha256":  "b805a0625168ff2691df5818d6d56e6a8a107b1584fcc81d65e42a891e6b7157"
+                          },
+                          {
+                              "path":  "backend/tests/test_frankfurter.py",
+                              "sha256":  "56c9b0b05be3804209b980ad0883c22bdf611ce425d068ddd37c9f78b0aa74de"
+                          },
+                          {
+                              "path":  "backend/tests/test_generic_tax_id.py",
+                              "sha256":  "05be768e8120f008897da1e7f316849232ccf8aea0b80eb3d301033cd00841d2"
+                          },
+                          {
+                              "path":  "backend/tests/test_health.py",
+                              "sha256":  "8447b52b1d13681bc303065789d36c237fa384b26124d8a16a503669652760e9"
+                          },
+                          {
+                              "path":  "backend/tests/test_increment_migrations.py",
+                              "sha256":  "62d9a5f7d4eef9c8383afc7ad2a53ea488130779caa664e9d1a7d5884fb683ea"
+                          },
+                          {
+                              "path":  "backend/tests/test_migrations.py",
+                              "sha256":  "3695cd344e5c607c66b07c39925b5eb0f51b8cc763f154239adcb849bca77f5f"
+                          },
+                          {
+                              "path":  "backend/tests/test_monthly_calculation.py",
+                              "sha256":  "fdd5e44783802282f067ac903d6eb8fb80577dd0ae1793c00e53706485dad14a"
+                          },
+                          {
+                              "path":  "backend/tests/test_pricing.py",
+                              "sha256":  "42561f96a43e37839ee2416851a262c02cabf2193134096ba4c2195ef95fdc4b"
+                          },
+                          {
+                              "path":  "backend/tests/test_problems.py",
+                              "sha256":  "a94517fde01809b1720a91474333224d93b2a0d7adefcd948679b38a0c684b50"
+                          },
+                          {
+                              "path":  "backend/tests/test_queries_and_preview.py",
+                              "sha256":  "f69255fa12514dddc1bd11bda7ea085fea55bd7a981529bfd977ed33c167fa99"
+                          },
+                          {
+                              "path":  "backend/tests/test_query_use_cases.py",
+                              "sha256":  "24d450909d41489c50202cd6dd1ad85e2c80bcd83ea209c0b2d74fb0f59ff859"
+                          },
+                          {
+                              "path":  "backend/tests/test_simulation_api.py",
+                              "sha256":  "87b9313ca9527041b9b289a1f9674ca9b1d14c7715e2d9b1e9948c3e9d33c0d7"
+                          },
+                          {
+                              "path":  "backend/tests/test_simulation_repository.py",
+                              "sha256":  "ce88526d12d75b8f106ee59edf405d56626d6de6b74da1110755ef9e24a97bc6"
+                          },
+                          {
+                              "path":  "backend/tests/test_simulation_schemas.py",
+                              "sha256":  "3ccbbc323394a047b2b065972f2efa0c289fca0eb012eb7cd6fbffaa3a618c3e"
+                          },
+                          {
+                              "path":  "backend/tests/test_simulation_use_case.py",
+                              "sha256":  "b3abb7c6f94767455e23c37a056bb78ca01cfe67dc6a9f212ad5e16cb8a784c0"
+                          },
+                          {
+                              "path":  "backend/tests/test_spanish_tax_id.py",
+                              "sha256":  "33c06cd0cba29a7d711733a8090b1e8f1b2dfdab6caa3b4cde26149ed4ac1413"
+                          },
+                          {
+                              "path":  "backend/tests/test_tax_fx_migration.py",
+                              "sha256":  "374d71a09be66b055f0f303d4a1b602cc75ae279b66a34ec971ee9787f2bcd38"
+                          },
+                          {
+                              "path":  "docs/adr/0001-technology-stack.md",
+                              "sha256":  "dbf94b283d8bb61451363804b8452a3f406499b6c95ca84af92fcd02c450e199"
+                          },
+                          {
+                              "path":  "docs/adr/0002-architecture.md",
+                              "sha256":  "3b909730ba59dba329eecdf4b1333acb945e88f4d5e2b463797a76e44114fde7"
+                          },
+                          {
+                              "path":  "docs/adr/0003-angular-frontend-stack.md",
+                              "sha256":  "7d95504c643091361789a2428be2b22d7f0778f9a9d58d3c8f9d168b98d950f7"
+                          },
+                          {
+                              "path":  "docs/assessment/001-repository-assessment.md",
+                              "sha256":  "d7073b2367df0ed88191d05fc9add1b7cf7d5a120c2e84d5bc0edf24a1621a61"
+                          },
+                          {
+                              "path":  "docs/planning/mvp-roadmap.md",
+                              "sha256":  "ca51a238304bb1003a6686c73257b9a4fbd784128229fb6728f148d0febe2bb4"
+                          },
+                          {
+                              "path":  "docs/process/ai-assisted-development.md",
+                              "sha256":  "7fb45af5cccd114c2ae4c0ac4aff3233ab354c93f08f79d25b824e044664743f"
+                          },
+                          {
+                              "path":  "docs/requirements/functional-requirements.md",
+                              "sha256":  "f839e6b3d2568837792de38fe9406a5ecd9c366648c8718ae2c5aa54cc0f5440"
+                          },
+                          {
+                              "path":  "docs/requirements/requirements-traceability.md",
+                              "sha256":  "ca4c40f226771ed90d9118c8d6f1c2cc5d0bbd0852dd19b42d49c3faa87be137"
+                          },
+                          {
+                              "path":  "docs/specs/001-customer-registration/plan.md",
+                              "sha256":  "003fb239e304ca429009bb9b1783cb722135fcd3e3a464c6af50fe518b185a93"
+                          },
+                          {
+                              "path":  "docs/specs/001-customer-registration/spec.md",
+                              "sha256":  "244edf3ff7095804ab3d854d7ecd3ebd7da769bad3ddb4d2ed7bb1b1302ef640"
+                          },
+                          {
+                              "path":  "docs/specs/001-customer-registration/tasks.md",
+                              "sha256":  "775f697a0bad72f182f44b1dd29dc9580525917c5e0e39513dfa9a01d2cdc88f"
+                          },
+                          {
+                              "path":  "docs/specs/002-progressive-pricing/plan.md",
+                              "sha256":  "2ab1a947a628f9f99df868e8c18ccc359842b1463a27135649084d4fe900a383"
+                          },
+                          {
+                              "path":  "docs/specs/002-progressive-pricing/spec.md",
+                              "sha256":  "c7f860acdfe2b6eaf98cd5dfbee41f8d796df68923ff4f5c61a128d10089c028"
+                          },
+                          {
+                              "path":  "docs/specs/002-progressive-pricing/tasks.md",
+                              "sha256":  "719d741786b16a5ac058ee60ce8d8cecbef7d09a36734d78bb34450feb898f64"
+                          },
+                          {
+                              "path":  "docs/specs/003-simulations/plan.md",
+                              "sha256":  "81312da60b5bbc4ec4ce8dc6cec01affaaeaf83e81cbd6bf6cd52c0665de31cf"
+                          },
+                          {
+                              "path":  "docs/specs/003-simulations/spec.md",
+                              "sha256":  "d3828ef380c164f1427c3df712242ec88feb0c45a82090e360530c2dc9b4b024"
+                          },
+                          {
+                              "path":  "docs/specs/003-simulations/tasks.md",
+                              "sha256":  "c295201276446c7167e62583c468675d7ec131b1d3b03590c6e55719069601ad"
+                          },
+                          {
+                              "path":  "docs/specs/004-international-customers-and-simulations/plan.md",
+                              "sha256":  "1075eccc5a5a3a988dccddebe298cc65915b9976b31fdc299252dce8435467fb"
+                          },
+                          {
+                              "path":  "docs/specs/004-international-customers-and-simulations/spec.md",
+                              "sha256":  "81bbe392afa01301438fdd90b57ac1bed06fd3c991ddecd4e90180c6e280a318"
+                          },
+                          {
+                              "path":  "docs/specs/004-international-customers-and-simulations/tasks.md",
+                              "sha256":  "918904a4cdf029de84a214791fea23392c62f29d2646b813b3676c831790110f"
+                          },
+                          {
+                              "path":  "docs/specs/005-taxes-and-currency-conversion/plan.md",
+                              "sha256":  "5840420938b79244db8ed5dedfcab55c2fd72c46aed0fa17c1121552ee0d5a07"
+                          },
+                          {
+                              "path":  "docs/specs/005-taxes-and-currency-conversion/sources.md",
+                              "sha256":  "2c4ae14b2d26cc87a1b87412c2dc36c98c52a71150678b031960d6be447cc899"
+                          },
+                          {
+                              "path":  "docs/specs/005-taxes-and-currency-conversion/spec.md",
+                              "sha256":  "1e9cdfc5f1665f7195e160b56f333c5ef565c833173b8080e32f5252c615e895"
+                          },
+                          {
+                              "path":  "docs/specs/005-taxes-and-currency-conversion/tasks.md",
+                              "sha256":  "9dd485aa2f28d498f9c63f17e1f805485ff8c9273e730752753ff5ca990cf20e"
+                          },
+                          {
+                              "path":  "docs/specs/006-customer-queries-and-preview/plan.md",
+                              "sha256":  "5e17fc2f66cc6c30cca8934a08107ce796d2ac3863452ea3092cdef1687800ab"
+                          },
+                          {
+                              "path":  "docs/specs/006-customer-queries-and-preview/spec.md",
+                              "sha256":  "f1d1e2c46d7da2dd8581fdbb00cf13daa4b39258a691d2f195b8d38488ef5d0d"
+                          },
+                          {
+                              "path":  "docs/specs/006-customer-queries-and-preview/tasks.md",
+                              "sha256":  "a3b039f78abbc13ea20194e2dbb1f51b2e02251ebc3cbedc9b038e56d9201c37"
+                          },
+                          {
+                              "path":  "docs/specs/007-angular-frontend-foundation/plan.md",
+                              "sha256":  "29de98de1d2d57b9eeaa8a78fc5b17bff43400ed0e98c332baeb6d75e5fa1a79"
+                          },
+                          {
+                              "path":  "docs/specs/007-angular-frontend-foundation/spec.md",
+                              "sha256":  "723dacb04cf885ff98cae2745f0518b3af481eb097ee427e2ac16d2d4c17592a"
+                          },
+                          {
+                              "path":  "docs/specs/007-angular-frontend-foundation/tasks.md",
+                              "sha256":  "3c29a7f29cb90fb0f22302164727c8a1a829f51756e56a67a23fdbd3b5d82f4b"
+                          },
+                          {
+                              "path":  "docs/specs/008-customer-management-frontend/plan.md",
+                              "sha256":  "f4cb3d08c417854c1495860af9c84b40f73547cf8428ae77db3b9f033eb88c72"
+                          },
+                          {
+                              "path":  "docs/specs/008-customer-management-frontend/spec.md",
+                              "sha256":  "a007a1f5c8b8cc3d3de9b2026a31baabb08d454df88b82e2fb9eed98dec0af1d"
+                          },
+                          {
+                              "path":  "docs/specs/008-customer-management-frontend/tasks.md",
+                              "sha256":  "f0b817400890456b41b700b0690eff2f8289bd293b35c8b2ede260f62d1498b6"
+                          },
+                          {
+                              "path":  "docs/specs/009-interactive-subscription-simulator/plan.md",
+                              "sha256":  "0a2ab030e071995a1356800f1dac4f9025259f8330a8203fd148d9ccbcdce94e"
+                          },
+                          {
+                              "path":  "docs/specs/009-interactive-subscription-simulator/spec.md",
+                              "sha256":  "d60867503cc2df356c72cee7fb9bc88338f0056c5a0b01227defe91c25598cb3"
+                          },
+                          {
+                              "path":  "docs/specs/009-interactive-subscription-simulator/tasks.md",
+                              "sha256":  "e6c5eb9b6150c805213aeecc2f88cd0f17fd673fee288dd2d93e875b709d77ce"
+                          },
+                          {
+                              "path":  "docs/specs/010-frontend-refinement-and-e2e/plan.md",
+                              "sha256":  "f093ce58f180d7684078b00e46ea2e249a7aa148846a250bfd38e201921e89a2"
+                          },
+                          {
+                              "path":  "docs/specs/010-frontend-refinement-and-e2e/spec.md",
+                              "sha256":  "96a98c306537190a8a9f821d3cf3c04cb1d08fbac62cc5dbae62b887b527f46d"
+                          },
+                          {
+                              "path":  "docs/specs/010-frontend-refinement-and-e2e/tasks.md",
+                              "sha256":  "eea10c096cbbabb71d8a09034148cbca4279a06571183205f28b6fd93c6f1829"
+                          },
+                          {
+                              "path":  "frontend/.editorconfig",
+                              "sha256":  "9da1d179fa691e796ec7cb26d719e2308a073594b7c7c77756d1ba4560e295be"
+                          },
+                          {
+                              "path":  "frontend/.gitignore",
+                              "sha256":  "9b57d7526e92f7b790f58aa8d96e32f0bdfea5473ae3badc47fb4a9e8f64ce5f"
+                          },
+                          {
+                              "path":  "frontend/.npmrc",
+                              "sha256":  "3b88d1057add6f92ec23dc22dd017e312ded13a042deb0ba6f08bad85d936456"
+                          },
+                          {
+                              "path":  "frontend/.nvmrc",
+                              "sha256":  "a1c56e968c358e10872d64220b3ae759ffe7feaffc4da95fae425dbcca43fe44"
+                          },
+                          {
+                              "path":  "frontend/.prettierignore",
+                              "sha256":  "5d7a6a3e5cfbe912e129ff6dac34bd09a526f2e8ac365546c78741854b1b6071"
+                          },
+                          {
+                              "path":  "frontend/.prettierrc",
+                              "sha256":  "8cd4a6408c3eadd007f0e8986754f4f03e6f2ea451a0181040555671491069a9"
+                          },
+                          {
+                              "path":  "frontend/README.md",
+                              "sha256":  "dcb5b40429c49e60076665955e2bfa3e841931bab58204034a5c4fc17d999b0a"
+                          },
+                          {
+                              "path":  "frontend/angular.json",
+                              "sha256":  "4b387845b3f0e911d101a565ef8e2615ec7951950027cb4a9601c25c8213e88c"
+                          },
+                          {
+                              "path":  "frontend/e2e/customer-management.spec.ts",
+                              "sha256":  "f2386a782efde013d062104de33969f62eec6f3c889d2161a77b08554e70f3fe"
+                          },
+                          {
+                              "path":  "frontend/e2e/navigation.spec.ts",
+                              "sha256":  "69f12e7000423de771c179ba8d75e16132cb0c860101f2de4c514e6fc8ef4353"
+                          },
+                          {
+                              "path":  "frontend/e2e/simulator.spec.ts",
+                              "sha256":  "d467837d176af3ade02b714204a74a963fcb0149462f8deb4316ff83033cb770"
+                          },
+                          {
+                              "path":  "frontend/e2e/task044-visual-evidence.spec.ts",
+                              "sha256":  "309106db8f7b1bb2b18e5d9a351d83c58336ddc3afee8e14abdd03858fdda569"
+                          },
+                          {
+                              "path":  "frontend/e2e/task045b-audit.spec.ts",
+                              "sha256":  "d45b3c3aac3c7fbd522545082156ece17f0d3fe693235150b8ec6f96d355f82b"
+                          },
+                          {
+                              "path":  "frontend/e2e/task045b-real-integration.spec.ts",
+                              "sha256":  "1ab06e771cf6a009c4495caa787bb755af68c9dcd23f0abf6932cd840917b1ef"
+                          },
+                          {
+                              "path":  "frontend/e2e/visual-evidence.spec.ts",
+                              "sha256":  "5df06a137bff5012a2f893acc3c5cdec7c7a1fcc15d3459c0c697ffa9cbb80c2"
+                          },
+                          {
+                              "path":  "frontend/eslint.config.js",
+                              "sha256":  "c92a49968fab95fd7ea538ae9e7501567682fd3cb4c202775ef5a7ed2e49a4a7"
+                          },
+                          {
+                              "path":  "frontend/package-lock.json",
+                              "sha256":  "ba22f84cc8a2fc1ced564afe9b7567e05839df778958d891df0e54df0b99f3cb"
+                          },
+                          {
+                              "path":  "frontend/package.json",
+                              "sha256":  "ed87e53aa3b3271123b97200038e11eaeb48226ae1452165a2466a562cea8ac0"
+                          },
+                          {
+                              "path":  "frontend/playwright.config.ts",
+                              "sha256":  "463acf1bab98eed4037b093ce5d4cf79e928f5588e4af4161372033c0a4be0ee"
+                          },
+                          {
+                              "path":  "frontend/public/favicon.svg",
+                              "sha256":  "b56ecfbc689fd3427f207ad528b07cd809bb15f2d0182a739e71ae006fadd11f"
+                          },
+                          {
+                              "path":  "frontend/src/app/app.config.ts",
+                              "sha256":  "876adc9f26309b22903f2324f8a03e2549f7989e94324c2936a641323d83e839"
+                          },
+                          {
+                              "path":  "frontend/src/app/app.html",
+                              "sha256":  "8ca551bdbbd281bbeb04c67758d11ae77067b6f350d5c4921a7b19203f3ac25e"
+                          },
+                          {
+                              "path":  "frontend/src/app/app.routes.spec.ts",
+                              "sha256":  "a5de4c97fa1dfff87f50a514d409ac1481a982daed78c05bcb3f637c53cbbad1"
+                          },
+                          {
+                              "path":  "frontend/src/app/app.routes.ts",
+                              "sha256":  "580bcb40f92f092da59d0dc6ac45cc40db6abc70c4043285956edc61a41d3e97"
+                          },
+                          {
+                              "path":  "frontend/src/app/app.spec.ts",
+                              "sha256":  "bd5b5f0f042e2b8191badd9a74ace13bfd74e455170c1ce43ecc698621bfe820"
+                          },
+                          {
+                              "path":  "frontend/src/app/app.ts",
+                              "sha256":  "a18e74bb327fd3398f7dad9820b90c9d8bed4f317b6bff0e37a92f065129e21f"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/config/api.config.ts",
+                              "sha256":  "b0f822e5f158214777902ee4e267ffc2a97c9b3f83497bbcf36feec24c99ebfc"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/http/api-client.spec.ts",
+                              "sha256":  "a7d19a958cdb5d22ab0103421b006417e06954188760794823aeea78d5a11e6b"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/http/api-client.ts",
+                              "sha256":  "0f9459687ab258f3ec922741d5d9665c22fbc91b7e3a4f02e84b483a0d352916"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/http/api-error.interceptor.ts",
+                              "sha256":  "1bbdf21fedbd4517fc2951377b34ef80189183827c50735397669eaed94fe865"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/http/api-error.spec.ts",
+                              "sha256":  "66603525302e38e5dbe33f426ecb3e387bbfe22687f1c8712f591c99c7240e8b"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/http/api-error.ts",
+                              "sha256":  "7298e5712804628424eb0111c0294a6b7ce19c40d490c6d8fcffbf1c91bb0581"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/layout/app-shell.html",
+                              "sha256":  "ae9c238680a9e4401f20b6f2017aeccc6112d47d579dbe6c0b8111151b21b0b3"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/layout/app-shell.scss",
+                              "sha256":  "d02fc44e4dbc3deac4ad59cac896e4caa6847041f6245e4646b9cddd53f2bbca"
+                          },
+                          {
+                              "path":  "frontend/src/app/core/layout/app-shell.ts",
+                              "sha256":  "a05f84692028ee2da9b6f6503a962ea56aceb724d8863691612ae64c19bc879f"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customer-create-page.spec.ts",
+                              "sha256":  "c6e4e5c12f986d970d0cd882a67e9b03f96f61c72245c645f4aa3e23526701fa"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customer-create-page.ts",
+                              "sha256":  "a54e332887dcbc9cfd6d0a99eacb294d402d75a811ace50d1d78528b7d211d56"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customer-detail-page.spec.ts",
+                              "sha256":  "3ae24299f1c18d4ddbfa119709e9c875aebf2f710c754dda615c994432d705ee"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customer-detail-page.ts",
+                              "sha256":  "a3ba07220507acfcffdd8ce5d7ef203e0e631114398f827f9817338e977583ae"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customer-form.validators.spec.ts",
+                              "sha256":  "dfb76d0d66279ca68c63bb7710c38cfe5c3296823fdd23fdf9f27dc7e3cd7f1b"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customer-form.validators.ts",
+                              "sha256":  "2c0688311e0ee6d06d65f3de9364b310676fdfca8e2849c5a610ebaeb3b63589"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customers-page.spec.ts",
+                              "sha256":  "1817e308a7cca13384f69491d8aec3483acd043f7da36f15e3e1997269e79e6c"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/customers-page.ts",
+                              "sha256":  "4f096c5209f400f3b0d299fde60b4a786f63250d54b5e6d59b0a80bc7588af65"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/data-access/customers-api.service.ts",
+                              "sha256":  "ac7d2a6743ef451ef4eb6b8521e6ea3d18d8c2ca8e4a6c1bae0c0bff5b01441b"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/data-access/simulation-history-api.service.ts",
+                              "sha256":  "ff886483276f572527c17c6177554ab7137d342197eb9df9d62f80dbcf67a256"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/simulation-history.spec.ts",
+                              "sha256":  "4f33b20d2bfdbcf92bb880f8d9670a7fdfb3cf11bfa72ad533107c752c17d13d"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/customers/simulation-history.ts",
+                              "sha256":  "dc408e1ec0b8d34360ffc642bb576576faf6a20e83535431bdf8a61efc91348b"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/dashboard/dashboard-page.spec.ts",
+                              "sha256":  "e41bb4a05e2d3b32bee484bf327dee4db2bb14fdc4c6460b4bf1afa64ed21322"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/dashboard/dashboard-page.ts",
+                              "sha256":  "f9f7d5045b71ef5025187b64c1c9eabc305cbf0439984db3d198e74d229fd050"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/not-found/not-found-page.ts",
+                              "sha256":  "f1c67fee766277d3a730aee4cc52002fa849b2c5b3d48ea14434a6f609ffec74"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/simulations/data-access/simulations-api.service.ts",
+                              "sha256":  "51ab8d467db513a6034fdfe211025e956b4231daa8329cd2577f6e1af318dbde"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/simulations/simulation-page.spec.ts",
+                              "sha256":  "005cc45270849d3719d6f182337db9b6b6084d1795e0708e963d7d59fa8c7643"
+                          },
+                          {
+                              "path":  "frontend/src/app/features/simulations/simulation-page.ts",
+                              "sha256":  "15e934b57d1583cb1c0db21b04ccf9fa1448df5cdf0d799cb2fa80e3316a8a49"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/components/customer-card.ts",
+                              "sha256":  "ab72a3a42debacd8e7d606ffa1543a4e61065060e411adb6bb99a4f2c20e6fda"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/components/empty-state.ts",
+                              "sha256":  "bca432c0db1fe2c97c5f93144c925fda13fca907058eff6c454f95a03ff3b456"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/components/error-state.ts",
+                              "sha256":  "fb63a9ad7c60b0c00cf5b02b0135e638f0f59664fbd5704374b7b9deb89ec216"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/components/loading-state.ts",
+                              "sha256":  "3342bf17f971b3b96cf1b1d3c7a9b0361c2932e06a2d86a427078658037b093f"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/components/page-placeholder.ts",
+                              "sha256":  "2dd743a704dd0c723966e3b881106ce9533c9641742d4ddcb21f7e48532ca7a7"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/components/section-heading.ts",
+                              "sha256":  "901175956795c1c4e63fdae1397c00edb1d409224211953942f73fc1962d0947"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/models/api.models.ts",
+                              "sha256":  "8e44c1d30e2368fa95fdd15450d3a818596e3b19860b51a293e2231878ce6119"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/utils/display-format.spec.ts",
+                              "sha256":  "c52f5e03bc5925a611c997437a4d4e7f3809cc92dffa93dbbef4916b66cdeb1c"
+                          },
+                          {
+                              "path":  "frontend/src/app/shared/utils/display-format.ts",
+                              "sha256":  "f04551016eccddd0638c6f3af164e0bd9bdd6b7f88504e41c4d301202f28a3f8"
+                          },
+                          {
+                              "path":  "frontend/src/index.html",
+                              "sha256":  "6ecdbe71b591b21810f41319b8de21b92d65b049478f388b05b67eae57f3ef93"
+                          },
+                          {
+                              "path":  "frontend/src/main.ts",
+                              "sha256":  "7b4c52f0b429a5ae2256f898609a4338b259e111791e94ab5512c00a92f5523b"
+                          },
+                          {
+                              "path":  "frontend/src/proxy.conf.json",
+                              "sha256":  "f0e6a69c4aae66044d3ed5ddc923c42a9c13081fba35daa1262e2012d38f29d2"
+                          },
+                          {
+                              "path":  "frontend/src/styles.scss",
+                              "sha256":  "4ef9285166b388f82457f93ed0185c23c99ba645c031cf410e19b1ca2e9e9390"
+                          },
+                          {
+                              "path":  "frontend/tsconfig.app.json",
+                              "sha256":  "3638a621553f472c05723a9487b6a5e2cb533e3a712b932e70a4cc30cc3d8b88"
+                          },
+                          {
+                              "path":  "frontend/tsconfig.json",
+                              "sha256":  "979d907cd3d7a376c396c64037678707bc354268cb284f3d3942d9a53c39b9a9"
+                          },
+                          {
+                              "path":  "frontend/tsconfig.spec.json",
+                              "sha256":  "7aeb8799d7e1d086d16d7b238769f664cfa73b3d135318df5dcc441fdc6a7e87"
+                          }
+                      ],
+    "excluded_untracked":  [
+                               "Prueba Devs con IA.docx",
+                               "ai-workspace/01-tasks/TASK046-frontend-pull-request-plan.md",
+                                "ai-workspace/01-tasks/TASK046-initial-hashes.json",
+                                "ai-workspace/01-tasks/TASK046-final-frontend-pull-request.md"
+                           ]
+}

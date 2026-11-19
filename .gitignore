@@ -188,6 +188,9 @@ node_modules/
 out-tsc/
 /frontend/dist/
 /frontend/coverage/
+/frontend/playwright-report/
+/frontend/test-results/
+/frontend/playwright/.cache/
 *.tsbuildinfo
 .eslintcache
 npm-debug.log*
