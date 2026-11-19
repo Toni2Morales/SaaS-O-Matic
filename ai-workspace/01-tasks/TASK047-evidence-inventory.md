@@ -75,15 +75,10 @@ credenciales ni datos fiscales/personales reales. Todas tienen resolución 1280�
 | — `real-limites-maximos-no-guardado.png`          | Límite superior/manual y no guardar                          | API real                             | No seleccionada; caso técnico de borde | «Simulador con entradas máximas admitidas, sin guardar.»                                  |
 
 TASK046 no tiene una captura de error FX. No afirmar que una captura TASK046 muestre ese
-escenario; la prueba E2E TASK046 cubre dicho estado. Selección propuesta para revisión humana
-(ocho como máximo): `real-dashboard.png`, `real-alta-es-ficha-historial-vacio.png`,
-`real-fiscal-es-invalido.png`, `real-busqueda-nombre-taxid.png`,
-`real-preview-15-eur-no-persistencia.png`, `real-simulacion-guardada-eur.png`,
-`real-simulacion-guardada-usd.png` y la evidencia TASK047A `after-320-valid.png`. Las siete
-primeras son capturas TASK046 reales con API/SQLite temporal sintética; USD usa FX fixture.
-La última es una respuesta API fixture interceptada, solo prueba la apariencia local a 320 px
-y **no** contradice A47-01, que sigue fallando en Linux CI. Requieren aprobación antes de
-copiarse o enlazarse en el repo público.
+escenario; la prueba E2E TASK046 cubre dicho estado. Las imágenes de esta sección son archivo
+histórico y alternativas; la propuesta de ocho imágenes TASK047F generadas desde el clon está
+en la sección siguiente. Cada fixture/API interceptada se identifica y nunca se presenta como
+integración real.
 
 ### TASK047A — capturas adicionales locales
 
@@ -102,6 +97,53 @@ fixture interceptada y datos sintéticos, no integración real ni tipos de cambi
 
 No se generó ni fabricó una captura “antes”: la reproducción Windows pre-corrección no falló
 y el run original no publicó artifact visual.
+
+### TASK047F — propuesta final de ocho capturas de la campaña limpia
+
+Ubicación fuera de Git: `%LOCALAPPDATA%\Temp\opencode\TASK047F\evidence-fafca9b7cef44d02b0c41ce9d9cd6636`.
+Capturas Playwright Chromium en Windows 10 desde el clon limpio SHA
+`8bdaf377454e8d943de01e2df46f502534eb76fb`. La UI y el backend accedieron a la SQLite del
+clon con datos sintéticos. Divisa USD utilizó Frankfurter live fechado; no fixture. El
+propietario debe revisar y autorizar cualquier publicación.
+
+| Archivo                                            | Resolución | Estado                                                  | Alt text propuesto                                                         |
+| -------------------------------------------------- | ---------: | ------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `dashboard-windows10.png`                          |  1440×1240 | Panel con dos clientes sintéticos                       | «Panel comercial con clientes sintéticos del clon Windows 10.»             |
+| `international-customer-pt-windows10.png`          |  1280×1030 | Alta/ficha Portugal real                                | «Ficha de cliente sintético portugués con validación genérica no oficial.» |
+| `customer-history-windows10.png`                   |  1440×1017 | Historial con simulación EUR guardada                   | «Ficha sintética e historial persistido tras guardado real.»               |
+| `fiscal-validation-windows10.png`                  |  1440×1013 | CIF/NIF español inválido, error mostrado                | «Formulario que rechaza un identificador fiscal español inválido.»         |
+| `simulator-preview-15-eur-windows10.png`           |  1440×1122 | Preview real, 15 usuarios, 250 GB, 100.000 llamadas/mes | «Preview 15 usuarios: subtotal 140, IVA 29,40, total 169,40 EUR.»          |
+| `simulation-saved-eur-windows10.png`               |  1440×1122 | Confirmación de guardado real en EUR                    | «Simulación guardada explícitamente en EUR.»                               |
+| `simulator-preview-usd-live-settled-windows10.png` |  1440×1122 | USD live: 1.0984, referencia 2026-11-19                 | «Estimación USD con total EUR original y tasa de referencia fechada.»      |
+| `simulator-mobile-390-windows10.png`               |   390×1737 | Simulador móvil real, EUR                               | «Simulador responsive en viewport móvil de 390 px.»                        |
+
+También se capturó `simulator-preview-gbp-live-settled-windows10.png` (0.83392/2026-11-19); es
+evidencia adicional no incluida en el grupo de ocho. Los fallidos intentos de captura tomada
+antes de que finalizara la preview no se proponen; solo se seleccionan archivos con estado
+estable. No se publicaron imágenes en TASK047F.
+
+### TASK047F — capturas de la campaña Windows 10
+
+Ubicación externa: `%LOCALAPPDATA%\Temp\opencode\TASK047F\evidence-fafca9b7cef44d02b0c41ce9d9cd6636`.
+Las respuestas de la UI se sirvieron desde el FastAPI y SQLite recién creados en el clon limpio;
+los clientes son sintéticos. USD/GBP indicados como live provienen de la API real Frankfurter
+vía backend, no de un fixture. No se copiaron al repositorio.
+
+| Archivo                                            |  Viewport | Estado y tipo de integración                                              | Alt text propuesto                                                                |
+| -------------------------------------------------- | --------: | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `dashboard-windows10.png`                          | 1440×1240 | Dashboard, API/SQLite reales                                              | «Panel comercial de SaaS-O-Matic con datos sintéticos del clon Windows 10.»       |
+| `international-customer-pt-windows10.png`          | 1280×1030 | Alta y ficha PT; validación genérica real, no fiscal oficial              | «Ficha de cliente sintético portugués; el identificador usa validación genérica.» |
+| `customer-history-windows10.png`                   | 1440×1017 | Ficha e historial de simulación EUR real                                  | «Cliente sintético y simulación EUR guardada visible en historial.»               |
+| `fiscal-validation-windows10.png`                  | 1440×1013 | CIF ES inválido rechazado por UI/API real                                 | «Formulario muestra error para un identificador fiscal español inválido.»         |
+| `simulator-preview-15-eur-windows10.png`           | 1440×1122 | Preview API real, 15 usuarios, 250 GB, 100.000 calls; historial no cambia | «Preview mensual 15 usuarios: subtotal 140, IVA 29,40, total 169,40 EUR.»         |
+| `simulation-saved-eur-windows10.png`               | 1440×1122 | Guardado explícito FastAPI/SQLite                                         | «Confirmación de simulación EUR guardada en SQLite sintética.»                    |
+| `simulator-preview-usd-live-settled-windows10.png` | 1440×1122 | USD live Frankfurter vía FastAPI; reference fechada 2026-11-19            | «Total presentado en USD y total original EUR; tasa live fechada.»                |
+| `simulator-mobile-390-windows10.png`               |  390×1737 | Simulador con backend/SQLite real                                         | «Simulador responsive en móvil 390 px, estimación EUR visible.»                   |
+
+Una captura de GBP live también existe como `simulator-preview-gbp-live-settled-windows10.png`
+en el mismo directorio, pero no integra la propuesta de ocho. Las capturas son candidatas;
+el propietario debe aprobar nombres/selección/publicación por separado. No acreditan
+compatibilidad Windows 11 ni resuelven el overflow de Linux CI A47-01.
 
 ## Catálogo externo adicional TASK042–TASK045B
 
@@ -127,5 +169,5 @@ directorio externo al inspeccionarlo; no se publican ni se finge haberlos revisa
 ### Solicitud de aprobación de publicación visual
 
 Antes de copiarlas a `docs/images/` o añadirlas al README, el propietario debe aprobar los
-nombres/selección (propuesta TASK047F: ocho archivos descritos arriba) y autorizar
-expresamente su publicación en el repo público. TASK047/TASK047F no publican ninguna imagen.
+nombres/selección de la tabla TASK047F y autorizar expresamente su publicación en el repo
+público. TASK047/TASK047F no publican ninguna imagen.
