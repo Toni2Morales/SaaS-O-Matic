@@ -1,7 +1,8 @@
 # TASK047A — Informe técnico de corrección responsive
 
-> **A47-01 CORREGIDO PENDIENTE DE VERIFICACIÓN EN CI.** Las validaciones locales Windows
-> pasan. No existe todavía un run GitHub Actions sobre el commit TASK047A.
+> **A47-01 NO RESUELTO.** La corrección publicada pasa las validaciones locales Windows, pero
+> el run GitHub Actions del commit TASK047A volvió a reproducir el overflow. Se detuvo tras
+> ese resultado; no se intentó otra solución.
 
 ## A. Resumen ejecutivo
 
@@ -10,7 +11,8 @@
 - Corrección localizada en CSS del componente del simulador, más ampliación de matriz
   responsive con 375 px.
 - La suite Playwright Windows completa pasó (79 PASS/20 skips); checks frontend y backend
-  locales pasaron. La nueva verificación de Quality CI queda pendiente del push.
+  locales pasaron. La nueva Quality CI en `54bd817b748f7769266a2d653353ffd4c8406775` volvió
+  a fallar las seis aserciones responsive originales con documentWidth 334 px.
 
 ## B. Diagnóstico
 
@@ -30,7 +32,10 @@ sin wrap; sus textos «Control deslizante» y «Entrada manual: 0–1.000.000» 
 responsables más probables de exceder el ancho mínimo intrínseco en el runner Linux. La
 intervención de permitir wrap es coherente con esa geometría. No se cuenta con DOM replay
 que pruebe causalidad exclusiva del encabezado; Windows pasa la prueba original incluso
-antes del cambio, por diferencia de métricas/maquetación entre entornos.
+antes del cambio, por diferencia de métricas/maquetación entre entornos. La ejecución CI nueva
+conservó `FORM.scrollWidth=297` y document width 334 a pesar del wrap; por ello `.field-heading`
+no era la causa suficiente. El elemento real que expande el formulario/documento sigue sin
+aislarse. No se seguirá diagnosticando ni se cambiarán otras reglas sin nueva autorización.
 
 `MAT-SLIDER` mostraba scroll interno en el diagnóstico, pero la caja `x=45..291` seguía
 dentro del viewport de 320 px; no se modificó. GitHub no subió artifacts y el endpoint de
@@ -39,10 +44,11 @@ software del sistema.
 
 ## C. Solución
 
-En `frontend/src/app/features/simulations/simulation-page.ts` se añade
+En `frontend/src/app/features/simulations/simulation-page.ts` se añadió
 `.field-heading { flex-wrap: wrap; }` dentro de `@media (max-width: 760px)`. Los rótulos y
 controles permanecen visibles; el encabezado conserva una fila cuando cabe y puede ocupar
-dos líneas en ancho estrecho. No se ocultó ni recortó contenido, no se alteró el slider ni
+dos líneas en ancho estrecho. Esto conserva legibilidad, pero el nuevo CI demuestra que no
+resuelve el overflow observado. No se ocultó ni recortó contenido, no se alteró el slider ni
 se usó overflow para tapar el problema.
 
 En `frontend/e2e/task045b-audit.spec.ts` se incorpora 375 px a la lista existente
@@ -112,9 +118,31 @@ leyó ni incluyó.
 
 ## H. Publicación y nueva CI
 
-Commit/push y nueva ejecución de Quality/Quick Start pendientes. No hay badge, PR ni merge.
-El run de Quality del futuro SHA debe confirmar que las seis fallas originales pasan en Linux
-y no introduce nuevas regresiones. Un resultado pendiente no es PASS.
+Commit `54bd817b748f7769266a2d653353ffd4c8406775`, mensaje
+`fix: resolve simulator overflow on narrow viewports`; push ordinario verificado a
+`origin/docs/final-delivery`. `origin/main` y `main` local no cambiaron. No se creó PR ni hubo
+merge. Este informe recibió los resultados post-push localmente; por la autorización de un
+solo commit no se hizo un segundo commit/push. El README, ai-workspace README y artefactos
+TASK047 existentes también permanecen locales sin publicar.
+
+Runs asociados exactamente al SHA `54bd817b748f7769266a2d653353ffd4c8406775`:
+
+- [Quality #44566635410](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44566635410):
+  backend y frontend PASS; Playwright **FAIL**. Repitió los mismos seis fallos originales en
+  la ruta del simulador a 320 px, Chromium/Firefox/WebKit. Persistió `scrollWidth=334`,
+  `clientWidth=320` y `.field-heading` wrap no modificó `FORM.scrollWidth=297`. Suite: 73
+  passed/20 skipped/6 failed. Job de integración se omitió al fallar el Playwright gate. Esto
+  confirma que A47-01 sigue sin resolverse y refuta la hipótesis `.field-heading` como causa
+  raíz suficiente.
+- [Quick Start #44566635425](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44566635425):
+  Ubuntu pasó start y smoke HTTP, pero parada/reinicio y limpieza fallaron porque PID 2677 no
+  coincide con el comando registrado. Windows volvió a agotar el health-check Angular tras
+  `npm ci`; el script limpió los procesos que inició. Logs de error/redirección no se
+  incorporaron al log de Actions; causas restantes no determinadas. No se modificó el workflow
+  ni scripts, fuera de alcance TASK047A.
+
+Los resultados Quick Start se registran por trazabilidad; no se intentó corregir ese problema.
+No se añadieron badges.
 
 ## I. A47-02/A47-03
 
@@ -123,12 +151,11 @@ abordan aquí.
 
 ## J. Veredicto TASK047A
 
-**A47-01 CORREGIDO PENDIENTE DE VERIFICACIÓN EN CI.** Las pruebas locales y evidencias
-Windows pasan, pero el defecto de referencia solo se reprodujo en Linux Actions. No declarar
-`A47-01 RESUELTO Y VERIFICADO EN CI` hasta inspeccionar el nuevo Quality run en Chromium,
-Firefox y WebKit.
+**A47-01 NO RESUELTO.** El run Quality #44566635410 reprodujo el mismo overflow de 14 px y
+fallaron las seis pruebas originales. La corrección publicada no solucionó el defecto. La
+siguiente diagnosis/corrección exige nueva autorización TASK047B; no se hicieron más cambios.
 
-## K. Criterios de aceptación CA01–CA56 (corte de validación local, previo a commit/push)
+## K. Criterios de aceptación CA01–CA56 (estado final observado)
 
 |  CA | Estado                     | Evidencia / observación                                                                                   |
 | --: | -------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -142,16 +169,16 @@ Firefox y WebKit.
 |  08 | CUMPLIDO                   | Logs del run original y resultado Playwright #44556931530 consultados.                                    |
 |  09 | CUMPLIDO                   | Identificadas dos pruebas, tres motores, viewport/assercciones y 6 fallos.                                |
 |  10 | CUMPLIDO CON OBSERVACIONES | Windows original no reproduce; nueva versión se probó antes/después, CI Linux pendiente.                  |
-|  11 | CUMPLIDO CON OBSERVACIONES | Causa raíz más probable sustentada por medidas DOM y texto flex; no replay Linux local.                   |
+|  11 | PARCIAL                    | DOM acota `FORM` desbordada; flex-wrap intentado no cambia el fallo CI; raíz aún no aislada.              |
 |  12 | CUMPLIDO CON OBSERVACIONES | Reproducción inicial intentada; en Windows original pasó.                                                 |
-|  13 | CUMPLIDO CON OBSERVACIONES | Flex sizing/wrapping del encabezado localizado como causa más probable.                                   |
+|  13 | PARCIAL                    | La hipótesis `.field-heading` como causa fue refutada por la nueva CI; raíz pendiente.                    |
 |  14 | CUMPLIDO                   | CSS limitado a `.field-heading` en media query móvil.                                                     |
 |  15 | CUMPLIDO                   | No se oculta contenido ni se aplicó `overflow-x:hidden`/hacks.                                            |
-|  16 | CUMPLIDO CON OBSERVACIONES | Tests confirman document/body ≤320 después; medición antes en Linux 334.                                  |
-|  17 | CUMPLIDO CON OBSERVACIONES | Ambas pruebas pasan Chromium local; CI Chromium pendiente.                                                |
-|  18 | CUMPLIDO CON OBSERVACIONES | Ambas pruebas pasan Firefox local; CI Firefox pendiente.                                                  |
-|  19 | CUMPLIDO CON OBSERVACIONES | Ambas pruebas pasan WebKit local; CI WebKit pendiente.                                                    |
-|  20 | CUMPLIDO CON OBSERVACIONES | Matriz seis widths/five routes/three browsers PASS local; run CI pendiente.                               |
+|  16 | INCUMPLIDO                 | CI en commit publicado volvió a medir 334 > 320 px; local Windows pasa, no basta.                         |
+|  17 | CUMPLIDO CON OBSERVACIONES | Chromium local responsive PASS; mismo caso CI Chromium volvió a fallar.                                   |
+|  18 | CUMPLIDO CON OBSERVACIONES | Firefox local responsive PASS; mismo caso CI Firefox volvió a fallar.                                     |
+|  19 | CUMPLIDO CON OBSERVACIONES | WebKit local responsive PASS; mismo caso CI WebKit volvió a fallar.                                       |
+|  20 | CUMPLIDO CON OBSERVACIONES | Matriz 6 widths/5 rutas/3 motores local PASS; CI conserva overflow a 320 px.                              |
 |  21 | CUMPLIDO                   | Suite Playwright completa mantiene desktop; screenshot 1440 px generado.                                  |
 |  22 | CUMPLIDO                   | Slider de teclado y resumen móvil comprobados por test original; captura móvil.                           |
 |  23 | CUMPLIDO                   | Captura/fixture de 1.000.000 usuarios muestra importes completos.                                         |
@@ -168,7 +195,7 @@ Firefox y WebKit.
 |  34 | CUMPLIDO                   | ESLint PASS.                                                                                              |
 |  35 | CUMPLIDO                   | Prettier PASS.                                                                                            |
 |  36 | CUMPLIDO                   | Build PASS.                                                                                               |
-|  37 | CUMPLIDO CON OBSERVACIONES | Playwright completo Windows 79/20 skips PASS; Linux CI por confirmar.                                     |
+|  37 | INCUMPLIDO                 | Playwright CI volvió a fallar las seis aserciones responsive; Windows suite pasa.                         |
 |  38 | CUMPLIDO CON OBSERVACIONES | Axe automatizado PASS; no certificación WCAG.                                                             |
 |  39 | CUMPLIDO                   | Pytest 579/579, Ruff, mypy, format, pip check PASS; sin cambios backend.                                  |
 |  40 | CUMPLIDO CON OBSERVACIONES | Dos tests integración PASS; harness de cleanup emitió error de proceso padre ya terminado, ports limpios. |
@@ -179,15 +206,16 @@ Firefox y WebKit.
 |  45 | CUMPLIDO                   | Scripts Quick Start no cambiaron.                                                                         |
 |  46 | CUMPLIDO                   | Workflows CI no cambiaron.                                                                                |
 |  47 | CUMPLIDO                   | Informe TASK047A redactado.                                                                               |
-|  48 | NO VERIFICADO              | Commit selectivo aún pendiente.                                                                           |
-|  49 | NO VERIFICADO              | Push y SHA remoto aún pendientes.                                                                         |
-|  50 | NO VERIFICADO              | Nueva ejecución Quality aún no disparada.                                                                 |
-|  51 | NO VERIFICADO              | Las seis fallas anteriores pasan en local; resolución en Linux CI pendiente.                              |
-|  52 | CUMPLIDO CON OBSERVACIONES | Cero regresiones en suites Windows; nuevo CI deberá confirmarlo.                                          |
+|  48 | CUMPLIDO                   | Commit selectivo `54bd817b748f7769266a2d653353ffd4c8406775`.                                              |
+|  49 | CUMPLIDO                   | Push ordinario verificado; remoto coincide con el commit.                                                 |
+|  50 | CUMPLIDO                   | Quality #44566635410 terminó sobre el SHA exacto; resultado failure verificado.                           |
+|  51 | INCUMPLIDO                 | Las seis fallas originales se reprodujeron otra vez en los tres motores.                                  |
+|  52 | CUMPLIDO CON OBSERVACIONES | No hay fallos nuevos diferentes, pero la suite sigue fallando por el overflow no resuelto.                |
 |  53 | CUMPLIDO                   | A47-02/A47-03 fuera de alcance y sin cambios.                                                             |
 |  54 | CUMPLIDO                   | DOCX permanece untracked, no abierto/consultado/staged.                                                   |
 |  55 | CUMPLIDO                   | No PR, merge ni cambios a main.                                                                           |
 |  56 | CUMPLIDO                   | No se inició TASK047B ni se completó TASK047.                                                             |
 
-Las observaciones reflejan la diferencia de plataforma: la causa se observó en Linux CI, no
-en Windows. CA50/51 solo pueden cambiar tras una nueva ejecución real del workflow.
+Las observaciones reflejan diferencias entre Windows local y Linux CI. La ejecución remota es
+decisiva: CA51 incumplido. Para continuar se requiere nueva autorización; no habrá otro commit
+o push desde TASK047A.

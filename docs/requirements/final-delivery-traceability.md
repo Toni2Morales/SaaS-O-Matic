@@ -1,9 +1,24 @@
-# Reconciliación final de requisitos y entregables del reto — TASK047
+# Reconciliación final de requisitos y entregables del reto — TASK047F
 
 Esta matriz complementa, no reemplaza ni altera, los requisitos y la matriz histórica
 canónica [`requirements-traceability.md`](requirements-traceability.md). El documento privado
 original no se abre ni se publica; esta reconciliación usa exclusivamente el resumen
 autorizado por el propietario en TASK047 y fuentes públicas/versionadas.
+
+## Corte de entrega TASK047F — Windows 10
+
+El propietario sustituyó los hitos pendientes TASK047/TASK047A2/B/C por una campaña final
+local en Windows 10. Las filas FR01–FR11 siguientes conservan la evidencia histórica TASK046
+y sus límites; la ejecución nueva se detalla en
+[`informe TASK047F`](../../ai-workspace/01-tasks/TASK047F-final-windows-delivery-report.md)
+y debe actualizarse allí sin sumar ejecuciones previas como si fueran la misma campaña.
+
+GitHub Actions se conserva manual para uso futuro, pero no se despachó durante TASK047F.
+A47-01 (overflow Linux de 14 px, primera corrección insuficiente), A47-02 (Angular health en
+Windows runner) y A47-03 (propiedad PID Bash en Ubuntu) siguen pendientes y aplazados por
+decisión expresa del propietario. No se presentan como resueltos. La evidencia de aceptación
+de esta entrega se limita a la campaña clon limpio Windows 10 y no demuestra soporte
+multiplataforma ni aptitud para producción pública.
 
 ## Requisitos funcionales FR01–FR11
 
@@ -52,10 +67,10 @@ autorizado por el propietario en TASK047 y fuentes públicas/versionadas.
 
 ## Estado de instalación/entrega
 
-La rama de preparación incorpora scripts/guías/CI; los resultados TASK047 se completarán
-en `TASK047-final-delivery-report.md`. Hasta completar clon limpio y verificar runs GitHub,
-Quick Start del evaluador y CI son **pendientes de verificación**, aunque el arranque
-Windows del árbol de trabajo ya tuvo un smoke local.
+La campaña final de clon limpio en Windows 10, resultados y veredicto se encuentran en
+`TASK047F-final-windows-delivery-report.md`. No usar los resultados históricos TASK046/TASK047
+como sustituto de esa campaña. Los workflows ahora requieren despacho manual y no se ejecutan
+como parte del criterio de entrega local.
 
 ## Deuda técnica y riesgos heredados
 

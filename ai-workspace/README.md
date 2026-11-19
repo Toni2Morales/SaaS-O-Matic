@@ -1,16 +1,32 @@
 # Trazabilidad del desarrollo asistido por IA
 
-| Campo             | Valor                                                                                                           |
-| ----------------- | --------------------------------------------------------------------------------------------------------------- |
-| Fecha de creación | 2026-11-13                                                                                                      |
-| Estado            | Backend integrado en main; frontend publicado en `feature/mvp-frontend`; TASK046 prepara la PR final, sin merge |
-| Ámbito            | Colaboración entre el propietario, ChatGPT y OpenCode + DeepSeek                                                |
+| Campo             | Valor                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Fecha de creación | 2026-11-13                                                                                                          |
+| Estado            | MVP integrado en `main` por PR #7; TASK047F prioriza entrega reproducible local Windows 10 en `docs/final-delivery` |
+| Ámbito            | Colaboración entre el propietario, ChatGPT y OpenCode + DeepSeek                                                    |
 
 ## 1. Propósito
 
 Este directorio conserva el rastro verificable del trabajo asistido por IA: qué se pidió, qué se hizo, quién participó, qué se validó, qué se corrigió y qué queda pendiente.
 
-**Vigente TASK046:** backend integrado en `main` (PR #6). TASK041 resolvió P-01 y
+**Corte final TASK047F:** backend y frontend están integrados en `main` por PR #7 (merge
+`99c0ebac984c70521c4e3c94226b35c15303f572`); el repositorio es público. La entrega de esta
+rama se evalúa mediante una campaña local reproducible en Windows 10. Los workflows se
+conservan manuales y los fallos A47-01/02/03 se mantienen abiertos/aplazados por decisión del
+propietario. No se declara compatibilidad universal ni preparación para producción. Véase el
+[plan TASK047F](01-tasks/TASK047F-final-windows-delivery-plan.md),
+[manifiesto](01-tasks/TASK047F-initial-hashes.json) y
+[informe final](01-tasks/TASK047F-final-windows-delivery-report.md).
+
+TASK047/TASK047A son contexto histórico: TASK047 se detuvo al fallar sus gates; la corrección
+responsive `.field-heading` de TASK047A se publicó, pero CI repitió las mismas seis fallas a
+320 px. TASK047F no oculta ni corrige ese resultado; su priorización local no lo declara
+resuelto. Véanse el [informe parcial TASK047](01-tasks/TASK047-final-delivery-report.md),
+[evidencias](01-tasks/TASK047-evidence-inventory.md) y
+[informe TASK047A](01-tasks/TASK047A-responsive-correction-report.md).
+
+**Contexto histórico TASK046:** backend integrado en `main` (PR #6). TASK041 resolvió P-01 y
 creó shell Angular; TASK042 implementa localmente dashboard, búsqueda/listado,
 registro, ficha e historial, con integración real navegador–FastAPI–SQLite temporal.
 TASK043 implementa simulador/preview/guardado y TASK044 refina el frontend;
@@ -18,7 +34,7 @@ TASK044P publicó el incremento inicial y TASK045BP publica las correcciones fin
 `feature/mvp-frontend`, sin integrarlos en `main`.
 TASK045 completó una auditoría independiente con observaciones A45-01/02; TASK045B las
 corrigió y refuerza pruebas. TASK046 revisa el frontend acumulado y prepara la PR final;
-la revisión del propietario y el merge siguen pendientes. CI y P-05/despliegue siguen
+la revisión del propietario y el merge seguían pendientes en ese corte. CI y P-05/despliegue seguían
 pendientes. TASK039 auditó el
 backend con dictamen APTA CON
 OBSERVACIONES y sin hallazgos bloqueantes. TASK039B corrige A39-01/02/03/04/06,
@@ -29,7 +45,43 @@ Las filas y registros históricos conservan su contexto de ejecución.
 
 No sustituye a `docs/`. Los requisitos, ADRs, evaluaciones y proceso siguen siendo la fuente principal en `docs/`; aquí se registra el proceso y se enlaza a esos documentos para evitar duplicidad.
 
+## 1.1 Navegación SDD vigente y cierre de entrega
+
+Flujo documentado: requisitos y preguntas abiertas → ADR/diseño → SPEC por funcionalidad →
+plan/tasks → aprobación humana → implementación asistida → pruebas/auditoría/corrección →
+publicación incremental → PR revisada y merge manual. El informe de cada tarea identifica
+fuentes, participantes, alcance y resultados; no todos los informes históricos tienen un
+prompt/transcripción original disponible.
+
+| Fase representativa                 | Evidencia para empezar                                                                                                                                                                                           |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Requisitos y criterios              | [`functional-requirements.md`](../docs/requirements/functional-requirements.md), [`requirements-traceability.md`](../docs/requirements/requirements-traceability.md)                                             |
+| Arquitectura inicial                | [ADR-0001](../docs/adr/0001-technology-stack.md), [ADR-0002](../docs/adr/0002-architecture.md), [evolución](00-project-context/architectural-evolution.md)                                                       |
+| Clientes y validación               | [SPEC-001](../docs/specs/001-customer-registration/spec.md), [TASK020](01-tasks/TASK020-customer-registration-completion.md)                                                                                     |
+| Pricing progresivo                  | [SPEC-002](../docs/specs/002-progressive-pricing/spec.md), [TASK025](01-tasks/TASK025-progressive-pricing-implementation.md)                                                                                     |
+| Simulación/persistencia             | [SPEC-003](../docs/specs/003-simulations/spec.md), [TASK032](01-tasks/TASK032-simulations-implementation.md)                                                                                                     |
+| Internacionalización/tax/FX         | [SPEC-004](../docs/specs/004-international-customers-and-simulations/spec.md), [SPEC-005](../docs/specs/005-taxes-and-currency-conversion/spec.md), [TASK037](01-tasks/TASK037-taxes-and-currency-conversion.md) |
+| Búsqueda/preview                    | [SPEC-006](../docs/specs/006-customer-queries-and-preview/spec.md), [TASK038](01-tasks/TASK038-customer-queries-and-preview.md)                                                                                  |
+| Angular y simulador                 | [SPEC-007–010](../docs/specs/), [TASK041–044](01-tasks/)                                                                                                                                                         |
+| Auditorías/correcciones             | [TASK039/TASK039B](01-tasks/), [TASK045/TASK045B](01-tasks/)                                                                                                                                                     |
+| Revisión/publicación final frontend | [TASK046](01-tasks/TASK046-final-frontend-pull-request.md), [PR #7](https://github.com/Toni2Morales/SaaS-O-Matic/pull/7)                                                                                         |
+| Preparación TASK047                 | [Plan](01-tasks/TASK047-final-delivery-plan.md), [informe bloqueado](01-tasks/TASK047-final-delivery-report.md), [inventario](01-tasks/TASK047-evidence-inventory.md)                                            |
+| Corrección responsive TASK047A      | [Plan](01-tasks/TASK047A-responsive-correction-plan.md), [informe post-CI](01-tasks/TASK047A-responsive-correction-report.md), [SHA inicial](01-tasks/TASK047A-initial-hashes.json)                              |
+| Entrega local TASK047F              | [Plan](01-tasks/TASK047F-final-windows-delivery-plan.md), [informe](01-tasks/TASK047F-final-windows-delivery-report.md), [manifiesto](01-tasks/TASK047F-initial-hashes.json)                                     |
+
+### Evidencias IA y capturas TASK047
+
+El [inventario TASK047](01-tasks/TASK047-evidence-inventory.md) distingue documentos
+versionados de interacciones originales privadas y capturas de navegador reales. Las
+conversaciones/chat screenshots no disponibles se piden al propietario y no se reconstruyen.
+Las capturas externas aún no están aprobadas para publicación; ninguna imagen se incluye en
+Git ni se enlaza desde el README.
+
 ## 2. Estructura
+
+El árbol que sigue es una instantánea histórica generada en TASK044; no incluye los
+artefactos posteriores TASK045–TASK047. Para el inventario vigente, utilizar la tabla de
+tareas y el estado TASK047 de esta página.
 
 ```text
 ai-workspace/
@@ -158,7 +210,10 @@ frontend y no incluye autorización de publicación.
 | TASK045   | Auditoría técnica independiente del frontend                              | Completada; APTA CON OBSERVACIONES; A45-01/02 reproducidos; sin cambios de producto                                | [TASK045-independent-frontend-audit.md](01-tasks/TASK045-independent-frontend-audit.md)                                                                                                                   | Correcciones autorizadas en TASK045B                            | Instrucción, inventario SHA-256, suites, integración local, Chromium, accesibilidad y dependencias |
 | TASK045B  | Correcciones finales del frontend y QA                                    | Implementada/validada; publicada en `feature/mvp-frontend`, pendiente integración en main                          | [TASK045B-frontend-corrections-plan.md](01-tasks/TASK045B-frontend-corrections-plan.md) · [informe final](01-tasks/TASK045B-final-frontend-corrections.md)                                                | —                                                               | A45/V44, axe, cobertura, Playwright multibrowser e integración FastAPI/SQLite aislada              |
 | TASK045BP | Publicación controlada de correcciones finales del frontend               | Publicada en `feature/mvp-frontend`; sin PR/merge                                                                  | [TASK045BP-final-frontend-corrections-publication.md](01-tasks/TASK045BP-final-frontend-corrections-publication.md)                                                                                       | Sin PR/merge; no integrada en main                              | Autorización del propietario, revisión de cambios, validaciones, commit y push verificados         |
-| TASK046   | Revisión final del frontend y Pull Request                                | Revisión documentada; PR autorizada; merge pendiente del propietario                                               | [TASK046-frontend-pull-request-plan.md](01-tasks/TASK046-frontend-pull-request-plan.md) · [manifiesto](01-tasks/TASK046-initial-hashes.json) · [informe](01-tasks/TASK046-final-frontend-pull-request.md) | El propietario decide merge; TASK047 pendiente                  | Diff acumulado, pruebas, seguridad, integración y PR a `main` sin auto-merge                       |
+| TASK046   | Revisión final del frontend y Pull Request                                | Completada; PR #7 fusionada por el propietario el 2026-11-19                                                       | [TASK046-frontend-pull-request-plan.md](01-tasks/TASK046-frontend-pull-request-plan.md) · [manifiesto](01-tasks/TASK046-initial-hashes.json) · [informe](01-tasks/TASK046-final-frontend-pull-request.md) | Merge `99c0ebac984c70521c4e3c94226b35c15303f572`                | Diff acumulado, pruebas, seguridad, integración, PR #7 y estado verificable                        |
+| TASK047   | Entrega final, Quick Start y CI                                           | Detenida históricamente por fallos CI; alcance actual sustituido por TASK047F                                      | [Plan](01-tasks/TASK047-final-delivery-plan.md) · [informe parcial](01-tasks/TASK047-final-delivery-report.md) · [inventario](01-tasks/TASK047-evidence-inventory.md)                                     | No PR/merge                                                     | Los resultados CI y criterios históricos se conservan; no son el veredicto actual                  |
+| TASK047A  | Diagnóstico responsive del simulador                                      | Corrección publicada, pero A47-01 sigue sin resolver en CI                                                         | [Plan](01-tasks/TASK047A-responsive-correction-plan.md) · [informe](01-tasks/TASK047A-responsive-correction-report.md)                                                                                    | Sin segundo commit/push tras el run fallido                     | Quality #44566635410 reprodujo document width 334 px                                               |
+| TASK047F  | Entrega local reproducible Windows 10                                     | Tarea vigente; estado/veredicto y QA final en su informe                                                           | [Plan](01-tasks/TASK047F-final-windows-delivery-plan.md) · [manifiesto](01-tasks/TASK047F-initial-hashes.json) · [informe](01-tasks/TASK047F-final-windows-delivery-report.md)                            | Hasta tres pushes; no PR/merge                                  | Clon limpio Windows 10; GitHub Actions solo manual y fuera de la campaña                           |
 
 ### 3.1 Publicaciones
 
@@ -170,8 +225,9 @@ frontend y no incluye autorización de publicación.
 | [#4](https://github.com/Toni2Morales/SaaS-O-Matic/pull/4) | `feature/progressive-pricing`   | `main` | Fusionado por el propietario el 2026-11-16T17:15:26+01:00 | `9cd553fff035de640e12a5eb5530f0791ed7b9e7` | TASK028 (sin archivo de registro); [TASK025](01-tasks/TASK025-progressive-pricing-implementation.md) y [TASK027](01-tasks/TASK027-progressive-pricing-audit-fixes.md)               |
 | [#5](https://github.com/Toni2Morales/SaaS-O-Matic/pull/5) | `feature/simulations`           | `main` | Fusionado por el propietario el 2026-11-17T15:47:05Z      | `b3c5ca81d23d279b478ed466757bada031aa1e1e` | TASK033 (auditoría) y TASK034 (publicación), sin archivo de registro; [TASK032](01-tasks/TASK032-simulations-implementation.md) y [TASK035](01-tasks/TASK035-mvp-reconciliation.md) |
 | [#6](https://github.com/Toni2Morales/SaaS-O-Matic/pull/6) | `feature/mvp-backend`           | `main` | Fusionado por el propietario                              | `23cc43b486d20f7995a2cf29375e3f724f3c7c3f` | [TASK040](01-tasks/TASK040-mvp-backend-publication.md)                                                                                                                              |
+| [#7](https://github.com/Toni2Morales/SaaS-O-Matic/pull/7) | `feature/mvp-frontend`          | `main` | Fusionado por el propietario el 2026-11-19                | `99c0ebac984c70521c4e3c94226b35c15303f572` | [TASK046](01-tasks/TASK046-final-frontend-pull-request.md)                                                                                                                          |
 
-Los merges de los PR #1–#6 fueron ejecutados personalmente por el propietario. El agente no ejecutó merge ni force-push. TASK024 registra el cierre documental del PR #3. TASK028 no generó archivo de registro; su evidencia es el PR #4 y el commit de merge `9cd553f`. TASK033 y TASK034 tampoco generaron archivo de registro; su evidencia es el PR #5, el commit de merge `b3c5ca8` y el informe TASK035.
+Los merges de los PR #1–#7 fueron ejecutados personalmente por el propietario. El agente no ejecutó merge ni force-push. TASK024 registra el cierre documental del PR #3. TASK028 no generó archivo de registro; su evidencia es el PR #4 y el commit de merge `9cd553f`. TASK033 y TASK034 tampoco generaron archivo de registro; su evidencia es el PR #5, el commit de merge `b3c5ca8` y el informe TASK035.
 
 ## 4. Índice de auditorías
 
@@ -219,7 +275,10 @@ Los merges de los PR #1–#6 fueron ejecutados personalmente por el propietario.
 6. Si hay auditoría, crear `02-audits/TASKxxx-audit.md` y enlazarla desde el índice.
 7. Actualizar las tablas de este README.
 
-## 8. Limitaciones actuales
+## 8. Limitaciones históricas (corte anterior a TASK047)
+
+El contenido de esta sección refleja la fecha/estado del registro histórico; no prevalece
+sobre el estado vigente descrito al inicio ni sobre los resultados del informe final TASK047.
 
 - Las instrucciones originales `TASK001.md`–`TASK010.md` están disponibles en `TASKS.zip`, pero el ZIP no se incorpora al repositorio.
 - No constan los informes originales de ejecución de TASK001, TASK002, TASK004, TASK006 ni TASK008. El assessment resume TASK004, TASK006 y TASK008; los archivos actuales permiten verificar parte de TASK002.

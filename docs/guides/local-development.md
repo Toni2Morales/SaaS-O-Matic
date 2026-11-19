@@ -2,12 +2,18 @@
 
 ## Quick Start
 
-Prerrequisitos instalados por el evaluador: Git, Python 3.13 (`>=3.13,<3.14`), Node.js
-24 (`>=24.15,<25`) y npm 11 (`>=11,<12`). Se requiere Internet para descargar dependencias
-y para obtener conversiones USD/GBP de Frankfurter. No se instalan runtimes automáticamente
-ni se necesitan privilegios de administrador.
+Prerrequisitos instalados por el evaluador: [Git for Windows](https://git-scm.com/download/win),
+[Python 3.13](https://www.python.org/downloads/windows/) (`>=3.13,<3.14`), [Node.js 24](https://nodejs.org/en/download)
+(`>=24.15,<25`, incluye npm 11 `>=11,<12`). El instalador de runtimes es manual; el Quick
+Start crea el venv y descarga dependencias del proyecto. Internet es necesario para paquetes
+y para referencias USD/GBP de Frankfurter. No se requieren permisos de administrador.
 
-### Windows — probado en Windows 11 / PowerShell
+### Windows 10 — entorno de referencia / PowerShell 5.1
+
+Entorno probado para el corte TASK047F: Windows 10 Pro 22H2, build 19045, x64. Versiones
+exactas de runtimes, librerías, navegador y resultados medidos están en el
+[informe final TASK047F](../../ai-workspace/01-tasks/TASK047F-final-windows-delivery-report.md).
+No se declara verificación en Windows 11, Linux, macOS ni Windows Server.
 
 ```powershell
 git clone https://github.com/Toni2Morales/SaaS-O-Matic.git
@@ -28,7 +34,7 @@ La base por defecto se crea en `backend/var/saas_o_matic.sqlite3`, solo si Alemb
 crear/migrar el esquema; detener o reiniciar los servicios no elimina la base ni sus filas.
 No se insertan datos de demostración automáticamente.
 
-### Linux: previsto; run de GitHub Actions pendiente. macOS no probado
+### Otras plataformas: no declaradas como compatibles
 
 ```bash
 git clone https://github.com/Toni2Morales/SaaS-O-Matic.git
@@ -36,18 +42,20 @@ cd SaaS-O-Matic
 bash start.sh
 ```
 
-URLs iguales. Detención segura, desde otra terminal en el repositorio:
+Los comandos siguientes documentan el script Bash existente, pero no constituyen validación
+de Linux ni macOS. CI para Ubuntu y runners Windows se aplazó por decisión del propietario;
+sus fallos históricos siguen abiertos. macOS y Windows Server tampoco se probaron. No utilice
+esta secuencia como declaración de soporte. Detención prevista en Bash:
 
 ```bash
 bash start.sh --stop
 ```
 
-Los scripts usan loopback únicamente. Los puertos configurados son 8000 (FastAPI) y 4200
-(Angular); si uno está ocupado, se informa y se aborta. No se mata el proceso que lo ocupa ni
-se cambia permanentemente la configuración. Libere el puerto de forma consciente o detenga
-el servicio que le pertenece antes de reintentar. El workflow pretende validar los scripts
-en runners efímeros, incluyendo flujo HTTP, parada, reinicio y persistencia; hasta que el run
-termine, no se declara verificado.
+En la plataforma Windows 10 probada, los scripts usan loopback únicamente. Los puertos
+configurados son 8000 (FastAPI) y 4200 (Angular); si uno está ocupado, el script informa y
+aborta sin terminar ese proceso ni cambiar la configuración. Compruebe su propiedad y libere
+el puerto conscientemente antes de reintentar. El script Linux no está validado para esta
+entrega.
 
 ### Qué hace el arranque
 
