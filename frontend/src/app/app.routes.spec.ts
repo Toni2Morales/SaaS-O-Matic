@@ -16,7 +16,7 @@ describe('application routes', () => {
     const page = await harness.navigateByUrl('/customers/new', CustomerCreatePageComponent);
 
     expect(page).toBeInstanceOf(CustomerCreatePageComponent);
-    expect(harness.routeNativeElement?.textContent).toContain('Nuevo cliente');
+    expect(harness.routeNativeElement?.textContent).toContain('Datos de la empresa');
     expect(harness.routeNativeElement?.textContent).toContain('Todos los campos son obligatorios');
   });
 

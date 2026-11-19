@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { resolve } from 'node:path';
 
 const customerId = '00000000-0000-4000-8000-000000000001';
+const realApiBaseUrl = process.env['TASK044_API_BASE_URL'] ?? 'http://127.0.0.1:8000';
 
 function customer(overrides: Record<string, unknown> = {}) {
   return {
@@ -63,6 +64,7 @@ test('shows real-shaped dashboard data and only the supplied count and capabilit
   await expect(page.getByRole('heading', { name: 'Panel comercial', level: 1 })).toBeVisible();
   await expect(page.getByRole('status', { name: '37 clientes registrados' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Empresa de prueba' })).toBeVisible();
+  await expect(page.getByText('Abrir ficha →').first()).toBeVisible();
   await expect(
     page.getByText('España, Portugal, Francia, Alemania, Italia y Países Bajos'),
   ).toBeVisible();
@@ -269,7 +271,7 @@ test('renders historical nulls as unknown while preserving real zeros and exact 
   await expect(page.getByText('0,00\u00a0€').first()).toBeVisible();
   await expect(page.getByText('0 GB', { exact: true })).toBeVisible();
   await expect(page.getByText('No registrado').first()).toBeVisible();
-  await page.getByText('Ver datos del snapshot').last().click();
+  await page.getByText('Ver detalle del cálculo original').last().click();
   await expect(page.getByText('1,234567890123456789')).toBeVisible();
   await expect(page.getByText('74,69\u00a0US$')).toBeVisible();
   await expect(page.getByText('2 ene 2024')).toBeVisible();
@@ -295,6 +297,14 @@ test('integrates customer registration, lookup, detail, history, and persistence
     process.env['TASK042_REAL_API'] !== '1',
     'Requires the isolated FastAPI/SQLite test services.',
   );
+  const captureReal = async (name: string, target?: string) => {
+    const directory = process.env['TASK044_SCREENSHOT_DIR'];
+    if (!directory) return;
+    await page.keyboard.press('Escape');
+    if (target) await page.locator(target).scrollIntoViewIfNeeded();
+    else await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: resolve(directory, name), fullPage: false });
+  };
   const register = async (legalName: string, country: 'ES' | 'PT', taxId: string) => {
     await page.goto('/customers/new');
     await page.getByLabel('Razón social').fill(legalName);
@@ -302,6 +312,12 @@ test('integrates customer registration, lookup, detail, history, and persistence
     await page.getByRole('option', { name: country === 'ES' ? 'España' : 'Portugal' }).click();
     await page.getByLabel('Identificador fiscal').fill(taxId);
     await page.getByLabel('Email de contacto').fill('qa@example.com');
+    if (country === 'ES') {
+      await captureReal('TASK044-registro-desktop.png');
+      await page.setViewportSize({ width: 390, height: 844 });
+      await captureReal('TASK044-registro-mobile.png');
+      await page.setViewportSize({ width: 1440, height: 1000 });
+    }
     await page.getByRole('button', { name: 'Guardar cliente' }).click();
     await expect(page).toHaveURL(/\/customers\/[0-9a-f-]+$/i);
     await expect(page.getByRole('heading', { name: legalName })).toBeVisible();
@@ -312,11 +328,19 @@ test('integrates customer registration, lookup, detail, history, and persistence
   };
 
   const spanishId = await register('TASK042 Empresa de Prueba ES', 'ES', 'B 123-45674');
+  await captureReal('TASK044-ficha-historial-desktop.png');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await captureReal('TASK044-ficha-historial-mobile.png', 'app-simulation-history');
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/customers');
   await page
     .getByRole('searchbox', { name: 'Buscar por razón social o identificador fiscal' })
     .fill('TASK042 Empresa de Prueba ES');
   await expect(page.getByRole('link', { name: 'TASK042 Empresa de Prueba ES' })).toBeVisible();
+  await captureReal('TASK044-clientes-desktop.png');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await captureReal('TASK044-clientes-mobile.png');
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole('link', { name: 'TASK042 Empresa de Prueba ES' }).click();
   await expect(page.getByRole('heading', { name: 'TASK042 Empresa de Prueba ES' })).toBeVisible();
   await page.reload();
@@ -327,11 +351,18 @@ test('integrates customer registration, lookup, detail, history, and persistence
   const referenceUsers = page.locator('#user-count');
   await referenceUsers.fill('15');
   await page.getByRole('spinbutton', { name: 'Almacenamiento contratado (GB)' }).fill('250');
-  await page.getByRole('spinbutton', { name: 'Llamadas API mensuales' }).fill('100000');
+  await page.getByRole('spinbutton', { name: 'Llamadas al servicio / mes' }).fill('100000');
   await page.getByRole('combobox', { name: 'Divisa de visualización' }).click();
   await page.getByRole('option', { name: 'EUR — Euro' }).click();
   await expect(page.locator('.total')).toHaveText('169,40 €');
   await expect(page.getByText('29,40 €')).toBeVisible();
+  await captureReal('TASK044-simulador-15-usuarios.png');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await captureReal('TASK044-simulador-mobile.png');
+  await expect(page.locator('.mobile-estimate')).toContainText('169,40 €');
+  await page.evaluate(() => window.scrollTo(0, 900));
+  await captureReal('TASK044-simulador-mobile-resumen.png', '.mobile-estimate');
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.keyboard.press('Escape');
   await page.locator('h1').last().click();
   if (process.env['TASK043_SCREENSHOT_DIR']) {
@@ -340,32 +371,114 @@ test('integrates customer registration, lookup, detail, history, and persistence
       fullPage: true,
     });
   }
-  const emptyHistory = await request.get(
-    `http://127.0.0.1:8000/customers/${spanishId}/simulations`,
-  );
+  const emptyHistory = await request.get(`${realApiBaseUrl}/customers/${spanishId}/simulations`);
   expect(emptyHistory.status()).toBe(200);
   expect((await emptyHistory.json()).total).toBe(0);
   await referenceUsers.fill('20');
   await referenceUsers.fill('30');
   await expect(page.locator('.total')).toHaveText('314,60 €');
   const stillEmptyHistory = await request.get(
-    `http://127.0.0.1:8000/customers/${spanishId}/simulations`,
+    `${realApiBaseUrl}/customers/${spanishId}/simulations`,
   );
   expect((await stillEmptyHistory.json()).total).toBe(0);
-  await referenceUsers.fill('15');
-  await expect(page.locator('.total')).toHaveText('169,40 €');
+  const previewSixteenPromise = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === '/api/simulations/preview' &&
+      response.request().method() === 'POST' &&
+      response.request().postDataJSON()?.user_count === 16,
+  );
+  await referenceUsers.fill('16');
+  const previewSixteen = await previewSixteenPromise;
+  expect(previewSixteen.status()).toBe(200);
+  expect(await previewSixteen.json()).toMatchObject({
+    user_count: 16,
+    user_subtotal_eur: '148.00',
+    tax_amount_eur: '31.08',
+    total_eur: '179.08',
+    converted_total: '179.08',
+  });
+  await expect(page.locator('.total')).toHaveText('179,08 €');
+  await captureReal('TASK044-simulador-16-usuarios.png');
+  const historyBeforeSixteen = await request.get(
+    `${realApiBaseUrl}/customers/${spanishId}/simulations`,
+  );
+  expect((await historyBeforeSixteen.json()).total).toBe(0);
+  const saveSixteenPromise = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === '/api/simulations' &&
+      response.request().method() === 'POST',
+  );
   await page.getByRole('button', { name: 'Guardar simulación' }).click();
+  const savedSixteen = await saveSixteenPromise;
+  expect(savedSixteen.status()).toBe(201);
+  expect(savedSixteen.request().postDataJSON()).toMatchObject({
+    customer_id: spanishId,
+    user_count: 16,
+    storage_gb: 250,
+    api_calls_per_month: 100000,
+    display_currency: 'EUR',
+  });
+  expect(await savedSixteen.json()).toMatchObject({
+    user_count: 16,
+    user_subtotal_eur: '148.00',
+    tax_amount_eur: '31.08',
+    total_eur: '179.08',
+    converted_total: '179.08',
+  });
+  await expect(page.getByText(/Simulación guardada/)).toBeVisible();
+  await captureReal('TASK044-simulacion-guardada.png');
+  await page.getByRole('link', { name: 'Ver ficha e historial' }).click();
+  await expect(page.getByRole('heading', { name: 'Historial' })).toBeVisible();
+  const historyAfterSixteen = await request.get(
+    `${realApiBaseUrl}/customers/${spanishId}/simulations`,
+  );
+  expect((await historyAfterSixteen.json()).total).toBe(1);
+  await expect(page.getByText('148,00 €').first()).toBeVisible();
+  await expect(page.getByText('179,08 €').last()).toBeVisible();
+  await captureReal('TASK044-historial-persistido.png', 'app-simulation-history');
+  await page.reload();
+  await expect(page.getByText('179,08 €').last()).toBeVisible();
+
+  await page.goto(`/customers/${spanishId}/simulations/new`);
+  await referenceUsers.fill('15');
+  await page.getByRole('spinbutton', { name: 'Almacenamiento contratado (GB)' }).fill('250');
+  await page.getByRole('spinbutton', { name: 'Llamadas al servicio / mes' }).fill('100000');
+  await expect(page.locator('.total')).toHaveText('169,40 €');
+  const historyBeforeFifteen = await request.get(
+    `${realApiBaseUrl}/customers/${spanishId}/simulations`,
+  );
+  expect((await historyBeforeFifteen.json()).total).toBe(1);
+  const saveFifteenPromise = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === '/api/simulations' &&
+      response.request().method() === 'POST',
+  );
+  await page.getByRole('button', { name: 'Guardar simulación' }).click();
+  const savedFifteen = await saveFifteenPromise;
+  expect(savedFifteen.status()).toBe(201);
+  expect(savedFifteen.request().postDataJSON()).toMatchObject({
+    customer_id: spanishId,
+    user_count: 15,
+    storage_gb: 250,
+    api_calls_per_month: 100000,
+    display_currency: 'EUR',
+  });
+  expect(await savedFifteen.json()).toMatchObject({
+    user_count: 15,
+    user_subtotal_eur: '140.00',
+    tax_amount_eur: '29.40',
+    total_eur: '169.40',
+    converted_total: '169.40',
+  });
   await expect(page.getByText(/Simulación guardada/)).toBeVisible();
   await page.getByRole('link', { name: 'Ver ficha e historial' }).click();
-  await expect(page.getByRole('heading', { name: 'Historial de simulaciones' })).toBeVisible();
-  await expect(
-    page.locator('app-simulation-history').getByRole('link', { name: 'Nueva simulación' }),
-  ).toHaveAttribute('href', `/customers/${spanishId}/simulations/new`);
-  const savedHistory = await request.get(
-    `http://127.0.0.1:8000/customers/${spanishId}/simulations`,
+  const historyAfterFifteen = await request.get(
+    `${realApiBaseUrl}/customers/${spanishId}/simulations`,
   );
-  expect((await savedHistory.json()).total).toBe(1);
+  expect((await historyAfterFifteen.json()).total).toBe(2);
+  await expect(page.getByText('140,00 €').first()).toBeVisible();
   await expect(page.getByText('169,40 €').last()).toBeVisible();
+  await captureReal('TASK044-historial-persistido.png', 'app-simulation-history');
   if (process.env['TASK043_SCREENSHOT_DIR']) {
     await page.screenshot({
       path: resolve(process.env['TASK043_SCREENSHOT_DIR'], 'TASK043-historial-actualizado.png'),
@@ -399,7 +512,7 @@ test('integrates customer registration, lookup, detail, history, and persistence
   await expect(page.getByText('Portugal')).toBeVisible();
   await expect(page.locator('.total')).toHaveText('172,20 €');
 
-  const response = await request.post('http://127.0.0.1:8000/simulations', {
+  const response = await request.post(`${realApiBaseUrl}/simulations`, {
     data: {
       customer_id: spanishId,
       user_count: 5,
@@ -410,7 +523,7 @@ test('integrates customer registration, lookup, detail, history, and persistence
   });
   expect(response.status()).toBe(201);
   for (const currency of ['USD', 'GBP'] as const) {
-    const fxResponse = await request.post('http://127.0.0.1:8000/simulations/preview', {
+    const fxResponse = await request.post(`${realApiBaseUrl}/simulations/preview`, {
       data: {
         customer_id: spanishId,
         user_count: 15,
@@ -424,6 +537,24 @@ test('integrates customer registration, lookup, detail, history, and persistence
     console.log(
       `TASK043 puntual FX ${currency}: HTTP ${fxResponse.status()} ${fxResponse.status() === 200 ? JSON.stringify(await fxResponse.json()) : JSON.stringify(await fxResponse.json())}`,
     );
+  }
+  if (process.env['TASK044_SCREENSHOT_DIR']) {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Menú' }).click();
+    await expect(page.getByRole('button', { name: 'Cerrar menú' })).toBeVisible();
+    await page.screenshot({
+      path: resolve(process.env['TASK044_SCREENSHOT_DIR'], 'TASK044-menu-mobile.png'),
+      fullPage: false,
+    });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('link', { name: 'Saltar al contenido principal' })).toBeFocused();
+    await page.screenshot({
+      path: resolve(process.env['TASK044_SCREENSHOT_DIR'], 'TASK044-foco-teclado.png'),
+      fullPage: false,
+    });
   }
   await page.goto(`/customers/${spanishId}`);
   await page.reload();

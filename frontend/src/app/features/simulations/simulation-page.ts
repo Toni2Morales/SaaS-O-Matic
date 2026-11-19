@@ -68,13 +68,12 @@ type SimulationForm = FormGroup<{
     RouterLink,
   ],
   template: `
-    <main class="simulator">
+    <section class="simulator" aria-labelledby="settings-heading">
       <a
         class="back-link"
         [routerLink]="customerId() ? ['/customers', customerId()] : ['/customers']"
         >← Volver</a
       >
-      <h1 tabindex="-1">Simulador de suscripción</h1>
       @if (loadingCustomer()) {
         <p role="status">Cargando cliente…</p>
       } @else if (customerError()) {
@@ -87,11 +86,28 @@ type SimulationForm = FormGroup<{
           <strong>{{ client.legal_name }}</strong
           ><span>{{ countryName(client.country) }} · Plan {{ client.plan }}</span>
         </section>
+        <aside class="mobile-estimate" aria-label="Resumen de la estimación mensual">
+          <div class="mobile-estimate-copy">
+            <span>Total mensual</span>
+            @if (preview() && !stale()) {
+              <strong>{{ money(preview()!.converted_total, preview()!.display_currency) }}</strong>
+            } @else if (preparing() || calculating()) {
+              <span>Actualizando…</span>
+            } @else if (errorMessage() || form.invalid) {
+              <span>Estimación no disponible</span>
+            } @else {
+              <span>Preparando…</span>
+            }
+          </div>
+          <a class="mobile-estimate-link" href="#estimate-heading">Ver desglose</a>
+        </aside>
         <div class="columns">
           <section class="panel">
-            <h2>Configuración mensual</h2>
+            <h2 id="settings-heading">Configuración mensual</h2>
             <form [formGroup]="form" (ngSubmit)="save()" novalidate>
-              <div class="field-heading"><span>Usuarios activos</span><span>0–1.000.000</span></div>
+              <div class="field-heading">
+                <span>Control deslizante</span><span>Entrada manual: 0–1.000.000</span>
+              </div>
               <mat-slider
                 min="0"
                 max="1000"
@@ -99,9 +115,18 @@ type SimulationForm = FormGroup<{
                 discrete
                 [disabled]="saving() || !sliderEnabled()"
                 aria-label="Usuarios activos, de 0 a 1.000"
+                aria-describedby="users-help"
               >
-                <input matSliderThumb [value]="sliderValue()" (valueChange)="setSlider($event)" />
+                <input
+                  matSliderThumb
+                  [value]="sliderValue()"
+                  [attr.aria-valuetext]="sliderValue() + ' usuarios activos; rango de 0 a 1.000'"
+                  (valueChange)="setSlider($event)"
+                />
               </mat-slider>
+              <div class="slider-range" aria-hidden="true">
+                <span>0</span><span>Máximo del deslizador: 1.000</span>
+              </div>
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Usuarios activos</mat-label
                 ><input
@@ -112,7 +137,11 @@ type SimulationForm = FormGroup<{
                   max="1000000"
                   step="1"
                   formControlName="user_count"
-                  aria-describedby="users-help users-error"
+                  [attr.aria-describedby]="
+                    form.controls.user_count.invalid && form.controls.user_count.touched
+                      ? 'users-help users-error'
+                      : 'users-help'
+                  "
                 />
                 @if (form.controls.user_count.invalid && form.controls.user_count.touched) {
                   <mat-error id="users-error">{{ fieldError('user_count') }}</mat-error>
@@ -122,11 +151,13 @@ type SimulationForm = FormGroup<{
                 El deslizador llega a 1.000. Para cifras mayores, el deslizador se desactiva sin
                 cambiar el valor manual.
               </p>
-              <div class="tiers" aria-label="Tarifas progresivas por usuario">
-                <span>Primeros 10: {{ bandCounts()[0] }} usuarios × 10 € / usuario</span>
-                <span>11–50: {{ bandCounts()[1] }} usuarios × 8 € / usuario</span>
-                <span>51+: {{ bandCounts()[2] }} usuarios × 5 € / usuario</span>
-              </div>
+              @if (form.controls.user_count.valid) {
+                <div class="tiers" aria-label="Tarifas progresivas por usuario">
+                  <span>Primeros 10: {{ bandCounts()[0] }} usuarios × 10 € / usuario</span>
+                  <span>11–50: {{ bandCounts()[1] }} usuarios × 8 € / usuario</span>
+                  <span>51+: {{ bandCounts()[2] }} usuarios × 5 € / usuario</span>
+                </div>
+              }
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Almacenamiento contratado (GB)</mat-label
                 ><input
@@ -136,17 +167,19 @@ type SimulationForm = FormGroup<{
                   max="1000000"
                   step="1"
                   formControlName="storage_gb"
-                  aria-describedby="storage-help storage-error"
+                  [attr.aria-describedby]="
+                    form.controls.storage_gb.invalid && form.controls.storage_gb.touched
+                      ? 'storage-help storage-error'
+                      : 'storage-help'
+                  "
                 />
                 @if (form.controls.storage_gb.invalid && form.controls.storage_gb.touched) {
                   <mat-error id="storage-error">{{ fieldError('storage_gb') }}</mat-error>
                 }
               </mat-form-field>
-              <p id="storage-help" class="help">
-                Dato informativo; sin coste adicional en este MVP.
-              </p>
+              <p id="storage-help" class="help">Dato informativo; no genera coste adicional.</p>
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Llamadas API mensuales</mat-label
+                <mat-label>Llamadas al servicio / mes</mat-label
                 ><input
                   matInput
                   type="number"
@@ -154,7 +187,12 @@ type SimulationForm = FormGroup<{
                   max="1000000000"
                   step="1"
                   formControlName="api_calls_per_month"
-                  aria-describedby="calls-help calls-error"
+                  [attr.aria-describedby]="
+                    form.controls.api_calls_per_month.invalid &&
+                    form.controls.api_calls_per_month.touched
+                      ? 'calls-help calls-error'
+                      : 'calls-help'
+                  "
                 />
                 @if (
                   form.controls.api_calls_per_month.invalid &&
@@ -163,7 +201,7 @@ type SimulationForm = FormGroup<{
                   <mat-error id="calls-error">{{ fieldError('api_calls_per_month') }}</mat-error>
                 }
               </mat-form-field>
-              <p id="calls-help" class="help">Dato informativo; sin coste adicional en este MVP.</p>
+              <p id="calls-help" class="help">Número aproximado; no genera coste adicional.</p>
               <mat-form-field appearance="outline" class="full-width"
                 ><mat-label>Divisa de visualización</mat-label>
                 <mat-select formControlName="display_currency" aria-label="Divisa de visualización"
@@ -265,7 +303,7 @@ type SimulationForm = FormGroup<{
           </section>
         </div>
       }
-    </main>
+    </section>
   `,
   styles: `
     :host {
@@ -281,14 +319,9 @@ type SimulationForm = FormGroup<{
       color: var(--color-primary);
       font-weight: 600;
     }
-    h1,
     h2,
     p {
       margin: 0;
-    }
-    h1 {
-      color: var(--color-text-strong);
-      font-size: clamp(1.6rem, 3vw, 2rem);
     }
     h2 {
       font-size: 1.15rem;
@@ -337,6 +370,14 @@ type SimulationForm = FormGroup<{
     mat-slider {
       width: 100%;
     }
+    .slider-range {
+      display: flex;
+      justify-content: space-between;
+      margin-top: calc(-1 * var(--space-3));
+      color: var(--color-text-muted);
+      font-size: 0.75rem;
+      font-variant-numeric: tabular-nums;
+    }
     .full-width {
       width: 100%;
     }
@@ -362,6 +403,12 @@ type SimulationForm = FormGroup<{
     .result-panel {
       position: sticky;
       top: var(--space-4);
+    }
+    .mobile-estimate {
+      display: none;
+    }
+    #estimate-heading {
+      scroll-margin-top: calc(4rem + var(--space-4));
     }
     .status {
       min-height: 1.5rem;
@@ -436,6 +483,43 @@ type SimulationForm = FormGroup<{
       .result-panel {
         position: static;
       }
+      .mobile-estimate {
+        position: static;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+        min-width: 0;
+        padding: var(--space-3) var(--space-4);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        background: rgb(255 255 255 / 97%);
+        box-shadow: var(--shadow-sm);
+      }
+      .mobile-estimate-copy {
+        display: grid;
+        min-width: 0;
+        gap: var(--space-1);
+      }
+      .mobile-estimate-copy > :first-child {
+        color: var(--color-text-muted);
+        font-size: 0.75rem;
+      }
+      .mobile-estimate-copy strong {
+        color: var(--color-primary);
+        font-size: 1rem;
+        overflow-wrap: anywhere;
+      }
+      .mobile-estimate-copy > :last-child:not(:first-child) {
+        color: var(--color-text-muted);
+        font-size: 0.88rem;
+      }
+      .mobile-estimate-link {
+        flex: 0 0 auto;
+        color: var(--color-primary);
+        font-size: 0.88rem;
+        font-weight: 650;
+      }
       .customer-context {
         flex-direction: column;
       }
@@ -492,11 +576,28 @@ export class SimulationPageComponent {
   protected readonly dateTime = formatDateTime;
 
   constructor() {
+    let currentCustomer = this.customerId();
     merge(toObservable(this.customerId), this.customerRetry)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(() => {
           const id = this.customerId();
+          if (id !== currentCustomer) {
+            currentCustomer = id;
+            this.form.reset({
+              user_count: 15,
+              storage_gb: 0,
+              api_calls_per_month: 0,
+              display_currency: 'EUR',
+            });
+            this.preview.set(null);
+            this.saved.set(null);
+            this.stale.set(true);
+            this.errorMessage.set(null);
+            this.fxUnavailable.set(false);
+            this.saveUncertain.set(false);
+            this.currentRequest = null;
+          }
           this.customer.set(null);
           this.loadingCustomer.set(true);
           this.customerError.set(null);

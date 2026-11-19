@@ -4,6 +4,8 @@ Frontend Angular para el uso comercial interno. TASK042 conecta dashboard, clien
 alta internacional, ficha e historial. TASK043 añade simulador con previsualización
 reactiva y persistencia explícita. FastAPI es la autoridad exclusiva de precios,
 impuestos y conversiones; los importes/tipos se conservan como cadenas decimales.
+TASK044 refina mensajes, validación, accesibilidad de navegación y controles responsive.
+En móvil el resumen de la estimación es compacto y no sticky para evitar tapar campos.
 
 ## Versiones
 
@@ -39,6 +41,10 @@ reenvía `/api/...` a `http://127.0.0.1:8000/...` quitando el prefijo artificial
 `/api`, puesto que los endpoints reales no tienen prefijo. No se ha añadido CORS ni
 modificado el backend. El proxy no se incluye en builds de producción; P-05 sigue
 pendiente. La aplicación no llama a Frankfurter: cualquier FX futuro pasa por FastAPI.
+
+TASK044 mantiene pendientes la revisión independiente y publicación; no constituye
+certificación WCAG AA. La integración real utiliza SQLite temporal con migraciones
+0001–0004; no reutilice la base de datos predeterminada para pruebas.
 
 No se debe usar la base SQLite predeterminada para pruebas de integración; crear una
 SQLite temporal y migrarla hasta `0004_add_simulation_taxes_and_fx`.

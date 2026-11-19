@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.6 (TASK043) |
-| Fecha | 2026-11-18 |
-| Estado | Backend integrado en main; dashboard/clientes y simulador implementados y validados localmente TASK042–043; revisión visual APTA CON OBSERVACIONES; auditoría independiente, publicación e instalación/despliegue finales pendientes. |
+| Versión | 1.7 (TASK044) |
+| Fecha | 2026-11-19 |
+| Estado | Backend integrado en main; frontend refinado y validado localmente en TASK044; revisión del propietario, auditoría independiente, publicación y despliegue pendientes. V43-01 se atribuye al fixture visual tras integración real 15/16; V43-02 corresponde a captura full-page. |
 | Fuente | Enunciado original del reto facilitado por el propietario (documento externo no versionado) y brief funcional del propietario |
 
 Este documento separa **requisitos funcionales**, **restricciones**, **supuestos** y **preguntas abiertas**. Todo lo que no aparece aquí como requisito no debe implementarse por iniciativa propia.

@@ -4,7 +4,10 @@ import { Component, input } from '@angular/core';
   selector: 'app-empty-state',
   template: `
     <section class="empty-state" aria-live="polite">
-      <span class="empty-mark" aria-hidden="true">✓</span>
+      <svg class="empty-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <path d="M5 8h22v16H5z" />
+        <path d="M3.5 13h7l2 3h6l2-3h7" />
+      </svg>
       <h2>{{ title() }}</h2>
       <p>{{ message() }}</p>
       <ng-content />
@@ -21,15 +24,17 @@ import { Component, input } from '@angular/core';
       background: var(--color-surface);
       text-align: center;
     }
-    .empty-mark {
-      display: grid;
+    .empty-icon {
       width: 2.5rem;
       height: 2.5rem;
-      place-items: center;
-      border-radius: 50%;
-      color: var(--color-primary);
-      background: var(--color-primary-soft);
-      font-weight: 700;
+      fill: none;
+      stroke: var(--color-primary);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.7;
+    }
+    .empty-icon path:first-child {
+      fill: var(--color-primary-soft);
     }
     h2,
     p {

@@ -51,7 +51,7 @@ interface CustomerQuery {
     <div class="customers-page">
       <header class="page-actions">
         <app-section-heading
-          title="Clientes"
+          title="Listado de clientes"
           description="Busca y consulta las empresas registradas."
         />
         <a mat-flat-button color="primary" routerLink="/customers/new">＋ Nuevo cliente</a>
@@ -62,12 +62,13 @@ interface CustomerQuery {
 
       <section class="search-panel" aria-label="Búsqueda de clientes">
         <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Buscar por razón social o identificador fiscal</mat-label>
+          <mat-label>Buscar empresa o ID fiscal</mat-label>
           <input
             matInput
             type="search"
             autocomplete="off"
             [formControl]="searchControl"
+            aria-label="Buscar por razón social o identificador fiscal"
             aria-describedby="search-help"
           />
           @if (searchControl.value) {
@@ -289,6 +290,13 @@ interface CustomerQuery {
       }
       .page-size-field {
         width: 9rem;
+      }
+      .search-panel {
+        gap: var(--space-2);
+      }
+      .search-help {
+        margin: 0;
+        line-height: 1.6;
       }
     }
     @media (max-width: 360px) {

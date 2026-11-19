@@ -1,6 +1,6 @@
 # SaaS-O-Matic
 
-> **Vigente TASK043:** backend integrado en `main` (PR #6). Dashboard, clientes y
+> **Vigente TASK044:** backend integrado en `main` (PR #6). Dashboard, clientes y
 > simulador interactivo implementados localmente en Angular; preview/guardado usan
 > FastAPI y el cálculo económico permanece exclusivamente en el backend. Sin publicar.
 > Cálculo mensual con IVA general de seis
@@ -16,7 +16,7 @@
 
 Herramienta interna para que el equipo comercial simule y estime el coste mensual de suscripciones SaaS corporativas: clientes, planes, consumo estimado, tramos de usuarios, impuestos por país y conversión de divisas.
 
-> **Estado real del MVP:** backend integrado en `main` (PR #6, merge `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`). TASK042 y TASK043 implementan localmente dashboard, clientes y simulador con preview, guardado e historial. Integración real Angular–FastAPI–SQLite validada. La revisión visual del propietario fue APTA CON OBSERVACIONES; V43-01–07 y auditoría independiente siguen pendientes. Cambios locales no publicados. **No existe CI ni despliegue.**
+> **Estado real del MVP:** backend integrado en `main` (PR #6, merge `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`). TASK044 refina localmente interfaz, foco, validación y estados; verifica respuestas 15/16 usuarios con Angular–FastAPI–SQLite y actualiza fixtures visuales. V43-01 se reproduce en el fixture visual, no confirmado como defecto del producto; V43-02 se reproduce como artefacto de captura full-page. Cambios TASK044 no publicados ni integrados en `main`; revisión del propietario y auditoría independiente pendientes. **No existe CI ni despliegue.**
 >
 > **Estado de publicación:** PR #6 fue fusionado por el propietario; merge commit `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`.
 >
@@ -28,7 +28,7 @@ Resumen; el detalle está en el [ADR 0001](docs/adr/0001-technology-stack.md) y 
 
 - **Backend:** Python 3.13, FastAPI, Pydantic v2, SQLAlchemy 2, SQLite y Alembic.
 - **Calidad backend:** Pytest, HTTPX, Ruff y mypy.
-- **Frontend:** Angular 22.2.6, TypeScript 6.0.3, Material/CDK, standalone components, Signals, RxJS, Router y HttpClient. Dashboard, gestión de clientes y simulador TASK041–TASK043 implementados y validados localmente; revisión independiente y publicación pendientes.
+- **Frontend:** Angular 22.2.6, TypeScript 6.0.3, Material/CDK, standalone components, Signals, RxJS, Router y HttpClient. Dashboard, clientes, simulador y refinamientos TASK044 implementados localmente; revisión independiente y publicación pendientes.
 - **Contrato de API:** OpenAPI. **Divisa base:** EUR.
 - **Arquitectura:** monolito modular con dependencias hacia dentro (`presentation → application → domain`, `infrastructure → domain`).
 

@@ -40,7 +40,7 @@ interface HistoryQuery {
     >
       <div class="history-header">
         <app-section-heading
-          title="Historial de simulaciones"
+          title="Historial"
           description="Registros guardados para este cliente; los importes históricos no se recalculan."
         />
         @if (!loading() && !error()) {
@@ -101,7 +101,7 @@ interface HistoryQuery {
                   </dd>
                 </div>
                 <div>
-                  <dt>Llamadas API / mes</dt>
+                  <dt>Llamadas / mes</dt>
                   <dd>
                     {{
                       item.api_calls_per_month === null
@@ -125,7 +125,7 @@ interface HistoryQuery {
               </dl>
 
               <details class="snapshot-details">
-                <summary>Ver datos del snapshot</summary>
+                <summary>Ver detalle del cálculo original</summary>
                 <dl class="snapshot-grid">
                   <div>
                     <dt>Impuesto</dt>
@@ -218,7 +218,13 @@ interface HistoryQuery {
       min-width: 0;
     }
     .history-total {
-      color: var(--color-text-muted);
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      color: #3730a3;
+      background: var(--color-primary-soft);
       font-size: 0.85rem;
       font-variant-numeric: tabular-nums;
     }
@@ -300,6 +306,7 @@ interface HistoryQuery {
     }
     .history-pagination {
       display: flex;
+      flex-wrap: wrap;
       justify-content: flex-end;
       align-items: center;
       gap: var(--space-4);
@@ -335,6 +342,13 @@ interface HistoryQuery {
         grid-template-columns: 1fr;
       }
       .history-pagination {
+        justify-content: space-between;
+      }
+      .history-pagination > span,
+      .history-pagination > div {
+        width: 100%;
+      }
+      .history-pagination > div {
         justify-content: space-between;
       }
     }

@@ -1,6 +1,16 @@
 # Matriz de trazabilidad del reto — SaaS-O-Matic
 
-## Delta vigente TASK043
+## Delta vigente TASK044
+
+TASK044 refinó mensajes, errores de campo, navegación/foco, slider y resumen móvil; amplió
+Playwright para concurrencia, invalidación, guardado y respuesta definitiva distinta. La
+integración real Angular–FastAPI–SQLite temporal comprobó 15 y 16 usuarios, sus parámetros,
+preview, respuesta HTTP 201 e historial persistido. V43-01 se reproduce en el fixture
+visual anterior; no se confirmó defecto productivo en los casos integrados. V43-02 se
+reprodujo sólo en captura full-page, no como foco inicial en viewport. La revisión
+independiente, publicación y despliegue permanecen pendientes; no se certifica WCAG AA.
+
+## Delta TASK043
 
 TASK043 implementa localmente SPEC-009: formulario reactivo, preview no persistente,
 conversión EUR/USD/GBP, guardado explícito e historial. FastAPI continúa como única
@@ -61,9 +71,9 @@ interpretan con este delta. Fuente fiscal/proveedor y limitaciones en SPEC-005/s
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.5 (TASK043) |
-| Fecha | 2026-11-18 |
-| Estado | Backend integrado en main; frontend TASK041–TASK043 implementado/validado localmente; revisión visual APTA CON OBSERVACIONES; auditoría independiente, publicación y despliegue pendientes |
+| Versión | 1.6 (TASK044) |
+| Fecha | 2026-11-19 |
+| Estado | Backend integrado en main; frontend TASK041–TASK044 implementado/validado localmente; auditoría independiente, publicación y despliegue pendientes |
 | Fuente principal | Enunciado original del reto, conservado fuera de Git y no publicado en GitHub |
 | Fuentes internas | Requisitos, ADRs, especificaciones 001–009, planes, tareas, código, pruebas y auditorías TASK039/TASK039B |
 

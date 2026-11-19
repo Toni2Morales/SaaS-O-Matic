@@ -1,11 +1,12 @@
 # Hoja de ruta optimizada del MVP — SaaS-O-Matic
 
-**Vigente TASK043:** el backend se integró en main mediante PR #6, merge
+**Vigente TASK044:** el backend se integró en main mediante PR #6, merge
 `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`. TASK041 estableció el shell y P-01;
 TASK042 implementa localmente dashboard y gestión de clientes (listado/búsqueda,
 registro, detalle e historial) con integración real y pruebas. TASK043 implementa
-localmente el simulador y su integración real. Revisión/publicación, CI y despliegue
-siguen pendientes; P-05 permanece abierta. Cambios sin publicar.
+localmente el simulador y TASK044 sus refinamientos, regresiones y verificación integrada
+de 15/16 usuarios con SQLite temporal. Revisión/publicación, CI y despliegue siguen
+pendientes; P-05 permanece abierta. Cambios sin publicar.
 
 **Contexto TASK039B:** TASK039 auditó el backend acumulado con dictamen APTA CON
 OBSERVACIONES y sin hallazgos bloqueantes. TASK039B corrige A39-01/02/03/04/06,
@@ -25,9 +26,9 @@ son contexto previo.
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.4 (TASK043) |
-| Fecha | 2026-11-18 |
-| Estado | TASK041–TASK043 implementadas/validadas localmente; revisión visual APTA CON OBSERVACIONES; TASK043P en curso; auditoría independiente y entrega final pendientes |
+| Versión | 1.5 (TASK044) |
+| Fecha | 2026-11-19 |
+| Estado | TASK041–TASK044 implementadas/validadas localmente con observaciones documentadas; revisión del propietario, auditoría independiente y entrega final pendientes |
 | Base | `origin/main` en `23cc43b486d20f7995a2cf29375e3f724f3c7c3f` (PR #6 fusionado) |
 | Referencia principal | Enunciado original del reto, conservado fuera de Git |
 | Trazabilidad | [`../requirements/requirements-traceability.md`](../requirements/requirements-traceability.md) |

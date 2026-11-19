@@ -26,8 +26,8 @@ export const routes: Routes = [
   },
   {
     path: 'customers/:customerId/simulations/new',
-    title: 'Nueva simulación',
-    data: { title: 'Nueva simulación' },
+    title: 'Simulador de suscripción',
+    data: { title: 'Simulador de suscripción' },
     loadComponent: () =>
       import('./features/simulations/simulation-page').then(
         (module) => module.SimulationPageComponent,

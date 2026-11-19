@@ -3,18 +3,19 @@
 | Campo | Valor |
 | --- | --- |
 | Fecha de creación | 2026-11-13 |
-| Estado | Backend integrado en main; dashboard/clientes y simulador TASK042–043 implementados localmente; publicación y despliegue pendientes |
+| Estado | Backend integrado en main; frontend refinado y validado localmente TASK044; publicación, revisión independiente y despliegue pendientes |
 | Ámbito | Colaboración entre el propietario, ChatGPT y OpenCode + DeepSeek |
 
 ## 1. Propósito
 
 Este directorio conserva el rastro verificable del trabajo asistido por IA: qué se pidió, qué se hizo, quién participó, qué se validó, qué se corrigió y qué queda pendiente.
 
-**Vigente TASK043:** backend integrado en `main` (PR #6). TASK041 resolvió P-01 y
+**Vigente TASK044:** backend integrado en `main` (PR #6). TASK041 resolvió P-01 y
 creó shell Angular; TASK042 implementa localmente dashboard, búsqueda/listado,
 registro, ficha e historial, con integración real navegador–FastAPI–SQLite temporal.
-TASK043 implementa simulador/preview/guardado localmente, con integración real; no
-publicado. CI y P-05/despliegue pendientes. TASK039 auditó el
+TASK043 implementa simulador/preview/guardado y TASK044 refina el frontend localmente;
+la integración real 15/16 usuarios pasa con FastAPI/SQLite temporal. No publicado. CI y
+P-05/despliegue pendientes. TASK039 auditó el
 backend con dictamen APTA CON
 OBSERVACIONES y sin hallazgos bloqueantes. TASK039B corrige A39-01/02/03/04/06,
 documenta A39-05 y revisa A39-07 a A39-11; A39-12 a A39-15 quedan diferidos o
@@ -70,7 +71,14 @@ ai-workspace/
 │   ├── TASK038-initial-hashes.json
 │   ├── TASK038-customer-queries-and-preview.md
 │   ├── TASK039-backend-independent-audit.md
-│   └── TASK039B-backend-audit-remediation.md
+│   ├── TASK039B-backend-audit-remediation.md
+│   ├── TASK040-mvp-backend-publication.md
+│   ├── TASK041-angular-frontend-foundation.md
+│   ├── TASK042-customer-management-frontend.md
+│   ├── TASK043-interactive-subscription-simulator.md
+│   ├── TASK043P-frontend-intermediate-publication.md
+│   ├── TASK044-initial-hashes.json
+│   └── TASK044-frontend-refinement-and-e2e.md
 └── 02-audits/
     ├── TASK003-audit.md
     ├── TASK005-audit.md
@@ -142,6 +150,7 @@ frontend y no incluye autorización de publicación.
 | TASK041 | Arquitectura, configuración y diseño base del frontend Angular | Base local implementada; sin publicación; flujos comerciales pendientes | [TASK041-angular-frontend-foundation.md](01-tasks/TASK041-angular-frontend-foundation.md) | — | TASK041, SPEC-007, ADR 0003, documentación oficial y comprobaciones ejecutadas |
 | TASK042 | Dashboard y gestión comercial de clientes | Implementada y validada localmente; no publicada | [TASK042-customer-management-frontend.md](01-tasks/TASK042-customer-management-frontend.md) | Revisión de dependencias en esta tarea; reevaluar TASK045 | Instrucción TASK042, SPEC-008, manifiesto inicial, contratos OpenAPI, pruebas e integración real |
 | TASK043 | Simulador interactivo y conversión multidivisa | Implementada y validada localmente; no publicada; revisión del propietario pendiente | [TASK043-interactive-subscription-simulator.md](01-tasks/TASK043-interactive-subscription-simulator.md) | Sin auditoría independiente; WCAG formal y seguridad pendientes | Instrucción TASK043, SPEC-009, hashes, OpenAPI, Vitest, Playwright, integración y capturas |
+| TASK044 | Refinamiento del frontend, accesibilidad, responsive e integración E2E | Implementada y validada localmente con observaciones pendientes; sin publicación | [TASK044-frontend-refinement-and-e2e.md](01-tasks/TASK044-frontend-refinement-and-e2e.md) | Auditoría independiente posterior pendiente | Instrucción TASK044, SPEC-010, hashes, Playwright, FastAPI/SQLite temporal y capturas |
 
 ### 3.1 Publicaciones
 

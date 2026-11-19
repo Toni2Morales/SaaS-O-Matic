@@ -6,7 +6,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { filter, map, startWith } from 'rxjs';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-shell',
@@ -32,6 +32,7 @@ export class AppShellComponent {
     { initialValue: false },
   );
   readonly pageTitle = signal('Inicio');
+  private hasCompletedInitialNavigation = false;
 
   constructor() {
     effect(() => {
@@ -39,12 +40,17 @@ export class AppShellComponent {
         this.menuOpen.set(false);
       }
     });
+    this.updatePageContext();
     this.router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        startWith(null),
-      )
-      .subscribe(() => this.updatePageContext());
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updatePageContext();
+        if (this.hasCompletedInitialNavigation) {
+          queueMicrotask(() => this.document.getElementById('page-title')?.focus());
+        } else {
+          this.hasCompletedInitialNavigation = true;
+        }
+      });
   }
 
   toggleMenu(): void {
@@ -78,6 +84,14 @@ export class AppShellComponent {
     queueMicrotask(() => this.document.getElementById('page-title')?.focus());
   }
 
+  skipToMain(event: MouseEvent): void {
+    event.preventDefault();
+    const main = this.document.getElementById('main-content');
+    main?.focus();
+    main?.scrollIntoView({ block: 'start' });
+    this.document.defaultView?.history.replaceState(null, '', '#main-content');
+  }
+
   private updatePageContext(): void {
     let route = this.router.routerState.snapshot.root;
     while (route.firstChild) {
@@ -86,9 +100,6 @@ export class AppShellComponent {
     const title = String(route.data['title'] ?? 'Inicio');
     this.pageTitle.set(title);
     this.document.title = `${title} | SaaS-O-Matic`;
-    if (this.isMobile()) {
-      this.closeMenu();
-      queueMicrotask(() => this.document.getElementById('page-title')?.focus());
-    }
+    if (this.isMobile()) this.closeMenu();
   }
 }

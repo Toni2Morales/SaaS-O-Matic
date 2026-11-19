@@ -15,13 +15,26 @@ const customer = {
 };
 
 function result(currency = 'EUR', users = 15) {
-  const subtotal = users === 0 ? '0.00' : users > 50 ? '425.00' : users > 10 ? '140.00' : '100.00';
-  const tax = users === 0 ? '0.00' : users > 50 ? '89.25' : users > 10 ? '29.40' : '21.00';
-  const total = users === 0 ? '0.00' : users > 50 ? '514.25' : users > 10 ? '169.40' : '121.00';
+  const reference = {
+    0: { subtotal: '0.00', tax: '0.00', total: '0.00' },
+    15: { subtotal: '140.00', tax: '29.40', total: '169.40' },
+    16: { subtotal: '148.00', tax: '31.08', total: '179.08' },
+    1500: { subtotal: '7670.00', tax: '1610.70', total: '9280.70' },
+  } as const;
+  const amounts = reference[users as keyof typeof reference];
+  if (!amounts) throw new Error(`Missing reference fixture for ${users} users.`);
+  const converted: Record<string, Record<number, string>> = {
+    USD: { 0: '0.00', 15: '186.31', 16: '196.95' },
+    GBP: { 0: '0.00', 15: '141.19', 16: '149.26' },
+  };
+  const convertedTotal = currency === 'EUR' ? amounts.total : converted[currency]?.[users];
+  if (convertedTotal === undefined) {
+    throw new Error(`Missing ${currency} conversion fixture for ${users} users.`);
+  }
   return {
     customer_id: id,
     user_count: users,
-    user_subtotal_eur: subtotal,
+    user_subtotal_eur: amounts.subtotal,
     storage_gb: 0,
     api_calls_per_month: 0,
     billing_period: 'monthly',
@@ -32,14 +45,14 @@ function result(currency = 'EUR', users = 15) {
     tax_verified_on: '2026-11-17',
     tax_territory: 'Península y Baleares',
     tax_effective_from: null,
-    tax_amount_eur: tax,
-    total_eur: total,
+    tax_amount_eur: amounts.tax,
+    total_eur: amounts.total,
     display_currency: currency,
-    exchange_rate: currency === 'EUR' ? '1' : currency === 'USD' ? '1.0998' : '0.83349',
+    exchange_rate: currency === 'EUR' ? '1' : currency === 'USD' ? '1.0998' : '0.83348',
     exchange_rate_date: currency === 'EUR' ? null : '2026-11-18',
     exchange_rate_obtained_at: '2026-11-18T12:00:00Z',
     exchange_rate_source: currency === 'EUR' ? 'identity' : 'Frankfurter (fixture)',
-    converted_total: currency === 'EUR' ? total : currency === 'USD' ? '186.31' : '141.19',
+    converted_total: convertedTotal,
   };
 }
 
@@ -63,7 +76,7 @@ test('captures real browser evidence with clearly intercepted deterministic API 
   await page.route('**/api/customers/*/simulations**', (route) =>
     route.fulfill({
       json: {
-        items: [{ ...result(), id: 'sim-1', created_at: '2026-11-18T12:00:00Z' }],
+        items: [{ ...result('USD', 16), id: 'sim-1', created_at: '2026-11-18T12:00:00Z' }],
         total: 1,
         limit: 10,
         offset: 0,
@@ -92,18 +105,35 @@ test('captures real browser evidence with clearly intercepted deterministic API 
       },
     });
   });
-  const shot = (name: string) =>
-    page.screenshot({ path: resolve(evidenceDir!, name), fullPage: true });
+  const shot = async (name: string) => {
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('listbox')).toHaveCount(0);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(page.locator('#page-title')).toBeInViewport();
+    await expect(
+      page.getByRole('link', { name: 'Saltar al contenido principal' }),
+    ).not.toBeFocused();
+    await page.screenshot({ path: resolve(evidenceDir!, name), fullPage: false });
+  };
 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(`/customers/${id}/simulations/new`);
   await expect(page.locator('.total')).toHaveText('169,40 €');
   await shot('TASK043-simulador-desktop.png');
 
-  for (const width of [320, 390, 768, 1280, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
+  for (const viewport of [
+    { width: 320, height: 568 },
+    { width: 390, height: 844 },
+    { width: 768, height: 1024 },
+    { width: 1024, height: 768 },
+    { width: 1280, height: 800 },
+    { width: 1440, height: 900 },
+    { width: 1920, height: 1080 },
+  ]) {
+    await page.setViewportSize(viewport);
     expect(
       await page.locator('body').evaluate((element) => element.scrollWidth <= window.innerWidth),
+      `horizontal overflow at ${viewport.width}×${viewport.height}`,
     ).toBe(true);
   }
 
@@ -142,7 +172,7 @@ test('captures real browser evidence with clearly intercepted deterministic API 
   await shot('TASK043-simulador-calculando.png');
   delayed = false;
   releasePreview?.();
-  await expect(page.locator('.total')).toHaveText('169,40 €');
+  await expect(page.locator('.total')).toHaveText('179,08 €');
 
   fxError = true;
   await currency.click();
@@ -151,7 +181,7 @@ test('captures real browser evidence with clearly intercepted deterministic API 
   await shot('TASK043-simulador-error-fx.png');
   fxError = false;
   await page.getByRole('button', { name: 'Reintentar estimación' }).click();
-  await expect(page.locator('.total')).toHaveText('186,31 US$');
+  await expect(page.locator('.total')).toHaveText('196,95 US$');
   await page.getByRole('button', { name: 'Guardar simulación' }).click();
   await expect(page.getByText(/Simulación guardada/)).toBeVisible();
   await shot('TASK043-simulacion-guardada.png');

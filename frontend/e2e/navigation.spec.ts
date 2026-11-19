@@ -7,10 +7,17 @@ test('loads the dashboard and navigates to the empty customers list', async ({ p
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Panel comercial', level: 1 })).toBeVisible();
   await expect(page.getByRole('status', { name: '0 clientes registrados' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Saltar al contenido principal' })).not.toBeFocused();
 
   await page.getByRole('link', { name: 'Clientes', exact: true }).click();
   await expect(page).toHaveURL(/\/customers$/);
   await expect(page.getByRole('heading', { name: 'Clientes', level: 1 })).toBeVisible();
+  await expect(page.locator('#page-title')).toBeFocused();
+  const headingGeometry = await page.evaluate(() => ({
+    headingTop: document.querySelector('#page-title')?.getBoundingClientRect().top ?? -1,
+    topbarBottom: document.querySelector('.topbar')?.getBoundingClientRect().bottom ?? 0,
+  }));
+  expect(headingGeometry.headingTop).toBeGreaterThanOrEqual(headingGeometry.topbarBottom);
   await expect(page.getByText('Todavía no hay clientes')).toBeVisible();
 
   await page.goto('/');
@@ -31,6 +38,7 @@ test('supports direct route loading and unknown route recovery', async ({ page }
   await expect(page.getByRole('heading', { name: 'Página no encontrada', level: 1 })).toBeVisible();
   await page.getByRole('link', { name: 'Ir al inicio' }).click();
   await expect(page).toHaveURL('/');
+  await expect(page.locator('#page-title')).toBeFocused();
 });
 
 test('opens and closes the mobile navigation with keyboard and route changes', async ({ page }) => {
@@ -50,6 +58,9 @@ test('opens and closes the mobile navigation with keyboard and route changes', a
 
   await menuButton.click();
   await expect(page.getByRole('button', { name: 'Cerrar menú' })).toBeVisible();
+  const mobileSidebar = await page.locator('.sidebar').boundingBox();
+  expect(mobileSidebar?.width).toBeGreaterThan(200);
+  await expect(page.getByRole('button', { name: 'Cerrar navegación' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cerrar menú' })).toBeFocused();
   await page.getByRole('button', { name: 'Cerrar menú' }).click();
   await expect(menuButton).toBeFocused();
@@ -67,6 +78,7 @@ test('provides a keyboard skip link to the main content', async ({ page }) => {
     route.fulfill({ json: { items: [], total: 0, limit: 6, offset: 0 } }),
   );
   await page.goto('/');
+  await expect(page.locator('#page-title')).not.toBeFocused();
   await page.keyboard.press('Tab');
   const skipLink = page.getByRole('link', { name: 'Saltar al contenido principal' });
   await expect(skipLink).toBeFocused();
@@ -78,15 +90,24 @@ test('keeps the shell within mobile, tablet and desktop viewports', async ({ pag
   await page.route('**/api/customers**', (route) =>
     route.fulfill({ json: { items: [], total: 0, limit: 20, offset: 0 } }),
   );
-  for (const width of [320, 390, 768, 1280]) {
-    await page.setViewportSize({ width, height: 900 });
+  for (const viewport of [
+    { width: 320, height: 568 },
+    { width: 390, height: 844 },
+    { width: 768, height: 1024 },
+    { width: 1024, height: 768 },
+    { width: 1280, height: 800 },
+    { width: 1440, height: 900 },
+    { width: 1920, height: 1080 },
+  ]) {
+    await page.setViewportSize(viewport);
     await page.goto('/');
     const dimensions = await page.evaluate(() => ({
       documentWidth: document.documentElement.scrollWidth,
       viewportWidth: document.documentElement.clientWidth,
     }));
-    expect(dimensions.documentWidth, `horizontal overflow at ${width}px`).toBeLessThanOrEqual(
-      dimensions.viewportWidth,
-    );
+    expect(
+      dimensions.documentWidth,
+      `horizontal overflow at ${viewport.width}×${viewport.height}`,
+    ).toBeLessThanOrEqual(dimensions.viewportWidth);
   }
 });

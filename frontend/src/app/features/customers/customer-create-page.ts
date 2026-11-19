@@ -47,7 +47,7 @@ const countries: { code: CountryCode; name: string }[] = [
   template: `
     <div class="create-page">
       <app-section-heading
-        title="Nuevo cliente"
+        title="Datos de la empresa"
         description="Registra una empresa para consultar sus datos y preparar estimaciones más adelante."
       />
 

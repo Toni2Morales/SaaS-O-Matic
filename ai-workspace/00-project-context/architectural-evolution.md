@@ -33,12 +33,13 @@ Antes de escribir código, el propietario cambió el rumbo por dos motivos expl�
 
 El cambio no se produjo por un problema técnico detectado en la propuesta anterior, sino por los objetivos personales y profesionales del propietario. Se documenta como decisión consciente, no como corrección de un error.
 
-## 3. Estado de evolución TASK043
+## 3. Estado de evolución TASK044
 
 TASK043 extiende el frontend Angular existente con simulador reactivo y persistencia
 explícita. Los cálculos monetarios permanecen en FastAPI, que sigue siendo la única
 autoridad para tarifas, impuestos, FX y snapshots. No se añadieron dependencias ni se
-cambió backend/stack. Estado local sin publicación; véase el informe TASK043.
+cambió backend/stack. TASK044 añade refinamientos de interfaz y regresiones integradas;
+FastAPI mantiene autoridad económica. Estado local sin publicación; véase TASK044.
 
 ## 4. Cronología de fases
 

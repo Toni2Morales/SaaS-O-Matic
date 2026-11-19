@@ -1,0 +1,22 @@
+# Tareas — SPEC-010
+
+- [x] Verificar rama, refs remotas, HEAD, working tree e índice antes del trabajo.
+- [x] Leer informes, SPEC-007–009, código de simulación y evidencia V43.
+- [x] Capturar hashes iniciales de archivos tracked y protegidos; registrar DOCX por hash sin abrir.
+- [x] Crear SPEC-010, plan y tareas antes de cambios funcionales.
+- [x] Reproducir V43-01 desde fixture y verificar 15/16 por API real, UI y SQLite.
+- [x] Añadir regresión E2E para preview/201/historial con 15 y 16 usuarios.
+- [x] Auditar concurrencia, invalidación inmediata y POST único; ampliar pruebas deterministas.
+- [x] Investigar foco/skip-link/topbar; preservar y probar navegación de teclado.
+- [x] Sustituir sticky de total móvil por resumen compacto no obstructivo tras inspección visual.
+- [x] Mejorar pista/labels del slider y distinguir límite visual/manual.
+- [x] Añadir mensajes por campo y ocultar bandas con `user_count` inválido.
+- [x] Cubrir errores FX, estados stale, retry, guardado concurrente e importes definitivos.
+- [x] Evaluar UX-01–UX-10 y V43-01–07; diferimientos/observaciones en informe TASK044.
+- [x] Revisar responsive, textos, estados vacíos y accesibilidad en las rutas disponibles.
+- [x] Ejecutar `npm ci --ignore-scripts` de forma aislada; los scripts no fueron autorizados.
+- [x] Ejecutar suites frontend/backend y auditorías npm autorizadas.
+- [x] Validar integración real Angular–FastAPI–SQLite y FX puntual separado.
+- [x] Generar 21 evidencias de navegador fuera del repositorio; 19 interceptadas, 2 integradas reales.
+- [x] Actualizar documentación vigente, completar informe TASK044 y comprobar hashes/protección.
+- [ ] Confirmar sin staging/commit/push/PR/merge y detenerse antes de TASK045.

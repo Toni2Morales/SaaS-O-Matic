@@ -17,9 +17,14 @@ const countryNames: Record<CustomerResponse['country'], string> = {
   template: `
     <article class="customer-card">
       <div class="customer-main">
-        <a class="customer-name" [routerLink]="['/customers', customer().id]">{{
-          customer().legal_name
-        }}</a>
+        <a
+          class="customer-name"
+          [routerLink]="['/customers', customer().id]"
+          [attr.aria-label]="customer().legal_name"
+        >
+          <span>{{ customer().legal_name }}</span>
+          <span class="detail-cue" aria-hidden="true">Abrir ficha →</span>
+        </a>
         <span class="customer-tax-id">{{ customer().tax_id }}</span>
       </div>
       <dl class="customer-details">
@@ -58,10 +63,25 @@ const countryNames: Record<CustomerResponse['country'], string> = {
       gap: var(--space-1);
     }
     .customer-name {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--space-2);
       overflow-wrap: anywhere;
       color: var(--color-text-strong);
       font-weight: 650;
       text-decoration: none;
+    }
+    .customer-name span:first-child {
+      text-decoration: underline;
+      text-decoration-color: #c7d2fe;
+      text-underline-offset: 0.18em;
+    }
+    .detail-cue {
+      color: var(--color-primary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
     }
     .customer-name:hover {
       color: var(--color-primary);

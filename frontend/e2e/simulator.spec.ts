@@ -36,7 +36,7 @@ function estimate(currency = 'EUR', users = 15) {
     exchange_rate_date: currency === 'EUR' ? null : '2026-11-17',
     exchange_rate_obtained_at: '2026-11-18T12:00:00Z',
     exchange_rate_source: currency === 'EUR' ? 'identity' : 'Frankfurter',
-    converted_total: currency === 'EUR' ? total : '155.85',
+    converted_total: currency === 'EUR' ? total : '186.31',
   };
 }
 
@@ -144,16 +144,56 @@ test('an invalid form immediately cancels an in-flight preview', async ({ page }
   await users.fill('1000001');
   await users.blur();
   await expect(page.getByText('Completa los campos correctamente para calcular.')).toBeVisible();
+  await expect(page.locator('.tiers')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Guardar simulación' })).toBeDisabled();
   releasePreview?.();
   await expect(page.locator('.total')).toHaveCount(0);
+});
+
+test('shows field-specific numeric errors and sends no preview for invalid inputs', async ({
+  page,
+}) => {
+  let previewCount = 0;
+  await page.route(`**/api/customers/${customerId}`, (route) => route.fulfill({ json: company }));
+  await page.route('**/api/simulations/preview', async (route) => {
+    previewCount++;
+    await route.fulfill({ json: estimate() });
+  });
+  await page.goto(`/customers/${customerId}/simulations/new`);
+  await expect(page.locator('.total')).toHaveText('169,40 €');
+
+  const users = page.locator('#user-count');
+  await users.fill('-1');
+  await users.blur();
+  await expect(page.getByText('El valor mínimo es 0.')).toBeVisible();
+  await users.fill('15.5');
+  await users.blur();
+  await expect(page.getByText('Introduce un número entero.')).toBeVisible();
+  await users.fill('');
+  await users.blur();
+  await expect(page.getByText('Este campo es obligatorio.')).toBeVisible();
+
+  const storage = page.getByRole('spinbutton', { name: 'Almacenamiento contratado (GB)' });
+  await storage.fill('-1');
+  await storage.blur();
+  await expect(page.getByText('El valor mínimo es 0.')).toBeVisible();
+  const calls = page.getByRole('spinbutton', { name: 'Llamadas al servicio / mes' });
+  await calls.fill('1000000001');
+  await calls.blur();
+  await expect(page.getByText('El valor máximo es 1.000.000.000.')).toBeVisible();
+  await expect(page.locator('.tiers')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Guardar simulación' })).toBeDisabled();
+  expect(previewCount).toBe(1);
 });
 
 test('locks the form while save is in flight and issues only one create request', async ({
   page,
 }) => {
   await page.route(`**/api/customers/${customerId}`, (route) => route.fulfill({ json: company }));
-  await page.route('**/api/simulations/preview', (route) => route.fulfill({ json: estimate() }));
+  await page.route('**/api/simulations/preview', (route) => {
+    const body = route.request().postDataJSON() as { user_count: number };
+    return route.fulfill({ json: estimate('EUR', body.user_count) });
+  });
   let finishSave: (() => void) | undefined;
   let creates = 0;
   await page.route('**/api/simulations', async (route) => {
@@ -176,12 +216,79 @@ test('locks the form while save is in flight and issues only one create request'
   expect(creates).toBe(1);
 });
 
-test('adapts the simulator to a 320px viewport without horizontal overflow', async ({ page }) => {
+test('shows the saved result when it differs from the preview', async ({ page }) => {
+  await page.route(`**/api/customers/${customerId}`, (route) => route.fulfill({ json: company }));
+  await page.route('**/api/simulations/preview', (route) => {
+    const body = route.request().postDataJSON() as { display_currency: string };
+    const currency = body.display_currency;
+    return route.fulfill({
+      json: {
+        ...estimate(currency),
+        exchange_rate: currency === 'EUR' ? '1' : '1.0998',
+        converted_total: currency === 'EUR' ? '169.40' : '186.31',
+      },
+    });
+  });
+  let creates = 0;
+  await page.route('**/api/simulations', async (route) => {
+    creates++;
+    await route.fulfill({
+      status: 201,
+      json: {
+        ...estimate('USD'),
+        converted_total: '186.32',
+        exchange_rate: '1.09986',
+        id: 'saved-with-new-fx-rate',
+        created_at: '2026-11-19T12:01:00Z',
+      },
+    });
+  });
+  await page.goto(`/customers/${customerId}/simulations/new`);
+  await page.getByRole('combobox', { name: 'Divisa de visualización' }).click();
+  await page.getByRole('option', { name: 'USD — Dólar estadounidense' }).click();
+  await expect(page.locator('.total')).toHaveText('186,31 US$');
+  await page.getByRole('button', { name: 'Guardar simulación' }).click();
+  await expect(page.getByText(/importe definitivo se ha actualizado/i)).toBeVisible();
+  await expect(page.locator('.total')).toHaveText('186,32 US$');
+  await expect(page.getByText(/Resultado definitivo: 186,32 US\$/)).toBeVisible();
+  expect(creates).toBe(1);
+});
+
+test('does not retry an ambiguous create failure and preserves inputs for history review', async ({
+  page,
+}) => {
   await page.route(`**/api/customers/${customerId}`, (route) => route.fulfill({ json: company }));
   await page.route('**/api/simulations/preview', (route) => route.fulfill({ json: estimate() }));
+  let creates = 0;
+  await page.route('**/api/simulations', async (route) => {
+    creates++;
+    await route.abort('failed');
+  });
+  await page.goto(`/customers/${customerId}/simulations/new`);
+  await expect(page.getByRole('button', { name: 'Guardar simulación' })).toBeEnabled();
+  await page.locator('#user-count').fill('15');
+  await expect(page.locator('.total')).toHaveText('169,40 €');
+  await page.getByRole('button', { name: 'Guardar simulación' }).click();
+  await expect(page.getByText(/La simulación podría haberse guardado/)).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Consultar historial' })).toBeVisible();
+  await expect(page.locator('#user-count')).toHaveValue('15');
+  await expect(page.getByRole('button', { name: 'Guardar simulación' })).toBeEnabled();
+  expect(creates).toBe(1);
+});
+
+test('adapts the simulator to a 320px viewport without horizontal overflow', async ({ page }) => {
+  await page.route(`**/api/customers/${customerId}`, (route) => route.fulfill({ json: company }));
+  await page.route('**/api/simulations/preview', (route) => {
+    const body = route.request().postDataJSON() as { user_count: number };
+    return route.fulfill({ json: estimate('EUR', body.user_count) });
+  });
   await page.setViewportSize({ width: 320, height: 760 });
   await page.goto(`/customers/${customerId}/simulations/new`);
   await expect(page.getByRole('heading', { name: 'Simulador de suscripción' })).toBeVisible();
+  await expect(page.locator('h1')).toHaveCount(1);
+  const mobileEstimate = page.locator('.mobile-estimate');
+  await expect(mobileEstimate).toBeVisible();
+  await expect(mobileEstimate).toContainText('169,40 €');
   expect(
     await page.locator('body').evaluate((element) => element.scrollWidth <= window.innerWidth),
   ).toBe(true);
@@ -189,4 +296,12 @@ test('adapts the simulator to a 320px viewport without horizontal overflow', asy
   await slider.focus();
   await slider.press('ArrowRight');
   await expect(page.locator('#user-count')).toHaveValue('16');
+  await expect.poll(() => page.locator('.total').textContent()).toBe('179,08 €');
+  await expect.poll(() => mobileEstimate.textContent()).toContain('179,08 €');
+  await page.evaluate(() => window.scrollTo(0, 900));
+  await expect(mobileEstimate).toHaveCSS('position', 'static');
+  await page.locator('#user-count').fill('1000001');
+  await page.locator('#user-count').blur();
+  await expect(mobileEstimate).toContainText('Estimación no disponible');
+  await expect(mobileEstimate).not.toContainText('179,08 €');
 });

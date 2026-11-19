@@ -1,5 +1,7 @@
 <div class="app-frame" tabindex="-1" (keydown)="onMenuKeydown($event)">
-  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+  <a class="skip-link" href="#main-content" (click)="skipToMain($event)">
+    Saltar al contenido principal
+  </a>
   <aside
     class="sidebar"
     [class.sidebar--mobile-open]="isMobile() && menuOpen()"
@@ -64,7 +66,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      <span class="mvp-badge">MVP · gestión de clientes</span>
+      <span class="mvp-badge">Área comercial</span>
     </div>
   </aside>
 

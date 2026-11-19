@@ -160,10 +160,12 @@
   min-height: calc(100dvh - 4rem);
   margin-inline: auto;
   padding: clamp(var(--space-5), 4vw, var(--space-10));
+  scroll-margin-top: 4rem;
 }
 
 .page-context {
   margin-bottom: var(--space-8);
+  scroll-margin-top: calc(4rem + var(--space-4));
 }
 
 .eyebrow {
