@@ -238,11 +238,11 @@ sin consultas FX inventadas.
 | ---------------------------------------------------------------------- | ------------------------------------------ | -------------------------------------------- |
 | `ci: retain manual quality checks and document validation scope`       | `afd51b2a482988821d1466bf770077fd264f1fbc` | Ordinario, remoto verificado                 |
 | `docs: finalize Windows 10 setup and AI-assisted development evidence` | `8bdaf377454e8d943de01e2df46f502534eb76fb` | Ordinario, clonado remoto directo verificado |
-| `docs: record final Windows delivery validation`                       | Pendiente                                  | Se añadirá antes de cierre                   |
+| `docs: record final Windows delivery validation`                       | `83e41479853821b4bd85a9fd1ca9218d238e9c8b` | Push ordinario verificado                    |
 
 Los workflows actuales contienen solo `workflow_dispatch`; no se ejecutaron manualmente ni
-automáticamente durante esta tarea. `main` local y `origin/main` quedan intactos. Sin PR ni
-merge. El informe post-push es local hasta el tercer y último commit.
+automáticamente durante TASK047F. `main` local y `origin/main` quedaron intactas. En el corte
+TASK047F no se creó PR ni se hizo merge; TASK048 registra la revisión y creación de la PR.
 
 ## 10. Integridad y privacidad
 
