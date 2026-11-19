@@ -1,24 +1,24 @@
 # Herramientas y roles de IA
 
-| Campo | Valor |
-| --- | --- |
-| Fecha | 2026-11-13 |
-| Estado | Propuesto — pendiente de aprobación; utilizado provisionalmente como referencia de trabajo |
-| Revisión | TASK010 (2026-11-13) |
-| Ámbito | Sesiones de desarrollo asistido por IA en este repositorio |
+| Campo    | Valor                                                                                      |
+| -------- | ------------------------------------------------------------------------------------------ |
+| Fecha    | 2026-11-13                                                                                 |
+| Estado   | Propuesto — pendiente de aprobación; utilizado provisionalmente como referencia de trabajo |
+| Revisión | TASK010 (2026-11-13)                                                                       |
+| Ámbito   | Sesiones de desarrollo asistido por IA en este repositorio                                 |
 
 ## 1. Entorno de trabajo
 
-| Elemento | Valor |
-| --- | --- |
-| Sistema operativo | Windows |
-| Shell | PowerShell |
-| Control de versiones | Git |
-| Plataforma remota | GitHub (`Toni2Morales/SaaS-O-Matic`) |
-| Gestión de GitHub | GitHub CLI (`gh`), autenticado por el propietario |
-| Entorno de codificación | OpenCode |
-| Modelo de implementación | DeepSeek v4.1 Flash Free |
-| Asesor de arquitectura y revisión | ChatGPT |
+| Elemento                          | Valor                                             |
+| --------------------------------- | ------------------------------------------------- |
+| Sistema operativo                 | Windows                                           |
+| Shell                             | PowerShell                                        |
+| Control de versiones              | Git                                               |
+| Plataforma remota                 | GitHub (`Toni2Morales/SaaS-O-Matic`)              |
+| Gestión de GitHub                 | GitHub CLI (`gh`), autenticado por el propietario |
+| Entorno de codificación           | OpenCode                                          |
+| Modelo de implementación          | DeepSeek v4.1 Flash Free                          |
+| Asesor de arquitectura y revisión | ChatGPT                                           |
 
 Las versiones de herramientas y modelos pueden cambiar. Cuando cambien, se actualizará este documento; no se asumirán capacidades no verificadas.
 
@@ -72,30 +72,30 @@ Las versiones de herramientas y modelos pueden cambiar. Cuando cambien, se actua
 
 ## 3. Artefactos de contexto
 
-| Ruta | Contenido |
-| --- | --- |
-| `AGENTS.md` | Reglas operativas para agentes de IA. |
-| `docs/requirements/` | Requisitos, restricciones, supuestos y preguntas abiertas. |
-| `docs/adr/` | Decisiones de arquitectura y stack, con su estado. |
-| `docs/process/` | Flujo de trabajo, ramas, commits y prohibiciones. |
-| `docs/assessment/` | Evaluaciones del repositorio. |
-| `docs/specs/` | Especificaciones por funcionalidad. `001-customer-registration/` está cerrada: D-02 aprobada, migración Alembic y `POST /customers` implementados y validados localmente. |
-| `ai-workspace/README.md` | Índice de tareas, auditorías y reglas de trazabilidad. |
-| `ai-workspace/00-project-context/` | Evolución del proyecto y contexto de herramientas. |
-| `ai-workspace/01-tasks/` | Registros de tareas, instrucciones, evidencias, validaciones y decisiones. |
-| `ai-workspace/02-audits/` | Auditorías independientes, hallazgos y correcciones. |
+| Ruta                               | Contenido                                                                                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`                        | Reglas operativas para agentes de IA.                                                                                                                                     |
+| `docs/requirements/`               | Requisitos, restricciones, supuestos y preguntas abiertas.                                                                                                                |
+| `docs/adr/`                        | Decisiones de arquitectura y stack, con su estado.                                                                                                                        |
+| `docs/process/`                    | Flujo de trabajo, ramas, commits y prohibiciones.                                                                                                                         |
+| `docs/assessment/`                 | Evaluaciones del repositorio.                                                                                                                                             |
+| `docs/specs/`                      | Especificaciones por funcionalidad. `001-customer-registration/` está cerrada: D-02 aprobada, migración Alembic y `POST /customers` implementados y validados localmente. |
+| `ai-workspace/README.md`           | Índice de tareas, auditorías y reglas de trazabilidad.                                                                                                                    |
+| `ai-workspace/00-project-context/` | Evolución del proyecto y contexto de herramientas.                                                                                                                        |
+| `ai-workspace/01-tasks/`           | Registros de tareas, instrucciones, evidencias, validaciones y decisiones.                                                                                                |
+| `ai-workspace/02-audits/`          | Auditorías independientes, hallazgos y correcciones.                                                                                                                      |
 
 Una sesión de IA debe leer estos artefactos antes de proponer cambios. El contexto no se transmite por memoria del modelo, sino por documentos versionados.
 
 ### 3.1 Ubicación y materialización de artefactos
 
-| Artefacto | Ubicación prevista | Materializa |
-| --- | --- | --- |
-| `spec.md` | `docs/specs/NNN-<funcionalidad>/spec.md` | OpenCode + DeepSeek |
-| `plan.md` | `docs/specs/NNN-<funcionalidad>/plan.md` | OpenCode + DeepSeek |
-| `tasks.md` | `docs/specs/NNN-<funcionalidad>/tasks.md` | OpenCode + DeepSeek |
-| Informe de tarea | `ai-workspace/01-tasks/TASKxxx.md` | OpenCode + DeepSeek |
-| Auditoría | `ai-workspace/02-audits/TASKxxx-audit.md` | OpenCode + DeepSeek |
+| Artefacto        | Ubicación prevista                        | Materializa         |
+| ---------------- | ----------------------------------------- | ------------------- |
+| `spec.md`        | `docs/specs/NNN-<funcionalidad>/spec.md`  | OpenCode + DeepSeek |
+| `plan.md`        | `docs/specs/NNN-<funcionalidad>/plan.md`  | OpenCode + DeepSeek |
+| `tasks.md`       | `docs/specs/NNN-<funcionalidad>/tasks.md` | OpenCode + DeepSeek |
+| Informe de tarea | `ai-workspace/01-tasks/TASKxxx.md`        | OpenCode + DeepSeek |
+| Auditoría        | `ai-workspace/02-audits/TASKxxx-audit.md` | OpenCode + DeepSeek |
 
 `docs/specs/001-customer-registration/` se creó en TASK018 al iniciar la primera funcionalidad, se actualizó en TASK019 con las decisiones aprobadas y se cerró en TASK020 con D-02, el contrato definitivo y las evidencias de validación. La autoría intelectual o propuesta de contenido puede ser de ChatGPT; la materialización en el repositorio corresponde a OpenCode + DeepSeek.
 
@@ -126,3 +126,17 @@ Este registro vive en `ai-workspace/01-tasks/TASKxxx.md`; las auditorías indepe
 - El agente no tiene acceso a decisiones que solo existen en la cabeza del propietario: deben estar escritas.
 - Las comprobaciones automáticas no sustituyen la revisión de negocio ni la revisión de seguridad.
 - El entorno local puede diferir del de integración; las diferencias se documentan.
+
+## 7. Evidencia específica TASK047F (2026-11-19)
+
+El entorno observado para esta campaña es Windows 10 Pro 22H2 (build 19045), x64, PowerShell
+5.1. La herramienta de implementación fue OpenCode; el modelo reportado por la sesión actual
+es GPT-6 Luna. No se atribuye esta intervención a DeepSeek ni se infiere que todas las tareas
+históricas usaran el mismo modelo. Los artefactos verificables de proceso son el plan e
+informe TASK047F, los manifests, requisitos/SPEC/ADR, resultados de pruebas observados y los
+commits/pushes de la rama. Las instrucciones completas existieron en la conversación del
+propietario; no se reconstruyen como transcripciones ni como prompts literales en el repo.
+
+Las capturas o extractos de conversaciones privadas de ChatGPT/OpenCode siguen pendientes
+de aporte y aprobación del propietario. Los informes y planes son evidencia documental de
+trabajo, no sustituyen esas interacciones ni equivalen a revisión independiente humana.

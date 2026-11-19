@@ -1,18 +1,17 @@
 # Backend de SaaS-O-Matic
 
-## Estado vigente TASK041 (base frontend)
+## Estado vigente TASK047
 
-TASK039 auditó el backend acumulado con dictamen **APTA CON OBSERVACIONES** y sin
-hallazgos bloqueantes. TASK039B corrige la trazabilidad, el README, `.env.example`,
-la configuración de SQLite y la validación defensiva de tasas FX. El runtime y
-Alembic comparten ahora la resolución de `DATABASE_URL`; la base predeterminada
-sigue siendo `backend/var/saas_o_matic.sqlite3`. Las tasas externas fuera de los
-límites técnicos se rechazan antes de la caché y producen `503
-application/problem+json`. La suite backend tiene 579 pruebas. El backend se integró
-en `main` mediante PR #6 (merge `23cc43b486d20f7995a2cf29375e3f724f3c7c3f`).
-TASK042 implementa localmente dashboard y gestión de clientes Angular e integra el
-flujo navegador–FastAPI–SQLite temporal. El simulador, el E2E completo del MVP,
-seguridad de despliegue y CI continúan pendientes; no se modificó el backend.
+Backend y frontend MVP están integrados en `main` por PR #7 (merge
+`99c0ebac984c70521c4e3c94226b35c15303f572`). Este documento conserva notas y evidencias
+de tareas de backend; algunos estados de frontend/CI que aparecen en secciones históricas
+describen el corte de esas tareas y no sustituyen el estado vigente de la raíz.
+
+Para Quick Start conjunto y los comandos manuales actualizados, consulte
+[README raíz](../README.md) y [guía local](../docs/guides/local-development.md). El backend
+usa Python 3.13, FastAPI, SQLite y Alembic; ejecuta migraciones antes de servir. La base
+predeterminada es `backend/var/saas_o_matic.sqlite3`. No se declara preparación para
+producción pública: auth, autorización, P-05 y hardening quedan pendientes.
 
 ## Delta TASK038 (conservado)
 

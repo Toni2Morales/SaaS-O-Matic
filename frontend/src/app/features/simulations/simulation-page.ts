@@ -520,6 +520,9 @@ type SimulationForm = FormGroup<{
       .customer-context {
         flex-direction: column;
       }
+      .field-heading {
+        flex-wrap: wrap;
+      }
     }
   `,
 })

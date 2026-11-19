@@ -1,15 +1,14 @@
 # SaaS-O-Matic — frontend
 
-Frontend Angular para el uso comercial interno. TASK042 conecta dashboard, clientes,
-alta internacional, ficha e historial. TASK043 añade simulador con previsualización
-reactiva y persistencia explícita. FastAPI es la autoridad exclusiva de precios,
-impuestos y conversiones; los importes/tipos se conservan como cadenas decimales.
-TASK044 refina mensajes, validación, accesibilidad de navegación y controles responsive.
-En móvil el resumen de la estimación es compacto y no sticky para evitar tapar campos.
-TASK045 auditó el frontend y confirmó observaciones sobre contraste de texto y el estado
-accesible tras un error FX. TASK045B corrige esas observaciones y refuerza la cobertura;
-TASK045BP publica las correcciones en `feature/mvp-frontend`; aún no están integradas en
-`main`.
+Frontend Angular para uso comercial interno. La implementación TASK041–TASK046 está
+integrada en `main` mediante PR #7 (merge `99c0ebac984c70521c4e3c94226b35c15303f572`).
+Incluye dashboard, gestión internacional de clientes, detalle/historial y simulador con
+preview reactiva y persistencia explícita. FastAPI conserva autoridad exclusiva sobre
+precios, impuestos, FX y snapshots. TASK045B atendió las observaciones de contraste/error
+FX; TASK046 repitió QA. Axe y responsive son comprobaciones automatizadas/parciales, no
+certificación WCAG. Para arranque conjunto véase el [README raíz](../README.md) y
+[guía local](../docs/guides/local-development.md); no se declara preparación para
+producción pública.
 
 ## Versiones
 

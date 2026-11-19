@@ -2,9 +2,9 @@
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.7 (TASK044) |
+| Versión | 1.8 (TASK047F) |
 | Fecha | 2026-11-19 |
-| Estado | Backend integrado en main; frontend refinado y validado localmente en TASK044; revisión del propietario, auditoría independiente, publicación y despliegue pendientes. V43-01 se atribuye al fixture visual tras integración real 15/16; V43-02 corresponde a captura full-page. |
+| Estado | Código MVP integrado en main por PR #7. Entrega actual prioriza ejecución/verificación local Windows 10; fallos A47-01/02/03 de GitHub Actions quedan aplazados expresamente, no resueltos. Ver la matriz final TASK047F y su informe para aceptación/limitaciones. No implica preparación para producción ni certificación multiplataforma. |
 | Fuente | Enunciado original del reto facilitado por el propietario (documento externo no versionado) y brief funcional del propietario |
 
 Este documento separa **requisitos funcionales**, **restricciones**, **supuestos** y **preguntas abiertas**. Todo lo que no aparece aquí como requisito no debe implementarse por iniciativa propia.
@@ -316,3 +316,5 @@ Las recomendaciones opcionales de la hoja de ruta no se convierten en requisitos
 | 1.4 | 2026-11-18 | TASK041: P-01 resuelta con ADR 0003; scaffold Angular local; interfaz comercial, E2E funcional y despliegue pendientes. |
 | 1.5 | 2026-11-18 | TASK042: dashboard y gestión frontend de clientes conectados localmente; SPEC-008; simulator/TASK043 y despliegue pendientes. |
 | 1.6 | 2026-11-18 | TASK043: simulador, preview/guardado e integración real local; SPEC-009. Revisión/publicación, npm ci limpio, auditoría formal y despliegue pendientes. |
+| 1.7 | 2026-11-19 | TASK044: refinamiento frontend/E2E; revisión del propietario, publicación y despliegue pendientes en ese corte. |
+| 1.8 | 2026-11-19 | TASK047F: campaña y estado final de entrega local Windows 10; criterios CI multiplataforma aplazados por decisión expresa. Véase `final-delivery-traceability.md` e informe TASK047F. |
