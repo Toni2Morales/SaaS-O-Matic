@@ -2,10 +2,10 @@
 
 ## Workflows
 
-| Workflow    | Archivo                             | Trigger                                                            | Jobs                                                                                                                         |
-| ----------- | ----------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Quality     | `.github/workflows/quality.yml`     | PR a `main`; push a `main`/`docs/final-delivery`; ejecución manual | Backend estático/Pytest; frontend typecheck/lint/formato/Vitest-cobertura/build/audits; Playwright Chromium/Firefox/WebKit   |
-| Quick Start | `.github/workflows/quick-start.yml` | mismos triggers                                                    | Ubuntu y Windows: ejecutar scripts, alta sintética, preview sin persistencia, guardar, parar/reiniciar y comprobar historial |
+| Workflow    | Archivo                             | Trigger actual | Jobs                                                                                                                         |
+| ----------- | ----------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Quality     | `.github/workflows/quality.yml`     | Solo manual (`workflow_dispatch`) | Backend estático/Pytest; frontend typecheck/lint/formato/Vitest-cobertura/build/audits; Playwright Chromium/Firefox/WebKit   |
+| Quick Start | `.github/workflows/quick-start.yml` | Solo manual (`workflow_dispatch`) | Ubuntu y Windows: ejecutar scripts, alta sintética, preview sin persistencia, guardar, parar/reiniciar y comprobar historial |
 
 Ambos son CI sin deployment. Usan `permissions: contents: read`, runners efímeros,
 `timeout-minutes`, concurrencia cancelable, actions de GitHub verificadas y referenciadas por
@@ -32,18 +32,28 @@ historial. Las tasas del fixture están etiquetadas en el job como test data. La
 multibrowser sigue usando los route fixtures existentes; los casos opt-in continúan siendo
 skips y no se cuentan como PASS.
 
-## Evidencia y badges
+## Validación local y resultados históricos
 
-El workflow está versionado en `docs/final-delivery`, pero resultados deben consultarse en
-los runs vinculados a [Actions](https://github.com/Toni2Morales/SaaS-O-Matic/actions).
-No considerar CI validada hasta que los jobs aparezcan y terminen. Al documentar una
-ejecución, registrar run ID/URL, evento, SHA, jobs, duración observada y logs relevantes.
-Un fallo por workflow se puede corregir en esa configuración; un fallo de código/tests
-existentes se reporta y detiene la corrección automática.
+La campaña de aceptación para esta entrega es local y reproducible en Windows 10, desde un
+clon limpio de `docs/final-delivery`; el informe TASK047F registra SHA, tiempos y comandos.
+GitHub Actions permanece disponible solo como infraestructura futura y no se despachará en
+TASK047F. No hay badges en el README.
 
-Los badges del README solo se añadirán después de runs reales y señalarán expresamente la
-rama `docs/final-delivery` mientras no se integren en `main`. No se infiere status a partir
-del workflow YAML ni se publica una cifra histórica como cobertura dinámica.
+Los resultados de estos runs son históricos y corresponden a push/SHA anteriores. No
+representan el estado actual del trigger ni se deben mostrar como una validación aprobada:
+
+| Hallazgo | Evidencia histórica | Estado en TASK047F |
+|---|---|---|
+| A47-01 | [Quality #44556931530](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44556931530), SHA `181afaf…`: seis fallos responsive (dos aserciones × Chromium/Firefox/WebKit), 320 px contra documento 334 px. | Pendiente y aplazado por decisión del propietario. No se reprodujo en Windows local. El wrap de `.field-heading` publicado en `54bd817` no resolvió el fallo: [Quality #44566635410](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44566635410) volvió a fallar las mismas seis pruebas y midió 334 px. |
+| A47-02 | [Quick Start #44556931645](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44556931645), SHA `181afaf…`: Angular no superó health check en Windows runner. El arranque había funcionado en Windows local. | Pendiente y aplazado. No se investigará/corregirá en TASK047F. |
+| A47-03 | [Quick Start #44556931645](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44556931645), SHA `181afaf…`: Bash no validó la propiedad del PID en parada/reinicio Linux. | Pendiente y aplazado. No se investigará/corregirá en TASK047F. |
+
+Runs posteriores sobre `54bd817…`: [Quality #44566635410](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44566635410) terminó failure (backend/frontend PASS, Playwright 73 PASS, 20 skips, 6 FAIL); [Quick Start #44566635425](https://github.com/Toni2Morales/SaaS-O-Matic/actions/runs/44566635425) terminó failure (health Angular Windows y comprobación PID Linux). Son evidencias del aplazamiento, no un ciclo de corrección.
+
+Los hallazgos A47-01/02/03 no se consideran resueltos. La decisión expresa del propietario
+es priorizar la ejecución local Windows 10. Estos resultados CI no constituyen por sí solos
+un incumplimiento del reto original; tampoco equivalen a certificación multiplataforma.
+No se alteran los jobs, comandos, aserciones ni matrices que los workflows ejecutan.
 
 ## Límites de seguridad
 
