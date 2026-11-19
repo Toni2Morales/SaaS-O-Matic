@@ -259,7 +259,7 @@ test('keeps dashboard, customers, create, detail and simulator within responsive
     `/customers/${customerId}`,
     `/customers/${customerId}/simulations/new`,
   ];
-  for (const width of [320, 390, 768, 1024, 1440]) {
+  for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const route of paths) {
       await page.goto(route);
